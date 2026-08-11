@@ -1,0 +1,21 @@
+{
+  "files": {
+    ".codex-plugin/plugin.json": "5ad856231ca8e38bf2f3df48a42bc6f80b7adf63954685a4de1b659bcf26a60f",
+    ".gitignore": "99a7bd5dd99a2f9ef1079953f2310a5f710961eb95cac1970b04a85273f007de",
+    "AGENTS.md": "4b3d5d29bec1f0b270a26881244b92583cdedc52267a6c25639772730b3f0c3e",
+    "README.md": "6ec3e412f36a0bd675da8fb7425bd2f8b1f7b259968f57a1a98a6d855b5ac308",
+    "advisors/engineering-council/SPEC.md": "52a4c1fa599c58ba5c2f16099345b733cc21a4c14fe949584fb1d2ead1393173",
+    "advisors/engineering-council/clean-boundary-architect.toml": "2f5cf28862c7ae98348269710e64ebb230d5889361e8ced90cd5d89876a32973",
+    "advisors/engineering-council/domain-model-cartographer.toml": "15c14ff4573f54867f8a4b1828b4be947fb8ada6aeae5f02324cf2adcbf994d8",
+    "advisors/engineering-council/evolutionary-deep-pragmatist.toml": "5709c6f502ad4a2c791984e5a672bb038a7b17e590141c3fa77b64f1b3708573",
+    "advisors/engineering-council/production-systems-sentinel.toml": "6f73486a92b2f44afb4779ee7ec1ac0d666693f4805640067c4359627c520822",
+    "docs/decisions/0001-canonical-plugin-root.md": "e3885baa9f5cc8199295b05dcdd92fbadfa4efef791a17ad2ccaa51ef176f9d3",
+    "provenance/engineering-council/generation-1.json": "3d0712562c3db115cfabe15e02c43940e9fd626b6ee862cf630fbc31141db6ed",
+    "skills/engineering-council/SKILL.md": "fe4b1a7c7cb272c92b94fb2239cb904dfb0a3d272027d317f918c13451a2719f",
+    "skills/engineering-council/agents/openai.yaml": "5caabcd01cc283236b9a79460daf521fd8c8facc94db99dd1a9807816af6d2ff",
+    "tests/test_distribution.py": "de80a99744eed4264173a9dc859fd381af6b6a631a28a56e014d80785de320d8",
+    "tools/council_dist.py": "679626340abf15e9e7721cfbb242df0519ec1082d5a58de0d3f61d6d988b3957"
+  },
+  "product_version": "0.1.0",
+  "schema_version": "council.lock/1"
+}

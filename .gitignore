@@ -1,0 +1,23 @@
+# Generated loader overlays and build output
+/.agents/
+/.codex/agents/
+/dist/
+/build/
+
+# Local installation receipts and recoverable backups
+/.council-local/
+*.council-backup-*
+*.council-stage-*
+
+# Runtime and editor noise
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+.idea/
+.vscode/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example

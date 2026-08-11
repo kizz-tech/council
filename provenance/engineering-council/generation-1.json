@@ -1,0 +1,64 @@
+{
+  "schema_version": "council.provenance/1",
+  "generation": "engineering-council-generation-1",
+  "date": "2026-08-11",
+  "custody": {
+    "availability": "private-owner-controlled",
+    "bundled_in_repository": false,
+    "locator": "lifeos:labs:experiment:engineering-council-evaluation:2026-08-11",
+    "raw_reasoning_bundled": false
+  },
+  "evidence_identity": {
+    "covered_file_count": 114,
+    "composite_sha256": "dd1716d04484c62b0348f8b329d2967da840582462c662c53650d0c4e3656656",
+    "package_manifest_sha256": "e1072c7b49e1d2df41d16abd8586b323439684cb68c89cd616a062c0552b96aa",
+    "runner_sha256": "5f8ab4883accaadfa1c425e41d9c814fd56b18fd599a832c07b1ddb52ac40e22",
+    "independent_audit": "pass-no-p0-p1"
+  },
+  "import_identity": {
+    "historical_baseline_skill_sha256": "a29e0357297c461599fc989abfc408c80d6714b70dd74de68097fc2e23686528",
+    "candidate_skill_sha256": "a22a1371711509778985bdbae999929903419355332645e299bdb38ce01432fe",
+    "canonical_engineering_skill_sha256": "fe4b1a7c7cb272c92b94fb2239cb904dfb0a3d272027d317f918c13451a2719f",
+    "skill_interface_sha256": "5caabcd01cc283236b9a79460daf521fd8c8facc94db99dd1a9807816af6d2ff",
+    "advisors": {
+      "clean_boundary_architect": "2f5cf28862c7ae98348269710e64ebb230d5889361e8ced90cd5d89876a32973",
+      "domain_model_cartographer": "15c14ff4573f54867f8a4b1828b4be947fb8ada6aeae5f02324cf2adcbf994d8",
+      "evolutionary_deep_pragmatist": "5709c6f502ad4a2c791984e5a672bb038a7b17e590141c3fa77b64f1b3708573",
+      "production_systems_sentinel": "6f73486a92b2f44afb4779ee7ec1ac0d666693f4805640067c4359627c520822"
+    }
+  },
+  "pilot_summary": {
+    "design": "synthetic-held-out-one-sample-per-cell-correlated-model-judge",
+    "heldout_weighted_means": {
+      "direct": 3.83,
+      "sequential_revision": 3.93,
+      "historical_skill": 3.93,
+      "candidate_v2": 3.93
+    },
+    "tie_threshold": 0.25,
+    "critical_anchor_misses": 0,
+    "supported_mechanism": "adaptive routing with independent first passes, accountable synthesis, bounded challenge, and explicit stop/provenance",
+    "cross_domain_control": "engineering skill correctly declined engineering advisors; fixed sequential review added substantial overhead without a reliable quality gain"
+  },
+  "supported_claims": [
+    "The imported v2 repaired a reproducible full-history profile-execution and consultation-provenance defect.",
+    "The candidate passed the predeclared local held-out replacement gate without a new critical-anchor miss.",
+    "All four imported advisor profiles were available in tested local Codex runtime smokes.",
+    "The evidence justifies selective adaptive routing, not a council on every task."
+  ],
+  "unsupported_claims": [
+    "Universal multi-agent or debate superiority",
+    "Advisor-roster or prompt optimality",
+    "Small-model councils replacing one capable model",
+    "Research, product, design, or life council transfer",
+    "Production outcome improvement",
+    "Public reproducibility before a sanitized evidence release"
+  ],
+  "state": {
+    "experiment": "completed",
+    "skill": "locally-implemented-and-validated",
+    "repository_import": "prepared-for-0.1.0",
+    "public_release": false,
+    "outcome_proven": false
+  }
+}

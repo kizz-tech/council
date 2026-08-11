@@ -1,0 +1,7 @@
+interface:
+  display_name: "Engineering Council"
+  short_description: "Read-only engineering decision council"
+  default_prompt: "Use $engineering-council to evaluate this consequential engineering decision: gather evidence, consult the smallest useful set of read-only advisors, synthesize the decision, and preserve the requested review, plan, or change mode."
+
+policy:
+  allow_implicit_invocation: true

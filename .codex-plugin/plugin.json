@@ -1,0 +1,20 @@
+{
+  "name": "council",
+  "version": "0.1.0",
+  "description": "Adaptive, evidence-bound decision councils for complex product and engineering work.",
+  "author": {
+    "name": "Council Project"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Council",
+    "shortDescription": "Adaptive specialist councils for consequential decisions.",
+    "longDescription": "Council packages evidence-bound decision workflows, specialist advisor profiles, and evaluation contracts for complex product work.",
+    "developerName": "Council Project",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Use Council to evaluate this consequential decision with the smallest useful set of independent specialist lenses."
+    ]
+  }
+}
