@@ -11,12 +11,20 @@ Their availability and basic behavior are tested. Their optimality,
 orthogonality, author-name effect, and portability across model tiers remain
 open experimental questions.
 
+This document specifies the generation-one prompt set, not the permanent
+Council roster architecture. The roster manifest preserves this set as a
+historical baseline; a candidate may deepen one prompt, split or merge
+responsibilities, or replace all four with a different source-bound
+decomposition.
+
 ## Composition
 
-Keep four available engineering lenses and select them dynamically. One profile
+Generation one keeps four available engineering lenses and selects them dynamically. One profile
 is a consultation; two countervailing profiles are the normal council; three or
 four require a high-blast-radius decision with a distinct decision-changing
-axis for each. There is no current evidence for a fifth default advisor.
+axis for each. There is no current evidence for a fifth default advisor, nor
+evidence that four is an optimum or ceiling. Candidate sizes and alternative
+groupings belong to `docs/experiments/roster-evaluation.md`.
 
 | Profile | Primary question | Unique protection | Counterweight |
 | --- | --- | --- | --- |

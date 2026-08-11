@@ -1,0 +1,173 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "security-privacy",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "jerome-saltzer",
+      "name": "Jerome H. Saltzer",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make protection mechanisms small, explicit, fail-safe, and subject to complete mediation at the boundary they protect.",
+      "decision_functions": ["security-architecture", "access-control", "trusted-computing-base"],
+      "lineage_ids": ["protection-principles", "reference-monitor"],
+      "primary_sources": [
+        {"id": "saltzer-schroeder-1975-protection", "title": "The Protection of Information in Computer Systems", "year": 1975, "locator": "https://doi.org/10.1109/PROC.1975.9939", "evidence_locator": "pp. 1278–1308; design principles including complete mediation, fail-safe defaults, least privilege, and economy of mechanism."},
+        {"id": "saltzer-1974-need-to-know", "title": "Protection and the Control of Information Sharing in Multics", "year": 1974, "locator": "https://doi.org/10.1145/361011.361067", "evidence_locator": "pp. 388–402; access control, rings, and protection domains in a running operating system."}
+      ],
+      "positions": [
+        {"statement": "Every access to a protected object should be checked rather than relying on an earlier authorization decision.", "source_ids": ["saltzer-schroeder-1975-protection"], "scope": "Reference-monitor and authorization paths."},
+        {"statement": "Security defaults should deny access unless a deliberate authorization grants it.", "source_ids": ["saltzer-schroeder-1975-protection"], "scope": "Permission and configuration design."},
+        {"statement": "Protection domains and small mechanism boundaries make it possible to limit which principals can exercise which rights.", "source_ids": ["saltzer-1974-need-to-know"], "scope": "Operating-system and platform access control."}
+      ],
+      "decision_questions": ["Where is each sensitive access mediated, and can that mediation be bypassed?", "Which permission is granted by default rather than explicitly?", "What is the smallest mechanism that must be trusted to enforce this boundary?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "Distributed systems may need cached or delegated authorization decisions, so complete mediation must be reconciled with explicit revocation, freshness, and availability semantics."}],
+      "misuse_risks": ["Interpreting least privilege as a reason to fragment every operational permission into unusable micro-grants.", "Treating a small code component as trustworthy without securing its configuration, dependencies, and administration."],
+      "evidence_boundary": "These works ground operating-system protection principles; they do not supply a complete privacy, legal, or human-centered threat model.",
+      "confidence": "high"
+    },
+    {
+      "id": "michael-schroeder",
+      "name": "Michael D. Schroeder",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Treat security as an enforceable system property whose mechanism, policy, auditing, and operational assumptions must be designed together.",
+      "decision_functions": ["security-architecture", "auditability", "access-control"],
+      "lineage_ids": ["protection-principles", "privilege-domains"],
+      "primary_sources": [
+        {"id": "saltzer-schroeder-1975-protection", "title": "The Protection of Information in Computer Systems", "year": 1975, "locator": "https://doi.org/10.1109/PROC.1975.9939", "evidence_locator": "pp. 1278–1308; policy/mechanism distinction and system security principles."},
+        {"id": "schroeder-1972-mutually-suspicious-subsystems", "title": "Cooperation of Mutually Suspicious Subsystems in a Computer Utility", "year": 1972, "locator": "https://web.mit.edu/~saltzer/www/publications/TRs%2BTMs/Multics/TR-104.pdf", "evidence_locator": "MIT/LCS/TR-104, September 1972, abstract p. 3; independent privilege domains, enforced access constraints, and mediated cross-domain calls."}
+      ],
+      "positions": [
+        {"statement": "A protection design should distinguish the policy being enforced from the mechanism that enforces it.", "source_ids": ["saltzer-schroeder-1975-protection"], "scope": "Security architecture and change management."},
+        {"statement": "Audit trails and compromise recording are part of a system's protection design rather than an afterthought.", "source_ids": ["saltzer-schroeder-1975-protection"], "scope": "Detection and accountability."},
+        {"statement": "Mutually suspicious subsystems can cooperate when each is encapsulated in an independent privilege domain and their cross-domain interactions are mediated by enforced access constraints.", "source_ids": ["schroeder-1972-mutually-suspicious-subsystems"], "scope": "Protected-subsystem and privilege-domain boundaries in a Multics hardware and segmented-memory design; not a blanket claim about every service boundary."}
+      ],
+      "decision_questions": ["What policy decision is this mechanism enforcing, and who can change that policy?", "Which security-relevant events must be recorded for investigation and accountability?", "Which systems are mutually suspicious and need distinct privilege domains, and how are their cross-domain calls and arguments mediated?"],
+      "counterweights": [{"relation": "counterbalances", "target_or_position": "Threat-modeling practice emphasizes attacker goals and attack paths, which policy-and-mechanism analysis alone may leave implicit."}],
+      "misuse_risks": ["Assuming audit logging creates accountability without retention, integrity, review, and response procedures.", "Modeling authorization state precisely while ignoring identity proofing and administrative compromise."],
+      "evidence_boundary": "The selected works support protection-system design, auditing, and privilege-domain mediation in Multics-era systems; they do not establish contemporary cloud identity, service-isolation, or privacy-governance requirements without additional evidence.",
+      "confidence": "high"
+    },
+    {
+      "id": "ross-anderson",
+      "name": "Ross Anderson",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Analyze security as an adversarial socio-technical system: incentives, usability, implementation details, and operational failures all shape the real attack surface.",
+      "decision_functions": ["threat-modeling", "security-economics", "systemic-risk"],
+      "lineage_ids": ["security-engineering", "security-economics"],
+      "primary_sources": [
+        {"id": "anderson-2001-why-information-security-is-hard", "title": "Why Information Security is Hard — An Economic Perspective", "year": 2001, "locator": "https://www.cl.cam.ac.uk/ftp/users/rja14/econ.pdf", "evidence_locator": "ACSAC 2001 paper, pp. 358–365; incentives, externalities, and misaligned security decisions."},
+        {"id": "anderson-2008-security-engineering", "title": "Security Engineering: A Guide to Building Dependable Distributed Systems", "year": 2008, "locator": "https://www.cl.cam.ac.uk/~rja14/book.html", "evidence_locator": "Second edition, chapters 1–3 and 26; security engineering, threat models, and incentive failures."}
+      ],
+      "positions": [
+        {"statement": "Security failures persist when the actors who can reduce risk do not bear the resulting costs.", "source_ids": ["anderson-2001-why-information-security-is-hard"], "scope": "Product, market, and organizational security incentives."},
+        {"statement": "A security design must account for the system actually operated by people and organizations, not only its cryptographic or access-control mechanisms.", "source_ids": ["anderson-2008-security-engineering"], "scope": "Socio-technical system design."},
+        {"statement": "Threat analysis should consider concrete assets, adversaries, attack paths, and the costs of defense and response.", "source_ids": ["anderson-2008-security-engineering"], "scope": "Security requirements and architecture review."}
+      ],
+      "decision_questions": ["Who can reduce this risk, and do their incentives align with the people who bear the loss?", "Which operational, usability, or organizational assumption would invalidate the technical control?", "What concrete assets, adversaries, attack paths, and response costs are in scope?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "A bounded component may still require a formal or protocol-level proof even when its surrounding incentives are understood."}],
+      "misuse_risks": ["Using incentive analysis to excuse remediable technical vulnerabilities.", "Expanding the threat model indefinitely without a decision boundary or prioritization rule."],
+      "evidence_boundary": "The sources support security-engineering and economic analysis; they do not make one economic model sufficient for legal, ethical, or rights-based privacy decisions.",
+      "confidence": "high"
+    },
+    {
+      "id": "bruce-schneier",
+      "name": "Bruce Schneier",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Design from an explicit threat model and attack surface, then judge controls by the assumptions and failure modes they leave behind.",
+      "decision_functions": ["threat-modeling", "attack-surface", "security-assurance"],
+      "lineage_ids": ["applied-cryptography", "security-by-design"],
+      "primary_sources": [
+        {"id": "schneier-1999-attack-trees", "title": "Attack Trees", "year": 1999, "locator": "https://www.schneier.com/academic/archives/1999/12/attack_trees.html", "evidence_locator": "Article text and diagram; attack goals decomposed into alternative and conjunctive subgoals."},
+        {"id": "schneier-2000-secrets-and-lies", "title": "Secrets and Lies: Digital Security in a Networked World", "year": 2000, "locator": "https://www.schneier.com/books/secrets-and-lies/", "evidence_locator": "Book overview and chapters on assets, threats, vulnerabilities, and countermeasures."}
+      ],
+      "positions": [
+        {"statement": "Attack trees provide a structured way to decompose an attacker goal into alternative and conjunctive paths.", "source_ids": ["schneier-1999-attack-trees"], "scope": "Threat analysis and security review."},
+        {"statement": "A security decision should distinguish assets, threats, vulnerabilities, and countermeasures rather than treating a product feature as security by itself.", "source_ids": ["schneier-2000-secrets-and-lies"], "scope": "Security requirements and risk framing."},
+        {"statement": "Security controls must be evaluated as a system whose people, processes, and technology can each fail.", "source_ids": ["schneier-2000-secrets-and-lies"], "scope": "Operational security design."}
+      ],
+      "decision_questions": ["What attacker goal is being considered, and what alternative paths could achieve it?", "Which asset, threat, vulnerability, and countermeasure is this claim referring to?", "Which assumption about users, operations, or technology must remain true for the control to work?"],
+      "counterweights": [{"relation": "counterbalances", "target_or_position": "Privacy engineering requires analysis of data uses and affected people in addition to attacker goals."}],
+      "misuse_risks": ["Treating a threat tree as evidence that all relevant attack paths have been enumerated.", "Focusing on malicious attackers while overlooking accidental misuse, safety failures, and privacy harms."],
+      "evidence_boundary": "The selected works support applied threat analysis; they do not provide formal proof of cryptographic protocols or a privacy-rights framework.",
+      "confidence": "high"
+    },
+    {
+      "id": "adam-shostack",
+      "name": "Adam Shostack",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make threat modeling a repeatable design activity that exposes threats early enough to change architecture and mitigations.",
+      "decision_functions": ["threat-modeling", "secure-design", "security-review"],
+      "lineage_ids": ["threat-modeling", "stride"],
+      "primary_sources": [
+        {"id": "shostack-2014-threat-modeling", "title": "Threat Modeling: Designing for Security", "year": 2014, "locator": "https://www.oreilly.com/library/view/threat-modeling/9781118809990/", "evidence_locator": "Chapters 1–4; diagrams, threat enumeration, mitigations, and validation."},
+        {"id": "shostack-2014-threat-modeling-appendix", "title": "Threat Modeling: Designing for Security — STRIDE and threat-modeling practice", "year": 2014, "locator": "https://adam.shostack.org/blog/2014/02/threat-modeling-designing-for-security/", "evidence_locator": "Author material introducing the book's practical threat-modeling process and STRIDE framing."}
+      ],
+      "positions": [
+        {"statement": "Threat modeling should use a representation of the system so that threats can be tied to concrete components, data flows, and trust boundaries.", "source_ids": ["shostack-2014-threat-modeling"], "scope": "Architecture and design review."},
+        {"statement": "A repeatable enumeration method can surface classes of threats that an unstructured review may miss.", "source_ids": ["shostack-2014-threat-modeling"], "scope": "Early-stage security analysis."},
+        {"statement": "The output of threat modeling is useful only when threats lead to prioritized mitigations and later validation.", "source_ids": ["shostack-2014-threat-modeling-appendix"], "scope": "Security work integrated with delivery."}
+      ],
+      "decision_questions": ["What diagram and trust boundaries make this system reviewable?", "Which threat classes apply to each element and data flow?", "Which mitigations are accepted, implemented, deferred, or explicitly rejected, and how will they be checked?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "A checklist-based threat taxonomy is not a substitute for domain-specific adversary research or empirical abuse analysis."}],
+      "misuse_risks": ["Running STRIDE mechanically without validating the model against the actual system and attacker capabilities.", "Treating a completed threat-model document as closure when mitigations have not been implemented or verified."],
+      "evidence_boundary": "The sources support a practical threat-modeling workflow; they do not claim that STRIDE covers all privacy, safety, fraud, or organizational threats.",
+      "confidence": "high"
+    },
+    {
+      "id": "gary-mcgraw",
+      "name": "Gary McGraw",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Build security into the software lifecycle through risk-driven architectural analysis, verification activities, and explicit security requirements.",
+      "decision_functions": ["secure-sdlc", "software-risk", "security-assurance"],
+      "lineage_ids": ["software-security", "building-security-in"],
+      "primary_sources": [
+        {"id": "mcgraw-2006-software-security", "title": "Software Security: Building Security In", "year": 2006, "locator": "https://www.informit.com/store/software-security-building-security-in-9780321356703", "evidence_locator": "Chapters 1–3 and 7–10; risk management, architectural risk analysis, code review, and testing."},
+        {"id": "mcgraw-2004-software-security", "title": "Software Security", "year": 2004, "locator": "https://doi.org/10.1109/MS.2004.46", "evidence_locator": "pp. 80–83; integrating security practices into software development."}
+      ],
+      "positions": [
+        {"statement": "Software security requires a set of lifecycle practices rather than a final testing phase.", "source_ids": ["mcgraw-2004-software-security"], "scope": "Software delivery process."},
+        {"statement": "Architectural risk analysis should identify security-relevant design flaws before they become expensive implementation commitments.", "source_ids": ["mcgraw-2006-software-security"], "scope": "Architecture and design assurance."},
+        {"statement": "Security requirements, code review, and testing activities should be selected and prioritized according to risk.", "source_ids": ["mcgraw-2006-software-security"], "scope": "Risk-based secure development."}
+      ],
+      "decision_questions": ["Which lifecycle activity will find this class of security defect before release?", "What architectural risk remains even if individual code units pass their tests?", "Which security requirements are explicit, testable, and prioritized by consequence?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "A standardized secure-development process can produce false assurance if it does not adapt to the system's actual threat model and operating context."}],
+      "misuse_risks": ["Turning security practices into compliance checkboxes that do not change high-risk design decisions.", "Assuming code-level verification can compensate for an unsafe product or authorization model."],
+      "evidence_boundary": "These sources support software-security lifecycle practices; they do not specify a universal organizational maturity model or legal compliance program.",
+      "confidence": "high"
+    },
+    {
+      "id": "dan-boneh",
+      "name": "Dan Boneh",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Treat cryptographic guarantees as conditional protocol properties: define the adversary, assumptions, and composition boundary before relying on a primitive.",
+      "decision_functions": ["cryptographic-design", "protocol-security", "security-assurance"],
+      "lineage_ids": ["applied-cryptography", "provable-security"],
+      "primary_sources": [
+        {"id": "boneh-shoup-2020-applied-cryptography", "title": "A Graduate Course in Applied Cryptography", "year": 2020, "locator": "https://crypto.stanford.edu/~dabo/cryptobook/", "evidence_locator": "Chapters 1–2 and 8–10; security definitions, adversarial models, encryption, and authentication."},
+        {"id": "boneh-franklin-2001-ibe", "title": "Identity-Based Encryption from the Weil Pairing", "year": 2001, "locator": "https://doi.org/10.1007/3-540-44647-8_13", "evidence_locator": "pp. 213–229; construction and security analysis for identity-based encryption."}
+      ],
+      "positions": [
+        {"statement": "A cryptographic security claim is meaningful only relative to an explicit adversarial game, capabilities, and assumptions.", "source_ids": ["boneh-shoup-2020-applied-cryptography"], "scope": "Cryptographic primitive and protocol selection."},
+        {"statement": "Confidentiality and authenticity require distinct properties and must be composed deliberately in the protocol that uses them.", "source_ids": ["boneh-shoup-2020-applied-cryptography"], "scope": "Secure channel and message design."},
+        {"statement": "A construction's security argument depends on the stated hardness assumptions and reduction, not on the novelty of the mechanism alone.", "source_ids": ["boneh-franklin-2001-ibe"], "scope": "Cryptographic construction evaluation."}
+      ],
+      "decision_questions": ["What adversary capability and success condition does this cryptographic claim assume?", "Which confidentiality, integrity, authenticity, freshness, or key-management properties are required separately?", "What implementation and protocol composition choices lie outside the primitive's stated proof boundary?"],
+      "counterweights": [{"relation": "counterbalances", "target_or_position": "Usability, key custody, operations, and authorization decisions can defeat a sound primitive without contradicting its security proof."}],
+      "misuse_risks": ["Treating a primitive's proof as proof that the deployed protocol, key management, and surrounding application are secure.", "Selecting advanced cryptography where a simpler standard construction and sound key lifecycle would reduce more risk."],
+      "evidence_boundary": "The selected sources support cryptographic and protocol reasoning; they do not establish end-to-end security of a deployed product or a privacy-rights position.",
+      "confidence": "high"
+    }
+  ],
+  "open_gaps": [
+    "No dedicated representation currently covers privacy rights, contextual integrity, or legal and regulatory privacy obligations; this family must not be used as a complete privacy council."
+  ],
+  "rejected_candidates": [],
+  "saturation": "The family covers protection principles, adversarial threat analysis, secure development, and cryptographic assurance. It is intentionally incomplete for privacy rights and legal governance."
+}

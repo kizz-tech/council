@@ -1,0 +1,54 @@
+{
+  "schema_version": "council.roster/1",
+  "roster_id": "engineering-council-generation-1",
+  "revision": 1,
+  "status": "historical-baseline",
+  "domain": "software-engineering",
+  "purpose": "Preserve the evaluated four-lens Engineering Council as a reproducible baseline while later rosters vary size, grouping, lineage, and prompt composition.",
+  "source_generation": "generation-1",
+  "slots": [
+    {
+      "slot_id": "clean-boundary",
+      "runtime_profile": "clean_boundary_architect",
+      "representation_mode": "functional_lens",
+      "decision_function": "Dependency direction, information hiding, volatility seams, ports and adapters, and testable policy.",
+      "lineage_cluster": "boundaries-and-dependency-direction",
+      "prompt_source": "advisors/engineering-council/clean-boundary-architect.toml"
+    },
+    {
+      "slot_id": "domain-model",
+      "runtime_profile": "domain_model_cartographer",
+      "representation_mode": "functional_lens",
+      "decision_function": "Domain language, workflows, lifecycle, invariants, consistency boundaries, and ownership.",
+      "lineage_cluster": "domain-and-enterprise-modeling",
+      "prompt_source": "advisors/engineering-council/domain-model-cartographer.toml"
+    },
+    {
+      "slot_id": "evolutionary-pragmatism",
+      "runtime_profile": "evolutionary_deep_pragmatist",
+      "representation_mode": "functional_lens",
+      "decision_function": "Simplicity, deep modules, convention, reversibility, refactoring sequence, and anti-ceremony.",
+      "lineage_cluster": "evolutionary-design-and-complexity",
+      "prompt_source": "advisors/engineering-council/evolutionary-deep-pragmatist.toml"
+    },
+    {
+      "slot_id": "production-systems",
+      "runtime_profile": "production_systems_sentinel",
+      "representation_mode": "functional_lens",
+      "decision_function": "Security, reliability, data integrity, deployment, observability, recovery, and measured performance.",
+      "lineage_cluster": "production-safety-and-operations",
+      "prompt_source": "advisors/engineering-council/production-systems-sentinel.toml"
+    }
+  ],
+  "independence_claim": {
+    "lineage": "The four functional lenses were designed to counterbalance one another, but shared authoring context means lineage independence is not established.",
+    "runtime": "Generation one used separate first-pass advisor calls from a shared factual brief; exact runtime evidence remains bound to its provenance receipt.",
+    "outcome": "A private one-sample-per-cell evaluation observed useful differences but cannot establish independent error distributions or optimal composition."
+  },
+  "known_limits": [
+    "The roster covers engineering decisions only and must not be reused as a product, research, or design council without domain-specific validation.",
+    "Four slots are a historical fact, not a demonstrated optimum or minimum.",
+    "Functional role labels do not prove intellectual, model-family, or outcome independence.",
+    "The source-bound representative library was created after this generation and was not part of its runtime prompts."
+  ]
+}

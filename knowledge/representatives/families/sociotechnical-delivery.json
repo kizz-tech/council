@@ -1,0 +1,610 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "sociotechnical-delivery",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "mel-conway",
+      "name": "Mel Conway",
+      "representation_type": "person",
+      "admission_status": "qualified_counterweight",
+      "lens": "Treat organization, communication, and system structure as mutually constraining design variables, then test rather than assume how closely they should mirror.",
+      "decision_functions": [
+        "sociotechnical-architecture",
+        "coordination-design",
+        "organizational-change"
+      ],
+      "lineage_ids": [
+        "conways-law",
+        "mirroring-hypothesis"
+      ],
+      "primary_sources": [
+        {
+          "id": "conway-1968-committees",
+          "title": "How Do Committees Invent?",
+          "year": 1968,
+          "locator": "https://www.melconway.com/Home/Committees_Paper.html",
+          "evidence_locator": "Sections Stages of Design, Relating the Two, and System Management."
+        },
+        {
+          "id": "colfer-baldwin-2016-mirroring",
+          "title": "The Mirroring Hypothesis: Theory, Evidence, and Exceptions",
+          "year": 2016,
+          "locator": "https://doi.org/10.1093/icc/dtw027",
+          "evidence_locator": "Industrial and Corporate Change 25(5), pp. 709–738; review of 142 empirical studies."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Communication paths among design groups constrain the system designs those groups can practically produce.",
+          "source_ids": [
+            "conway-1968-committees"
+          ],
+          "scope": "Multi-group system design and organizational interfaces."
+        },
+        {
+          "statement": "When technical dependencies require cooperation, the responsible people need sufficiently direct communication paths to coordinate their work.",
+          "source_ids": [
+            "conway-1968-committees"
+          ],
+          "scope": "System-management and integration work."
+        },
+        {
+          "statement": "Mirroring is common but not universal; partial mirroring or intentional non-mirroring can fit dynamic, complex settings better than a deterministic rule.",
+          "source_ids": [
+            "colfer-baldwin-2016-mirroring"
+          ],
+          "scope": "Evidence reviewed through 2016; organizational and technical design relationships, not a universal causal law."
+        }
+      ],
+      "decision_questions": [
+        "Which technical dependency paths lack a reliable, low-friction communication path between the people who must resolve them?",
+        "Which team boundaries support coherent ownership, and where would strict mirroring make integration or learning worse?",
+        "What observable integration delay, handoff, or architectural mismatch would falsify the proposed organization-to-system alignment?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The empirical review finds heterogeneous evidence and exceptions; organization charts alone do not determine architecture."
+        }
+      ],
+      "misuse_risks": [
+        "Treating one team per service as a mechanical application of Conway's Law without measuring real dependencies.",
+        "Using organizational structure as an excuse to blame teams for architectural problems instead of repairing interfaces, incentives, and coordination."
+      ],
+      "evidence_boundary": "One direct Conway work and a later peer-reviewed systematic review support a qualified sociotechnical dependency lens with documented empirical exceptions. This record does not meet the two-direct-work gate for full person admission, and it does not prescribe microservice granularity, a fixed reporting structure, or a deterministic architecture outcome.",
+      "confidence": "medium"
+    },
+    {
+      "id": "mary-tom-poppendieck",
+      "name": "Mary & Tom Poppendieck",
+      "representation_type": "joint_authors",
+      "admission_status": "admitted",
+      "lens": "Improve product delivery by making value flow and learning visible, reducing delay and rework, building quality in, and preserving reversible options until the last responsible moment.",
+      "decision_functions": [
+        "flow-improvement",
+        "product-learning",
+        "delivery-policy"
+      ],
+      "lineage_ids": [
+        "poppendieck-lean-series",
+        "lean-software-development-joint-work"
+      ],
+      "primary_sources": [
+        {
+          "id": "poppendieck-2003-lean-software-development",
+          "title": "Lean Software Development: An Agile Toolkit",
+          "year": 2003,
+          "locator": "https://www.informit.com/store/lean-software-development-an-agile-toolkit-9780321150783",
+          "evidence_locator": "Chapters 1–7 on lean principles, waste, learning, commitment, integrity, and whole-system optimization."
+        },
+        {
+          "id": "poppendieck-2006-implementing-lean",
+          "title": "Implementing Lean Software Development: From Concept to Cash",
+          "year": 2006,
+          "locator": "https://www.pearson.com/en-us/subject-catalog/p/implementing-lean-software-development-from-concept-to-cash/P200000009108/9780321437389",
+          "evidence_locator": "Chapters 2–9, including the value-stream and pull-system material."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Software development should be managed as learning and discovery, with queues, handoffs, rework, and feedback delays made visible as flow problems.",
+          "source_ids": [
+            "poppendieck-2003-lean-software-development",
+            "poppendieck-2006-implementing-lean"
+          ],
+          "scope": "Product and software delivery where work crosses multiple functions."
+        },
+        {
+          "statement": "Commitment should be delayed to the last responsible moment when keeping options open produces better-informed decisions rather than unmanaged indecision.",
+          "source_ids": [
+            "poppendieck-2003-lean-software-development"
+          ],
+          "scope": "Irreversible product, design, and sequencing choices."
+        },
+        {
+          "statement": "Quality should be built into the flow and the whole value stream optimized, rather than shifting defects and waiting time between local silos.",
+          "source_ids": [
+            "poppendieck-2003-lean-software-development",
+            "poppendieck-2006-implementing-lean"
+          ],
+          "scope": "Cross-functional delivery systems; not a justification for removing necessary controls."
+        }
+      ],
+      "decision_questions": [
+        "Where does customer value wait, loop, or lose context between idea, implementation, validation, and release?",
+        "Which decision is genuinely irreversible, and what evidence will be available by its last responsible moment?",
+        "Which quality activity prevents escape or rework at the system level rather than merely moving work to another team?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The lean-to-software transfer is practitioner doctrine: a useful explanatory and operational model, not universal empirical proof that every lean practice improves every software context."
+        }
+      ],
+      "misuse_risks": [
+        "Equating lean with staff reduction, higher utilization, or elimination of slack needed for learning, reliability, and incident response.",
+        "Using defer commitment as an excuse to avoid accountable decisions, documentation, or timely escalation."
+      ],
+      "evidence_boundary": "The joint practitioner books faithfully support flow, learning, and quality-in-the-system lenses. They do not establish a mandated staffing model, remove safety or regulatory evidence obligations, or show causal effect sizes; outcome prediction remains context-dependent.",
+      "confidence": "medium"
+    },
+    {
+      "id": "jez-humble",
+      "name": "Jez Humble",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make changes safe to release through a repeatable delivery system: versioned build, test, deploy, and operational feedback paths that reduce batch size and expose constraints.",
+      "decision_functions": [
+        "continuous-delivery",
+        "release-risk",
+        "delivery-system-design"
+      ],
+      "lineage_ids": [
+        "continuous-delivery-humble-farley",
+        "accelerate-humble-forsgren-kim"
+      ],
+      "primary_sources": [
+        {
+          "id": "humble-farley-2010-continuous-delivery",
+          "title": "Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation",
+          "year": 2010,
+          "locator": "https://www.informit.com/store/continuous-delivery-reliable-software-releases-through-9780321601919",
+          "evidence_locator": "Chapters 1–15, especially the deployment-pipeline and configuration-management material."
+        },
+        {
+          "id": "forsgren-humble-kim-2018-accelerate",
+          "title": "Accelerate: The Science of Lean Software and DevOps",
+          "year": 2018,
+          "locator": "https://www.simonandschuster.com/books/Accelerate/Nicole-Forsgren-PhD/9781942788331",
+          "evidence_locator": "Publisher overview and book chapters describing four years of State of DevOps research and statistical analysis."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "A deployment pipeline should make the build, validation, and release path visible and repeatable from version-controlled inputs.",
+          "source_ids": [
+            "humble-farley-2010-continuous-delivery"
+          ],
+          "scope": "Software delivery where automated or reproducible checks are feasible."
+        },
+        {
+          "statement": "Build once, package once, and promote the same artifact through environments so that later-stage behavior is not confounded by a different build process.",
+          "source_ids": [
+            "humble-farley-2010-continuous-delivery"
+          ],
+          "scope": "Release artifact integrity and environment promotion."
+        },
+        {
+          "statement": "Reducing release risk requires attention to architecture, data, configuration, infrastructure, and governance constraints, not only test automation.",
+          "source_ids": [
+            "humble-farley-2010-continuous-delivery",
+            "forsgren-humble-kim-2018-accelerate"
+          ],
+          "scope": "End-to-end delivery systems; deployment automation alone is insufficient."
+        }
+      ],
+      "decision_questions": [
+        "Can this change travel through a repeatable, observable path from version control to production without rebuilding or manually reinterpreting it?",
+        "Which safety checks remain non-automatable, and how are their evidence, owners, and turnaround time made explicit?",
+        "What are the data, configuration, dependency, and rollback conditions that make a small release unsafe despite a green pipeline?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "A pipeline is a risk-control mechanism, not proof of product correctness, safety, user value, or readiness for irreversible external action."
+        }
+      ],
+      "misuse_risks": [
+        "Calling a CI tool or a scripted deployment continuous delivery while retaining opaque manual handoffs and unrehearsed recovery.",
+        "Using delivery speed to bypass proportionate security, privacy, regulatory, or human-approval controls."
+      ],
+      "evidence_boundary": "The sources directly support delivery-system practices and provide shared, context-dependent industry research framing; Accelerate is not independent evidence from the Forsgren or Kim units. They do not require automatic production deployment or establish that every service should release independently.",
+      "confidence": "medium"
+    },
+    {
+      "id": "nicole-forsgren",
+      "name": "Nicole Forsgren",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Use empirical, multidimensional measurement to examine delivery capabilities and developer productivity, while resisting causal overclaim and individual ranking.",
+      "decision_functions": [
+        "empirical-delivery-audit",
+        "measurement-design",
+        "metric-guardrails"
+      ],
+      "lineage_ids": [
+        "accelerate-humble-forsgren-kim",
+        "space-developer-productivity"
+      ],
+      "primary_sources": [
+        {
+          "id": "forsgren-humble-kim-2018-accelerate",
+          "title": "Accelerate: The Science of Lean Software and DevOps",
+          "year": 2018,
+          "locator": "https://www.simonandschuster.com/books/Accelerate/Nicole-Forsgren-PhD/9781942788331",
+          "evidence_locator": "Publisher overview and book chapters describing four years of State of DevOps research and statistical analysis."
+        },
+        {
+          "id": "forsgren-et-al-2021-space",
+          "title": "The SPACE of Developer Productivity: There's More to It Than You Think",
+          "year": 2021,
+          "locator": "https://doi.org/10.1145/3454122.3454124",
+          "evidence_locator": "ACM Queue 19(1), pp. 20–48; the SPACE dimensions and measurement guidance."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Accelerate presents delivery capabilities and performance as subjects for empirical study using State of DevOps research and statistical analysis, rather than as a maturity label alone.",
+          "source_ids": [
+            "forsgren-humble-kim-2018-accelerate"
+          ],
+          "scope": "Industry research synthesis; reported relationships should not be converted into a universal causal guarantee."
+        },
+        {
+          "statement": "Developer productivity is multidimensional: satisfaction and well-being, performance, activity, communication and collaboration, and efficiency and flow all matter.",
+          "source_ids": [
+            "forsgren-et-al-2021-space"
+          ],
+          "scope": "Developer-productivity measurement; not a single score for judging individuals."
+        },
+        {
+          "statement": "A useful measurement system selects measures for a stated purpose across relevant dimensions instead of treating one convenient activity count as productivity.",
+          "source_ids": [
+            "forsgren-et-al-2021-space"
+          ],
+          "scope": "Measurement design and interpretation."
+        }
+      ],
+      "decision_questions": [
+        "What exact decision will this metric inform, and what outcome, unit of analysis, population, and time window does it actually represent?",
+        "Which complementary measures and qualitative checks prevent a delivery or activity metric from obscuring collaboration, well-being, reliability, or user value?",
+        "Which inference is supported by the observed association, and which causal or individual-performance conclusion remains unsupported?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Survey-based and observational industry research can reveal associations and patterns, but it cannot by itself prove local causal mechanisms or replace direct product and operational evidence."
+        }
+      ],
+      "misuse_risks": [
+        "Using deployment frequency, pull-request counts, or SPACE dimensions to rank, reward, or punish individual developers.",
+        "Claiming that DORA-style associations prove a particular organizational change will cause business value in a different context."
+      ],
+      "evidence_boundary": "The industry research synthesis and ACM-published framework support empirical questioning and multidimensional measurement. They do not define a universal productivity score, target, causal model, or substitute for customer outcome and safety evidence; local causal application and cross-organization benchmarking remain limited.",
+      "confidence": "medium"
+    },
+    {
+      "id": "gene-kim",
+      "name": "Gene Kim",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Improve delivery as a system of flow, feedback, and continual learning, while treating the Three Ways as a practitioner framing rather than independent proof of outcomes.",
+      "decision_functions": [
+        "devops-systems-thinking",
+        "feedback-design",
+        "continuous-learning"
+      ],
+      "lineage_ids": [
+        "three-ways",
+        "accelerate-humble-forsgren-kim"
+      ],
+      "primary_sources": [
+        {
+          "id": "gene-kim-2012-three-ways",
+          "title": "The Three Ways: The Principles Underpinning DevOps",
+          "year": 2012,
+          "locator": "https://itrevolution.com/articles/the-three-ways-principles-underpinning-devops/",
+          "evidence_locator": "The three named principles: Flow, Amplify Feedback Loops, and Continual Learning and Experimentation."
+        },
+        {
+          "id": "forsgren-humble-kim-2018-accelerate",
+          "title": "Accelerate: The Science of Lean Software and DevOps",
+          "year": 2018,
+          "locator": "https://www.simonandschuster.com/books/Accelerate/Nicole-Forsgren-PhD/9781942788331",
+          "evidence_locator": "Publisher overview and book chapters describing four years of State of DevOps research and statistical analysis."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Flow should be optimized across the system of work, especially by reducing wait states and bottlenecks that prevent small, safe changes from reaching users.",
+          "source_ids": [
+            "gene-kim-2012-three-ways"
+          ],
+          "scope": "Cross-functional technology delivery."
+        },
+        {
+          "statement": "Feedback loops should be amplified so that defects, operational conditions, and customer-relevant signals are discovered and corrected sooner.",
+          "source_ids": [
+            "gene-kim-2012-three-ways"
+          ],
+          "scope": "Development, operations, and product feedback paths."
+        },
+        {
+          "statement": "Continual learning and experimentation require capacity to improve the delivery system rather than only resolve the next local demand.",
+          "source_ids": [
+            "gene-kim-2012-three-ways",
+            "forsgren-humble-kim-2018-accelerate"
+          ],
+          "scope": "Improvement work under recurring operational and delivery pressure."
+        }
+      ],
+      "decision_questions": [
+        "Where does work accumulate or wait, and which constraint prevents a small, valuable change from flowing through the whole system?",
+        "Which feedback signal arrives too late, lacks an owner, or fails to change the next decision?",
+        "What protected capacity and experiment design will let the organization learn without turning users, operators, or security controls into uncontrolled test subjects?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The Three Ways is a compact practitioner framework; it does not supply a causal effect size, an organization-specific topology, or a substitute for safety and product evidence."
+        }
+      ],
+      "misuse_risks": [
+        "Creating a named DevOps team or purchasing tools while leaving development, operations, product, and security handoffs unchanged.",
+        "Presenting stories or the shared Accelerate source as independently replicated proof of every proposed DevOps intervention."
+      ],
+      "evidence_boundary": "The Three Ways practitioner essay supports systems, feedback, and learning questions; the industry research source is shared with the Humble and Forsgren units and is not a separate vote. The works do not decide team boundaries, maturity scores, compensation policy, product strategy, or local empirical outcomes.",
+      "confidence": "medium"
+    },
+    {
+      "id": "matthew-skelton-manuel-pais",
+      "name": "Matthew Skelton & Manuel Pais",
+      "representation_type": "joint_authors",
+      "admission_status": "admitted",
+      "lens": "Design team boundaries and interaction modes deliberately around fast flow and cognitive load, then evolve them as the technical and organizational context changes.",
+      "decision_functions": [
+        "team-topology",
+        "platform-boundaries",
+        "interaction-design"
+      ],
+      "lineage_ids": [
+        "team-topologies-joint-work",
+        "team-topologies-2019-2025-revision"
+      ],
+      "primary_sources": [
+        {
+          "id": "skelton-pais-2019-team-topologies",
+          "title": "Team Topologies: Organizing Business and Technology Teams for Fast Flow",
+          "year": 2019,
+          "locator": "https://itrevolution.com/wp-content/uploads/2022/06/TTOP_excerpt.pdf",
+          "evidence_locator": "2019 first-edition front matter and chapters covering four fundamental team types and three interaction modes."
+        },
+        {
+          "id": "skelton-pais-2025-team-topologies-second-edition",
+          "title": "Team Topologies, 2nd Edition",
+          "year": 2025,
+          "locator": "https://itrevolution.com/product/team-topologies/",
+          "evidence_locator": "Official second-edition description; publication date 2025-09-23; cognitive load, evolving interaction patterns, and platform grouping."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "The model distinguishes stream-aligned, enabling, complicated-subsystem, and platform teams, each intended to support different delivery and expertise needs.",
+          "source_ids": [
+            "skelton-pais-2019-team-topologies"
+          ],
+          "scope": "Organizing product and technology work across multiple teams."
+        },
+        {
+          "statement": "Team interactions should be explicit and time-bounded where appropriate: collaboration, facilitation, and service consumption impose different cognitive-load and coordination demands.",
+          "source_ids": [
+            "skelton-pais-2019-team-topologies",
+            "skelton-pais-2025-team-topologies-second-edition"
+          ],
+          "scope": "Inter-team interfaces and platform consumption."
+        },
+        {
+          "statement": "Team topology is an evolving design problem; cognitive load and changing product or technology context should inform adaptation rather than a one-time reorganization.",
+          "source_ids": [
+            "skelton-pais-2025-team-topologies-second-edition"
+          ],
+          "scope": "Organization design over time; not a fixed taxonomy imposed on every company."
+        }
+      ],
+      "decision_questions": [
+        "Which team owns an enduring flow of value, and which specialized capability or platform truly reduces that team's cognitive load?",
+        "For each proposed interaction, what is the mode, purpose, owner, expected duration, and exit criterion?",
+        "What evidence would show that a platform or enabling team is simplifying consumption rather than becoming a gatekeeper or permanent dependency?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The team types and interaction modes are a practitioner pattern language; their fit and causal effects must be validated locally rather than inferred from a label or reorganization."
+        }
+      ],
+      "misuse_risks": [
+        "Renaming teams or redrawing reporting lines to match the taxonomy without changing ownership, interfaces, incentives, or interaction contracts.",
+        "Turning a platform team into a compulsory gatekeeper whose cognitive load is transferred rather than reduced."
+      ],
+      "evidence_boundary": "The joint practitioner works support organizational-design hypotheses for multi-team product delivery; the 2025 edition revises the 2019 work and is not independent corroboration. They do not establish that a static topology, a platform investment, or a particular headcount will improve outcomes.",
+      "confidence": "medium"
+    },
+    {
+      "id": "michael-feathers",
+      "name": "Michael Feathers",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make legacy changes safer by first creating a testable characterization of current behavior around the change point, then changing and refactoring through seams and feedback.",
+      "decision_functions": [
+        "legacy-change",
+        "testability",
+        "incremental-refactoring"
+      ],
+      "lineage_ids": [
+        "legacy-code-change",
+        "characterization-testing"
+      ],
+      "primary_sources": [
+        {
+          "id": "feathers-2002-working-effectively-paper",
+          "title": "Working Effectively with Legacy Code",
+          "year": 2002,
+          "locator": "https://objectmentor.com/resources/articles/WorkingEffectivelyWithLegacyCode.pdf",
+          "evidence_locator": "pp. 1–3 and 10–12 on the test-based definition of legacy code, change points, and characterization."
+        },
+        {
+          "id": "feathers-2004-working-effectively-book",
+          "title": "Working Effectively with Legacy Code",
+          "year": 2004,
+          "locator": "https://ptgmedia.pearsoncmg.com/images/9780131177055/samplepages/0131177052.pdf",
+          "evidence_locator": "Preface, p. xvii, and the book's change-and-test method."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "For change-risk purposes, legacy code is code without tests: the central problem is lack of a safety net for modification, not age alone.",
+          "source_ids": [
+            "feathers-2002-working-effectively-paper",
+            "feathers-2004-working-effectively-book"
+          ],
+          "scope": "Existing code that must change under uncertain behavior and limited test coverage."
+        },
+        {
+          "statement": "Before changing difficult legacy behavior, identify the change point, establish characterization tests or other observation, then change and refactor in controlled steps.",
+          "source_ids": [
+            "feathers-2002-working-effectively-paper",
+            "feathers-2004-working-effectively-book"
+          ],
+          "scope": "Targeted, incremental change; not a blanket instruction to avoid redesign."
+        },
+        {
+          "statement": "Seams and dependency-breaking techniques make it possible to introduce feedback around code that was not originally designed for testability.",
+          "source_ids": [
+            "feathers-2004-working-effectively-book"
+          ],
+          "scope": "Improving testability around a bounded change path."
+        }
+      ],
+      "decision_questions": [
+        "What current behavior or invariant must be preserved, and what evidence distinguishes an intentional contract from an accidental defect?",
+        "Where is the smallest seam or observable boundary that permits a characterization test before the change?",
+        "Which risks remain outside code-level tests, including data migration, security, performance, concurrency, operations, and user workflow?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Characterization tests can preserve existing defects; they reduce change uncertainty but do not establish product correctness, safety, or desirability."
+        }
+      ],
+      "misuse_risks": [
+        "Treating increased code coverage as proof that a legacy change is safe in production.",
+        "Treating characterized behavior as a product requirement when it may be a bug, policy violation, or obsolete workflow."
+      ],
+      "evidence_boundary": "The practitioner paper and book support incremental code-change and testability tactics. They reduce change uncertainty but do not prove that preserved behavior is desired, and do not replace migration rehearsal, security review, performance validation, or an explicit decision between incremental change and replacement.",
+      "confidence": "medium"
+    }
+  ],
+  "shared_lineages": [
+    {
+      "id": "accelerate-humble-forsgren-kim",
+      "kind": "joint_authorship-and-shared-source",
+      "representation_ids": [
+        "jez-humble",
+        "nicole-forsgren",
+        "gene-kim"
+      ],
+      "source_id": "forsgren-humble-kim-2018-accelerate",
+      "independence_rule": "Count the Accelerate source lineage once across these three units. It supplies shared evidence and does not create three independent votes or replications.",
+      "limitation": "The book synthesizes industry research; local decisions still require context-specific operational and product evidence."
+    },
+    {
+      "id": "poppendieck-lean-series",
+      "kind": "joint_authorship",
+      "representation_ids": [
+        "mary-tom-poppendieck"
+      ],
+      "source_ids": [
+        "poppendieck-2003-lean-software-development",
+        "poppendieck-2006-implementing-lean"
+      ],
+      "independence_rule": "Mary and Tom Poppendieck are represented as one joint-authors unit; their jointly authored books are not split into two nominally independent Council voices.",
+      "limitation": "The works are a coherent practitioner doctrine rather than a controlled empirical comparison."
+    },
+    {
+      "id": "team-topologies-joint-work",
+      "kind": "joint_authorship-and-revision",
+      "representation_ids": [
+        "matthew-skelton-manuel-pais"
+      ],
+      "source_ids": [
+        "skelton-pais-2019-team-topologies",
+        "skelton-pais-2025-team-topologies-second-edition"
+      ],
+      "independence_rule": "Matthew Skelton and Manuel Pais are represented as one joint-authors unit. The 2025 second edition revises the 2019 work and must not count as an independent corroborating lineage.",
+      "limitation": "The pattern language must be tested against the actual delivery system, cognitive load, and incentives."
+    }
+  ],
+  "contradictions": [
+    {
+      "id": "conway-mirroring-is-not-deterministic",
+      "involved_representation_ids": [
+        "mel-conway"
+      ],
+      "record": "Conway's organizational-design argument is qualified by the later systematic review: empirical mirroring is heterogeneous, and intentional non-mirroring can be appropriate."
+    },
+    {
+      "id": "delivery-capability-is-not-product-value",
+      "involved_representation_ids": [
+        "jez-humble",
+        "nicole-forsgren",
+        "gene-kim"
+      ],
+      "record": "Continuous-delivery and DevOps capabilities can be measured or improved without proving customer value, product correctness, safety, or causal business outcomes."
+    },
+    {
+      "id": "flow-and-topology-patterns-are-not-causal-laws",
+      "involved_representation_ids": [
+        "mary-tom-poppendieck",
+        "matthew-skelton-manuel-pais"
+      ],
+      "record": "Lean and Team Topologies provide practitioner models for intervention; neither source pair establishes that a named pattern or reorganization will improve outcomes in every context."
+    },
+    {
+      "id": "characterization-is-not-correctness",
+      "involved_representation_ids": [
+        "michael-feathers"
+      ],
+      "record": "Preserving observed legacy behavior can preserve a defect. Characterization must be paired with product, safety, and operational judgment."
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "David Farley",
+      "reason": "Retained as the coauthor source lineage for Continuous Delivery but not admitted as a separate unit in the fixed seven-unit lane; splitting the joint work would overstate independent evidence."
+    },
+    {
+      "name": "Patrick Debois",
+      "reason": "Not admitted in this bounded lane because the selected units already cover delivery flow, feedback, and organizational interaction; a distinct source-backed counterweight would be required before adding a separate representation."
+    },
+    {
+      "name": "The Phoenix Project",
+      "reason": "Useful as a fictional teaching artifact but not admitted as empirical evidence or a separate representation unit."
+    },
+    {
+      "name": "Individual DORA or State of DevOps reports",
+      "reason": "Not represented as separate nominal voices because their use here is already captured by the shared Accelerate lineage and needs a separate, versioned evidence package for any metric claim."
+    }
+  ],
+  "saturation": "Stopped at six admitted representations plus one qualified counterweight. Each unit has two canonical HTTPS source bindings, three locator-bound positions, three decision questions, a counterweight, two misuse risks, and an explicit boundary. Further candidates either duplicate a shared lineage, are coauthors of already represented joint work, or need a distinct source-backed counterweight before admission."
+}

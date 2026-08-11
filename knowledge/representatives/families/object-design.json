@@ -1,0 +1,193 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "object-design",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "alan-kay",
+      "name": "Alan Kay",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Model systems as communicating autonomous objects whose messages, behavior, and protected state make complexity locally manageable.",
+      "decision_functions": ["object-boundary", "message-design", "complexity-management"],
+      "lineage_ids": ["smalltalk", "object-oriented-programming"],
+      "primary_sources": [
+        {"id": "kay-1993-early-history-oop", "title": "The Early History of Smalltalk", "year": 1993, "locator": "https://doi.org/10.1145/155360.155364", "evidence_locator": "pp. 69–95; account of objects, messages, and the Smalltalk design trajectory."},
+        {"id": "kay-1969-reactive-engine", "title": "The Reactive Engine", "year": 1969, "locator": "https://mprove.de/diplom/gui/kay69.html", "evidence_locator": "Sections on cells, messages, and independently active components."}
+      ],
+      "positions": [
+        {"statement": "An object-oriented system should emphasize independently active components that communicate by messages rather than expose a shared implementation.", "source_ids": ["kay-1969-reactive-engine"], "scope": "Interactive and extensible system construction."},
+        {"statement": "Object orientation was conceived as a way to structure powerful ideas through late binding, messaging, and local state, not merely as class syntax.", "source_ids": ["kay-1993-early-history-oop"], "scope": "Conceptual model for object-oriented design."},
+        {"statement": "A live, malleable environment can make systems easier to learn, inspect, and evolve when it supports direct experimentation.", "source_ids": ["kay-1993-early-history-oop"], "scope": "Programming environment and feedback loop design."}
+      ],
+      "decision_questions": ["What behavior belongs behind an object's message boundary rather than in a caller?", "Can collaborators be changed through message contracts without exposing one another's representation?", "Does the environment make the model inspectable and easy to experiment with?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "Data-oriented and functional designs can be clearer when the dominant problem is transparent transformation of shared values rather than autonomous collaborators."}],
+      "misuse_risks": ["Reducing the lens to inheritance hierarchies or noun extraction.", "Introducing fine-grained object networks where a small explicit data flow is easier to understand."],
+      "evidence_boundary": "The selected writings articulate the origins and goals of Smalltalk-style object orientation; they do not prescribe a universal microservice, persistence, or deployment architecture.",
+      "confidence": "high"
+    },
+    {
+      "id": "rebecca-wirfs-brock",
+      "name": "Rebecca Wirfs-Brock",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Discover object responsibilities and collaborations from behavioral obligations, then make those collaborations explicit enough to assess and revise.",
+      "decision_functions": ["responsibility-assignment", "collaboration-design", "object-boundary"],
+      "lineage_ids": ["responsibility-driven-design", "crc"],
+      "primary_sources": [
+        {"id": "wirfs-brock-wilkerson-1989-object-oriented-design", "title": "Object-Oriented Design: A Responsibility-Driven Approach", "year": 1989, "locator": "https://doi.org/10.1145/63334.63338", "evidence_locator": "pp. 71–75; responsibilities, collaborators, and object design process."},
+        {"id": "wirfs-brock-2006-designing-objects", "title": "Designing Objects: Object-Oriented Design for Simple and Complex Systems", "year": 2006, "locator": "https://www.oreilly.com/library/view/designing-objects/9780596554596/", "evidence_locator": "Chapters 2–5 on responsibilities, collaborations, and role stereotypes."}
+      ],
+      "positions": [
+        {"statement": "Object design should start by assigning responsibilities and identifying the collaborators needed to discharge them.", "source_ids": ["wirfs-brock-wilkerson-1989-object-oriented-design"], "scope": "Early object-model discovery."},
+        {"statement": "Responsibilities can be organized as knowing, doing, and deciding obligations, which exposes whether a candidate object has a coherent role.", "source_ids": ["wirfs-brock-2006-designing-objects"], "scope": "Responsibility assignment and review."},
+        {"statement": "Role stereotypes and collaboration scenarios help test an object model before implementation details become fixed.", "source_ids": ["wirfs-brock-2006-designing-objects"], "scope": "Design communication and iterative modeling."}
+      ],
+      "decision_questions": ["Which responsibility has one clear home, and which collaborator does it require?", "Is this object a meaningful role or an accumulation of unrelated operations?", "Can a concrete scenario be narrated as a comprehensible collaboration?"],
+      "counterweights": [{"relation": "challenged-by", "target_or_position": "Data-oriented design cautions that forcing every operation into object collaborations can obscure simple transformations and data ownership."}],
+      "misuse_risks": ["Treating CRC cards or stereotypes as proof that the runtime design is viable.", "Assigning behavior to nominal nouns while leaving real coordination in a procedural controller."],
+      "evidence_boundary": "The sources support responsibility-driven object modeling; they do not determine persistence mapping, distributed ownership, or organizational boundaries.",
+      "confidence": "high"
+    },
+    {
+      "id": "grady-booch",
+      "name": "Grady Booch",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Manage complex software through explicit abstractions, separation of concerns, hierarchy, and staged refinement of its structural and behavioral views.",
+      "decision_functions": ["abstraction", "decomposition", "architecture-communication"],
+      "lineage_ids": ["object-oriented-analysis-design", "uml"],
+      "primary_sources": [
+        {"id": "booch-1986-object-oriented-development", "title": "Object-Oriented Development", "year": 1986, "locator": "https://doi.org/10.1109/TSE.1986.6312937", "evidence_locator": "IEEE Transactions on Software Engineering SE-12(2), pp. 211–221; abstraction, encapsulation, modularity, and hierarchy."},
+        {"id": "booch-1994-object-oriented-analysis-design", "title": "Object-Oriented Analysis and Design with Applications, 2nd Edition", "year": 1994, "locator": "https://www.informit.com/store/object-oriented-analysis-and-design-with-applications-9780805353402", "evidence_locator": "2nd ed., ISBN-13 978-0-8053-5340-2; Chapter 4 §4.3 on key abstractions and mechanisms; Chapter 5 pp. 173–175 on multiple, mutually consistent views."}
+      ],
+      "positions": [
+        {"statement": "Abstraction, encapsulation, modularity, and hierarchy are complementary ways to control the complexity of software systems.", "source_ids": ["booch-1986-object-oriented-development"], "scope": "Object-oriented system design."},
+        {"statement": "A useful object model identifies the essential abstractions of the problem before committing to representation and implementation detail.", "source_ids": ["booch-1994-object-oriented-analysis-design"], "scope": "Analysis and design modeling."},
+        {"statement": "Complex systems benefit from multiple coherent views, so structural and behavioral descriptions should be kept mutually consistent.", "source_ids": ["booch-1994-object-oriented-analysis-design"], "scope": "Architecture description and communication."}
+      ],
+      "decision_questions": ["What are the essential abstractions, and what detail can remain hidden for now?", "Which hierarchy clarifies ownership or specialization without becoming an accidental taxonomy?", "Do structural and behavioral views describe the same system constraints?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "Parnas's information-hiding criterion warns that class and hierarchy structure must follow volatile decisions, not only conceptual taxonomy."}],
+      "misuse_risks": ["Producing elaborate diagrams without a corresponding decision or verification purpose.", "Using inheritance as the default form of reuse or variation."],
+      "evidence_boundary": "These sources establish a broad object-oriented design vocabulary; they do not decide which contemporary notation, process framework, or service boundary is appropriate.",
+      "confidence": "high"
+    },
+    {
+      "id": "kent-beck",
+      "name": "Kent Beck",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Keep design adaptable through short feedback cycles, tests that specify behavior, and incremental structural improvement backed by executable evidence.",
+      "decision_functions": ["feedback-loop", "testability", "incremental-design"],
+      "lineage_ids": ["extreme-programming", "test-driven-development"],
+      "primary_sources": [
+        {"id": "beck-1999-extreme-programming-explained", "title": "Extreme Programming Explained: Embrace Change", "year": 1999, "locator": "https://www.informit.com/store/extreme-programming-explained-embrace-change-9780321278654", "evidence_locator": "Chapters 1–5 on values, feedback, simple design, and practices."},
+        {"id": "beck-2002-test-driven-development", "title": "Test Driven Development: By Example", "year": 2002, "locator": "https://www.informit.com/store/test-driven-development-by-example-9780321146533", "evidence_locator": "Chapters 1–2 on the red-green-refactor cycle and tests as design feedback."}
+      ],
+      "positions": [
+        {"statement": "Development practices should make feedback frequent enough that teams can adapt to changing knowledge and requirements.", "source_ids": ["beck-1999-extreme-programming-explained"], "scope": "Team process and planning under change."},
+        {"statement": "A design should be kept as simple as the current evidence permits, while preserving the ability to change it safely.", "source_ids": ["beck-1999-extreme-programming-explained"], "scope": "Incremental implementation design."},
+        {"statement": "Writing a failing test, making it pass, and then improving structure provides a tight loop between desired behavior and code design.", "source_ids": ["beck-2002-test-driven-development"], "scope": "Code-level behavior and refactoring."}
+      ],
+      "decision_questions": ["What is the smallest observable behavior that would reduce uncertainty now?", "Which test gives a durable specification of the intended change?", "What structural simplification is safe after behavior is protected?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "Up-front architectural analysis remains necessary when an irreversible boundary, safety condition, or external contract cannot be cheaply discovered through local iteration."}],
+      "misuse_risks": ["Interpreting simple design as permission to ignore known cross-cutting constraints.", "Using test count as a substitute for meaningful behavioral coverage or system-level evidence."],
+      "evidence_boundary": "The selected works support incremental code and team feedback practices; they do not guarantee the adequacy of requirements, operations, or costly-to-reverse architecture.",
+      "confidence": "high"
+    },
+    {
+      "id": "ward-cunningham",
+      "name": "Ward Cunningham",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make design knowledge visible and continuously reconcile the cost of code change with the system's evolving conceptual model.",
+      "decision_functions": ["technical-debt", "shared-understanding", "incremental-design"],
+      "lineage_ids": ["technical-debt", "patterns", "wiki"],
+      "primary_sources": [
+        {"id": "cunningham-1992-wycash", "title": "The WyCash Portfolio Management System", "year": 1992, "locator": "https://c2.com/doc/oopsla92.html", "evidence_locator": "Original OOPSLA experience report; discussion of iterative object design and the debt metaphor."},
+        {"id": "cunningham-2010-debt-metaphor-video", "title": "Ward Cunningham on the Technical Debt Metaphor", "year": 2010, "locator": "https://www.youtube.com/watch?v=pqeJFYwnkjE", "evidence_locator": "Cunningham's explanation of intentional debt, learning, and repayment through changed understanding."}
+      ],
+      "positions": [
+        {"statement": "An initially incomplete design can be a rational investment when subsequent learning supports timely restructuring rather than permanent neglect.", "source_ids": ["cunningham-1992-wycash"], "scope": "Iterative design under uncertainty."},
+        {"statement": "Technical debt is principally the future cost of changing code whose structure no longer reflects the team's understanding, not a label for every defect.", "source_ids": ["cunningham-2010-debt-metaphor-video"], "scope": "Maintenance and decision framing."},
+        {"statement": "Shared, editable design knowledge supports collective improvement when it remains close enough to ongoing work to be corrected.", "source_ids": ["cunningham-1992-wycash"], "scope": "Team learning and design communication."}
+      ],
+      "decision_questions": ["What learning was deferred by this implementation, and what change will reveal its cost?", "Is the alleged debt a changeability problem, a defect, a risk, or merely an unfamiliar style?", "Where can the team record and revise its shared design understanding?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "Safety, security, and regulatory obligations can make deliberate deferral unacceptable even when a future refactor appears likely."}],
+      "misuse_risks": ["Using technical debt as a vague moral category for code one dislikes.", "Deferring structural work without a plausible learning event or repayment path."],
+      "evidence_boundary": "The selected artifacts support an economic and learning-oriented debt metaphor; they do not provide a universal backlog metric or a justification for accumulating known operational risk.",
+      "confidence": "medium"
+    },
+    {
+      "id": "martin-fowler",
+      "name": "Martin Fowler",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Improve the internal design of working software through small behavior-preserving transformations, and make architectural choices explicit through patterns and evolutionary delivery.",
+      "decision_functions": ["refactoring", "evolutionary-architecture", "architecture-communication"],
+      "lineage_ids": ["refactoring", "enterprise-application-architecture"],
+      "primary_sources": [
+        {"id": "fowler-1999-refactoring", "title": "Refactoring: Improving the Design of Existing Code", "year": 1999, "locator": "https://martinfowler.com/books/refactoring.html", "evidence_locator": "Definition and catalog framing; behavior-preserving restructuring of existing code."},
+        {"id": "fowler-2017-evolutionary-architecture", "title": "Foreword to Building Evolutionary Architectures", "year": 2017, "locator": "https://martinfowler.com/articles/evo-arch-forward.html", "evidence_locator": "Paragraphs on small changes, feedback loops, fitness functions, and guided architectural evolution."}
+      ],
+      "positions": [
+        {"statement": "Refactoring changes the internal structure of software without changing its externally observable behavior, allowing design improvement in small verified steps.", "source_ids": ["fowler-1999-refactoring"], "scope": "Code-level design improvement with regression protection."},
+        {"statement": "A refactoring catalog makes small structural changes discussable by giving each transformation a shared name and defined mechanics, while behavior still has to remain invariant.", "source_ids": ["fowler-1999-refactoring"], "scope": "Design communication and behavior-preserving change."},
+        {"statement": "An evolutionary architecture needs fitness functions that guide change toward desired qualities instead of relying on unbounded adaptation.", "source_ids": ["fowler-2017-evolutionary-architecture"], "scope": "Architecture evolution and governance."}
+      ],
+      "decision_questions": ["What behavior must remain invariant while this structure changes?", "Which small transformation reduces a concrete design smell without expanding scope?", "What measurable fitness function would detect architectural drift?"],
+      "counterweights": [{"relation": "bounded-by", "target_or_position": "Large data migrations, public contracts, and safety-critical changes may require a coordinated transition plan in addition to local refactorings."}],
+      "misuse_risks": ["Calling any rewrite a refactoring despite a behavior or contract change.", "Applying named patterns as ceremony instead of testing whether their forces are present."],
+      "evidence_boundary": "The selected materials support incremental structural change and fitness-guided evolution; they do not remove the need for migration, compatibility, or operational evidence.",
+      "confidence": "high"
+    },
+    {
+      "id": "john-ousterhout",
+      "name": "John Ousterhout",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Reduce complexity by creating deep modules with simple interfaces, avoiding unnecessary generality, and investing in design before code commits the wrong structure.",
+      "decision_functions": ["interface-design", "complexity-management", "abstraction-boundary"],
+      "lineage_ids": ["deep-modules", "strategic-programming"],
+      "primary_sources": [
+        {"id": "ousterhout-2018-philosophy-software-design", "title": "A Philosophy of Software Design", "year": 2018, "locator": "https://web.stanford.edu/~ouster/cgi-bin/book.php", "evidence_locator": "Chapters 4–6 and 17 on deep modules, information hiding, and strategic programming."},
+        {"id": "ousterhout-1998-scripting-higher-level-programming", "title": "Scripting: Higher-Level Programming for the 21st Century", "year": 1998, "locator": "https://doi.org/10.1109/2.660187", "evidence_locator": "IEEE Computer 31(3), pp. 23–30; printed pp. 27–28, 'Different Tools for Different Tasks', on system-programming and integration roles."}
+      ],
+      "positions": [
+        {"statement": "A module is deep when it offers substantial functionality behind a simple interface, reducing the cognitive load imposed on its clients.", "source_ids": ["ousterhout-2018-philosophy-software-design"], "scope": "Module and API boundary design."},
+        {"statement": "Complexity is created when a change requires understanding many interdependent details, so interfaces should hide rather than redistribute that detail.", "source_ids": ["ousterhout-2018-philosophy-software-design"], "scope": "Complexity assessment."},
+        {"statement": "Choose an implementation medium by the work's role: use a system-programming layer for complex algorithms and data structures, and a higher-level integration layer when the task chiefly composes existing components and must evolve quickly.", "source_ids": ["ousterhout-1998-scripting-higher-level-programming"], "scope": "Component-framework and integration-layer choice; this is a 1998 language-design position, not a timeless classification of current languages."}
+      ],
+      "decision_questions": ["Does this interface make common use simpler than the implementation it conceals?", "Which details can be hidden within one deep module rather than exposed across several shallow ones?", "Is this work building complex algorithms and data structures, or chiefly integrating components that must evolve quickly?"],
+      "counterweights": [{"relation": "competes-with", "target_or_position": "Robert C. Martin emphasizes dependency direction, test seams, and small cohesive components; the practical question is whether a proposed split reduces client-visible complexity or merely creates additional coordination."}],
+      "misuse_risks": ["Equating a large module with a deep module even when its interface is broad or incoherent.", "Using a strategic-design argument to postpone valuable feedback indefinitely."],
+      "evidence_boundary": "The selected book and 1998 IEEE article support a complexity-centered module-design argument and a historically scoped distinction between system-programming and integration work; they do not establish one optimal module depth, language category, or process for every system.",
+      "confidence": "medium"
+    },
+    {
+      "id": "robert-c-martin",
+      "name": "Robert C. Martin",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Keep high-level policy independent of volatile details by directing dependencies inward through stable abstractions and preserving code-level clarity through disciplined design practices.",
+      "decision_functions": ["dependency-direction", "boundary-design", "testability"],
+      "lineage_ids": ["solid", "clean-architecture"],
+      "primary_sources": [
+        {"id": "martin-1996-dependency-inversion", "title": "The Dependency Inversion Principle", "year": 1996, "locator": "https://web.archive.org/web/20110714230840/http://www.objectmentor.com/resources/articles/dip.pdf", "evidence_locator": "Principle statement and discussion of stable abstractions and dependency direction."},
+        {"id": "martin-2012-clean-architecture", "title": "The Clean Architecture", "year": 2012, "locator": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html", "evidence_locator": "Dependency rule and concentric-boundary explanation."}
+      ],
+      "positions": [
+        {"statement": "High-level policy should not depend on low-level implementation details; both should depend on abstractions that protect policy from volatility.", "source_ids": ["martin-1996-dependency-inversion"], "scope": "Source-code dependency direction."},
+        {"statement": "Architectural boundaries should keep business rules independent of frameworks, user interfaces, databases, and external delivery mechanisms.", "source_ids": ["martin-2012-clean-architecture"], "scope": "Application boundary and dependency design."},
+        {"statement": "Abstractions should be owned by the side that needs stable policy rather than imposed by the implementation detail that happens to exist first.", "source_ids": ["martin-1996-dependency-inversion"], "scope": "Interface ownership and change isolation."}
+      ],
+      "decision_questions": ["Which high-level policies must survive replacement of frameworks, storage, or delivery mechanisms?", "Do dependencies cross the boundary toward stable policy, or does policy import volatile details?", "Which abstraction is owned by the client policy that needs it?"],
+      "counterweights": [{"relation": "competes-with", "target_or_position": "John Ousterhout's deep-module lens asks whether extra interfaces and components actually reduce the complexity visible to clients; dependency direction alone does not establish that they do."}],
+      "misuse_risks": ["Treating concentric diagrams as a mandatory package layout for every application.", "Creating indirection and interfaces without a credible volatility or policy boundary."],
+      "evidence_boundary": "The selected sources articulate dependency direction and application boundaries; they do not establish that every domain model, framework adapter, or interface layer is necessary in a particular system.",
+      "confidence": "high"
+    }
+  ],
+  "rejected_candidates": [],
+  "saturation": "Eight representation units cover object messaging, responsibility assignment, abstraction, feedback, debt, refactoring, deep modules, and dependency direction. Further candidates require a distinct decision function and two locator-backed primary works."
+}

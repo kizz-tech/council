@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://council.local/schemas/roster.schema.json",
+  "title": "Council experimental roster",
+  "description": "A versioned, falsifiable roster configuration. It is an experiment input, not a universal optimum.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "roster_id",
+    "revision",
+    "status",
+    "domain",
+    "purpose",
+    "source_generation",
+    "slots",
+    "independence_claim",
+    "known_limits"
+  ],
+  "properties": {
+    "schema_version": {"const": "council.roster/1"},
+    "roster_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "revision": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["historical-baseline", "candidate", "retired"]},
+    "domain": {"type": "string", "minLength": 3},
+    "purpose": {"type": "string", "minLength": 20},
+    "source_generation": {"type": "string", "minLength": 3},
+    "slots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slot_id",
+          "runtime_profile",
+          "representation_mode",
+          "decision_function",
+          "lineage_cluster",
+          "prompt_source"
+        ],
+        "properties": {
+          "slot_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "runtime_profile": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "representation_mode": {"enum": ["functional_lens", "library_bound", "hybrid"]},
+          "representation_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "description": "Only roster-eligible admitted or source_corpus library units may be bound. qualified_counterweight units are forbidden.",
+            "items": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}
+          },
+          "decision_function": {"type": "string", "minLength": 8},
+          "lineage_cluster": {"type": "string", "minLength": 3},
+          "prompt_source": {
+            "type": "string",
+            "pattern": "^advisors/[a-z0-9-]+/[a-z0-9-]+\\.toml$",
+            "description": "Executable read-only advisor TOML whose declared name must equal runtime_profile."
+          }
+        }
+      }
+    },
+    "independence_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lineage", "runtime", "outcome"],
+      "properties": {
+        "lineage": {"type": "string", "minLength": 8},
+        "runtime": {"type": "string", "minLength": 8},
+        "outcome": {"type": "string", "minLength": 8}
+      }
+    },
+    "known_limits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 12}
+    }
+  }
+}

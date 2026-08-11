@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://council.local/schemas/representative.schema.json",
+  "title": "Council representative lens",
+  "description": "A source-bound representation unit. A named person is a provenance anchor, not a simulated identity.",
+  "type": "object",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {"representation_type": {"const": "source_corpus"}},
+        "required": ["representation_type"]
+      },
+      "then": {
+        "properties": {"admission_status": {"const": "source_corpus"}}
+      },
+      "else": {
+        "properties": {
+          "admission_status": {
+            "enum": ["admitted", "qualified_counterweight"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"representation_type": {"const": "source_corpus"}},
+        "required": ["representation_type"]
+      },
+      "then": {
+        "properties": {"primary_sources": {"minItems": 1}}
+      },
+      "else": {
+        "properties": {"primary_sources": {"minItems": 2, "maxItems": 2}}
+      }
+    }
+  ],
+  "required": [
+    "id",
+    "name",
+    "representation_type",
+    "admission_status",
+    "lens",
+    "decision_functions",
+    "lineage_ids",
+    "primary_sources",
+    "positions",
+    "decision_questions",
+    "counterweights",
+    "misuse_risks",
+    "evidence_boundary",
+    "confidence"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 2
+    },
+    "representation_type": {
+      "enum": ["person", "joint_authors", "school", "functional_lens", "source_corpus"]
+    },
+    "admission_status": {
+      "description": "Admission controls roster eligibility: admitted and source_corpus units may be bound; qualified_counterweight units are source-pack/counterweight-only.",
+      "enum": ["admitted", "qualified_counterweight", "source_corpus"]
+    },
+    "lens": {
+      "type": "string",
+      "minLength": 20
+    },
+    "decision_functions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}
+    },
+    "lineage_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}
+    },
+    "primary_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "positions": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/position"}
+    },
+    "decision_questions": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "string", "minLength": 12}
+    },
+    "counterweights": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/counterweight"}
+    },
+    "misuse_risks": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"type": "string", "minLength": 12}
+    },
+    "evidence_boundary": {
+      "type": "string",
+      "minLength": 30
+    },
+    "confidence": {
+      "enum": ["high", "medium", "limited"]
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "year", "locator", "evidence_locator"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 3},
+        "year": {"type": "integer", "minimum": 1940, "description": "The repository validator derives the upper bound from the versioned library cutoff."},
+        "locator": {"type": "string", "pattern": "^https://"},
+        "evidence_locator": {"type": "string", "minLength": 8}
+      }
+    },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "source_ids", "scope"],
+      "properties": {
+        "statement": {"type": "string", "minLength": 20},
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string"}
+        },
+        "scope": {"type": "string", "minLength": 8}
+      }
+    },
+    "counterweight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relation", "target_or_position"],
+      "properties": {
+        "relation": {
+          "enum": ["challenged-by", "bounded-by", "counterbalances", "competes-with", "gap"]
+        },
+        "target_or_position": {"type": "string", "minLength": 12}
+      }
+    }
+  }
+}

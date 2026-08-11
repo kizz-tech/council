@@ -1,0 +1,520 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "domain-enterprise",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "eric-evans",
+      "name": "Eric Evans",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Domain meaning, bounded contexts, and integration relationships.",
+      "decision_functions": [
+        "semantic-ownership",
+        "bounded-context-mapping",
+        "integration-relationship-selection"
+      ],
+      "lineage_ids": [
+        "domain-driven-design"
+      ],
+      "primary_sources": [
+        {
+          "id": "evans-ddd-2003",
+          "title": "Domain-Driven Design: Tackling Complexity in the Heart of Software",
+          "year": 2003,
+          "locator": "https://www.pearson.com/en-gb/subject-catalog/p/domain-driven-design-tackling-complexity-in-the-heart-of-software/P200000009375/9780321125217",
+          "evidence_locator": "ISBN-13 9780321125217; chapters 1-4 and 14-17; 2003 publication, copyright 2004."
+        },
+        {
+          "id": "evans-ddd-reference-2015",
+          "title": "DDD Reference: Definitions and Pattern Summaries",
+          "year": 2015,
+          "locator": "https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf",
+          "evidence_locator": "pp. 5-9, 16, and 33."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "A domain model and ubiquitous language are collaboratively evolved with domain practitioners inside an explicitly bounded context; a detached glossary is not the practice.",
+          "source_ids": [
+            "evans-ddd-2003",
+            "evans-ddd-reference-2015"
+          ],
+          "scope": "Model collaboration and language within a context; not a mandate for a single enterprise vocabulary."
+        },
+        {
+          "statement": "Multiple models are expected. A bounded context states where one model applies, and a context map makes the relationship between models explicit.",
+          "source_ids": [
+            "evans-ddd-2003",
+            "evans-ddd-reference-2015"
+          ],
+          "scope": "Semantic, team, code, and data boundaries; no prescribed deployment topology."
+        },
+        {
+          "statement": "Integration relationships such as translation, shared kernel, published language, customer-supplier, and separate ways are deliberate alternatives rather than a default integration rule.",
+          "source_ids": [
+            "evans-ddd-2003"
+          ],
+          "scope": "Choice among context relationships; the source does not rank one relationship as universally superior."
+        }
+      ],
+      "decision_questions": [
+        "Which terms differ materially in meaning, and who owns each meaning?",
+        "At each crossing, is translation, a published contract, deliberate sharing, or separation intended?",
+        "Which concepts are core enough to justify sustained model investment?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Gregor Hohpe and Bobby Woolf's Canonical Data Model pattern can reduce mapping paths for many applications; that is an interchange-format trade-off, not proof of one enterprise semantic model."
+        }
+      ],
+      "misuse_risks": [
+        "Equating every bounded context with one microservice, database, or team.",
+        "Using ubiquitous language to impose a universal ontology instead of exposing local semantic ownership."
+      ],
+      "evidence_boundary": "Suitable for semantic ownership, bounded-context boundaries, and translation or published-language relationships; not sufficient alone for broker topology, delivery guarantees, or physical deployment sizing. Primary author and publisher materials establish Evans's stated patterns, not comparative evidence that these boundaries improve outcomes in every organization.",
+      "confidence": "medium"
+    },
+    {
+      "id": "vaughn-vernon",
+      "name": "Vaughn Vernon",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Aggregate consistency boundaries and evidence-based use of eventual consistency.",
+      "decision_functions": [
+        "aggregate-consistency-boundaries",
+        "invariant-transaction-design",
+        "eventual-consistency-acceptance"
+      ],
+      "lineage_ids": [
+        "domain-driven-design",
+        "eric-evans"
+      ],
+      "primary_sources": [
+        {
+          "id": "vernon-implementing-ddd-2013",
+          "title": "Implementing Domain-Driven Design",
+          "year": 2013,
+          "locator": "https://www.pearson.com/en-ca/subject-catalog/p/implementing-domain-driven-design/P200000009616/9780321834577",
+          "evidence_locator": "ISBN-13 9780321834577; chapter 10, 'Aggregates'."
+        },
+        {
+          "id": "vernon-effective-aggregate-design-iii-2011",
+          "title": "Effective Aggregate Design, Part III: Gaining Insight Through Discovery",
+          "year": 2011,
+          "locator": "https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_3.pdf",
+          "evidence_locator": "pp. 1-4, 'Gaining Insight Through Discovery'."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "An aggregate is a deliberately crafted consistency boundary around real business invariants, not an object-composition or ORM graph boundary.",
+          "source_ids": [
+            "vernon-implementing-ddd-2013"
+          ],
+          "scope": "Transaction design inside an already selected bounded context."
+        },
+        {
+          "statement": "Aggregate size should be driven by invariant protection; a preference for small aggregates is not an unconditional rule.",
+          "source_ids": [
+            "vernon-implementing-ddd-2013",
+            "vernon-effective-aggregate-design-iii-2011"
+          ],
+          "scope": "Business-rule and workload trade-off, not a general microservice sizing heuristic."
+        },
+        {
+          "statement": "Eventual consistency needs domain-expert acceptance and user-facing handling of staleness; otherwise delayed state can be perceived as a defect.",
+          "source_ids": [
+            "vernon-effective-aggregate-design-iii-2011"
+          ],
+          "scope": "Applies where cross-boundary delay is proposed; it is not permission to weaken a required invariant."
+        }
+      ],
+      "decision_questions": [
+        "Which rule must be atomically true, and what business evidence supports that requirement?",
+        "Does a proposed cross-aggregate transaction expose a missing concept or an incorrect consistency boundary?",
+        "What delay, repair, status-display, and notification behavior do affected users accept?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Vernon's Part III rejects a mechanical small-aggregate rule and calls for validation against invariants, workload, cost, and user experience."
+        }
+      ],
+      "misuse_risks": [
+        "Applying 'small aggregates' mechanically and thereby breaking a genuine business invariant.",
+        "Treating eventual consistency as free scalability without UX, repair, or operational design."
+      ],
+      "evidence_boundary": "Suitable for deciding atomic business invariants inside a bounded context; not sufficient alone for service decomposition, enterprise semantic mapping, or message-delivery guarantees. The sources are practitioner design guidance and examples, not comparative performance studies across stacks or workloads.",
+      "confidence": "medium"
+    },
+    {
+      "id": "alistair-cockburn",
+      "name": "Alistair Cockburn",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Application behavior, use-case scope, and ports/adapters boundaries.",
+      "decision_functions": [
+        "application-behavior-boundaries",
+        "use-case-scope",
+        "ports-and-adapters-contracts"
+      ],
+      "lineage_ids": [
+        "use-case-modeling",
+        "ports-and-adapters"
+      ],
+      "primary_sources": [
+        {
+          "id": "cockburn-hexagonal-2005",
+          "title": "Hexagonal Architecture",
+          "year": 2005,
+          "locator": "https://alistair.cockburn.us/hexagonal-architecture",
+          "evidence_locator": "HaT Technical Report 2005.02, dated 2005-09-04; sections on inside/outside, ports, and primary and secondary actors."
+        },
+        {
+          "id": "cockburn-writing-effective-use-cases-2000",
+          "title": "Writing Effective Use Cases",
+          "year": 2000,
+          "locator": "https://ptgmedia.pearsoncmg.com/images/9780201702255/samplepages/0201702258.pdf",
+          "evidence_locator": "ISBN-13 9780201702255; pp. 20-35; 2000 original publication, 2001 copyright edition."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Core application behavior should be separated from UI, device, database, and other adapter details; ports name purposeful conversations.",
+          "source_ids": [
+            "cockburn-hexagonal-2005"
+          ],
+          "scope": "Application-boundary design; it does not require a specific framework or transport."
+        },
+        {
+          "statement": "Both primary actors that drive the application and secondary actors it calls are relevant to the boundary; technical left-right layering is not the principal symmetry.",
+          "source_ids": [
+            "cockburn-hexagonal-2005"
+          ],
+          "scope": "Actor and dependency reasoning, not an organizational or deployment model."
+        },
+        {
+          "statement": "A use case is a behavioral contract around an actor goal and a scope of responsibility, rather than a UI-to-database implementation sequence.",
+          "source_ids": [
+            "cockburn-writing-effective-use-cases-2000"
+          ],
+          "scope": "Behavior and responsibility specification; cross-system collaboration may need an explicit higher-level scenario."
+        }
+      ],
+      "decision_questions": [
+        "What observable outcome does this application own?",
+        "Which actor initiates it, and which actors or dependencies must it invoke or notify?",
+        "Are the boundary contracts named by purpose and behavior rather than framework or transport?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Udi Dahan's autonomy lens concerns a distributed business-service boundary; Cockburn's sources do not prescribe asynchronous interservice transport."
+        }
+      ],
+      "misuse_risks": [
+        "Mistaking a dependency-injection interface or folder layout for a complete ports-and-adapters boundary.",
+        "Abstracting every adapter before there is a real behavioral boundary or replacement pressure."
+      ],
+      "evidence_boundary": "Suitable for application-owned behavior, actor interactions, and technology-independent ports; not sufficient alone for aggregate invariants, global model ownership, or distributed-message topology. The sources are authorial method and technical-report guidance, not proof that a particular hexagonal implementation improves all delivery outcomes.",
+      "confidence": "medium"
+    },
+    {
+      "id": "greg-young",
+      "name": "Greg Young",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Intentful writes, read/write separation, and durable event records.",
+      "decision_functions": [
+        "intentful-command-design",
+        "read-write-model-separation",
+        "event-history-governance"
+      ],
+      "lineage_ids": [
+        "command-query-responsibility-segregation",
+        "event-sourcing"
+      ],
+      "primary_sources": [
+        {
+          "id": "young-cqrs-documents-2010",
+          "title": "CQRS Documents",
+          "year": 2010,
+          "locator": "https://cqrs.files.wordpress.com/2010/11/cqrs_documents.pdf",
+          "evidence_locator": "pp. 5-15 and 27-53; the PDF has no formal publication date beyond its 2010 archive path."
+        },
+        {
+          "id": "young-cqrs-event-sourcing-talk-2014",
+          "title": "CQRS and Event Sourcing",
+          "year": 2014,
+          "locator": "https://www.youtube.com/watch?v=JHGkaShoyNs",
+          "evidence_locator": "Code on the Beach talk delivered 2014-08-09; recording published 2014-09-08."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Generic state-update or DTO save flows can hide domain behavior; named commands express intent and can be rejected.",
+          "source_ids": [
+            "young-cqrs-documents-2010"
+          ],
+          "scope": "Behavior-rich write processes; the source also treats simpler DTO approaches as a viable baseline for many cases."
+        },
+        {
+          "statement": "Event sourcing records completed state-changing facts so prior state can be reconstructed and corrections are expressed as subsequent facts rather than erased history.",
+          "source_ids": [
+            "young-cqrs-documents-2010",
+            "young-cqrs-event-sourcing-talk-2014"
+          ],
+          "scope": "A temporal/audit decision that entails event-schema, replay, and retention responsibilities."
+        },
+        {
+          "statement": "Separate read and write models plus event publication introduce synchronization, snapshot, replay, and publication-failure decisions; snapshots are a later performance measure rather than a starting premise.",
+          "source_ids": [
+            "young-cqrs-documents-2010"
+          ],
+          "scope": "Implementation and operations choices, not a claim that CQRS and event sourcing are universally inseparable."
+        }
+      ],
+      "decision_questions": [
+        "Does the write process enforce behavior or invariants that a state-update API would hide?",
+        "Do divergent read needs or temporal/audit requirements justify event versioning, replay, and operational support?",
+        "What is the durable event contract and the publication or recovery boundary?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Martin Fowler's CQRS article says that CQRS adds risky complexity for most systems and should be applied only to portions where its benefits outweigh it."
+        }
+      ],
+      "misuse_risks": [
+        "Conflating CQRS, event sourcing, and message brokers as one mandatory architecture.",
+        "Publishing internal event streams as public integration APIs without compatibility, versioning, or replay governance."
+      ],
+      "evidence_boundary": "Suitable where behavior-rich writes, divergent reads, or temporal history justify CQRS or event-sourcing lifecycle cost; not sufficient for simple CRUD or for exposing an internal event log as a public contract by default. The principal document is a practitioner position paper and talk, not a controlled comparison against simpler designs.",
+      "confidence": "medium"
+    },
+    {
+      "id": "udi-dahan",
+      "name": "Udi Dahan",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Business-service autonomy, service-boundary versus deployment-boundary separation, and long-running collaboration.",
+      "decision_functions": [
+        "business-service-boundaries",
+        "dependency-autonomy",
+        "long-running-workflow-control"
+      ],
+      "lineage_ids": [
+        "service-oriented-architecture",
+        "event-driven-architecture"
+      ],
+      "primary_sources": [
+        {
+          "id": "dahan-autonomous-services-2006",
+          "title": "Autonomous Services - a Step Beyond Service Orientation",
+          "year": 2006,
+          "locator": "https://udidahan.com/2006/01/08/autonomous-services-a-step-beyond-service-orientation/",
+          "evidence_locator": "Author article dated 2006-01-08; autonomy and loose-in-time/loose-in-code discussion."
+        },
+        {
+          "id": "dahan-service-boundaries-2011",
+          "title": "Service Boundaries Aren't Process Boundaries",
+          "year": 2011,
+          "locator": "https://udidahan.com/2011/07/03/service-boundaries-arent-process-boundaries/",
+          "evidence_locator": "Author article dated 2011-07-03; opening correction of the earlier separate-process recommendation."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Service autonomy concerns the ability to function correctly within a service level despite dependency unavailability; loose coupling includes time and code, not only a network protocol.",
+          "source_ids": [
+            "dahan-autonomous-services-2006"
+          ],
+          "scope": "Distributed-service failure and latency reasoning; not a claim that all communication must be asynchronous."
+        },
+        {
+          "statement": "Long-running collaboration needs explicit correlation, timeouts, and workflow state rather than an unbounded hidden request chain.",
+          "source_ids": [
+            "dahan-autonomous-services-2006"
+          ],
+          "scope": "Cross-service workflows where completion can take time; immediate atomic confirmation remains a separate requirement."
+        },
+        {
+          "statement": "A service boundary is a logical business-capability boundary, while process or deployment topology is orthogonal; the article explicitly corrects Dahan's earlier process-boundary recommendation.",
+          "source_ids": [
+            "dahan-service-boundaries-2011"
+          ],
+          "scope": "Logical decomposition and deployment should be decided separately."
+        }
+      ],
+      "decision_questions": [
+        "What business capability, rather than deployment unit, makes the ownership boundary coherent?",
+        "Which outcomes must confirm immediately, and which can be delayed, retried, or compensated?",
+        "Who owns timeout, escalation, compensation, and user-visible completion in the workflow?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The 2011 source retracts the earlier recommendation that a service should be a separate process; do not turn the 2006 autonomy position into a physical-deployment rule."
+        }
+      ],
+      "misuse_risks": [
+        "Applying 'no synchronous calls' as a universal rule rather than examining the SLA and user-confirmation requirement.",
+        "Equating a service with a process, container, organization chart, or team."
+      ],
+      "evidence_boundary": "Suitable for business-capability ownership, dependency-failure behavior, and timeout or compensation responsibilities across services; not sufficient for an atomic cross-capability invariant, simple individual CRUD, or a physical topology decision alone. These are authorial service-design positions and a documented self-correction, not comparative evidence that asynchronous collaboration is superior in every context.",
+      "confidence": "medium"
+    },
+    {
+      "id": "gregor-hohpe",
+      "name": "Gregor Hohpe",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Message delivery, residual event coupling, and integration control-flow obligations.",
+      "decision_functions": [
+        "message-delivery-semantics",
+        "event-contract-evolution",
+        "asynchronous-integration-control"
+      ],
+      "lineage_ids": [
+        "enterprise-integration-patterns",
+        "message-oriented-middleware"
+      ],
+      "primary_sources": [
+        {
+          "id": "hohpe-woolf-idempotent-receiver-2003",
+          "title": "Idempotent Receiver, Enterprise Integration Patterns",
+          "year": 2003,
+          "locator": "https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html",
+          "evidence_locator": "'Idempotent Receiver' pattern, problem and solution; related book ISBN-13 9780321200686."
+        },
+        {
+          "id": "hohpe-event-driven-coupling-2023",
+          "title": "Event-driven = Loosely coupled? Not so fast!",
+          "year": 2023,
+          "locator": "https://www.enterpriseintegrationpatterns.com/ramblings/eventdriven_coupling.html",
+          "evidence_locator": "Author article, 'Event Semantics vs. Interaction Style' and event-coupling discussion; captured page carries 2024 copyright."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "A receiver must tolerate duplicate delivery through deduplication or idempotent business semantics even when the sender believes it sent a message only once.",
+          "source_ids": [
+            "hohpe-woolf-idempotent-receiver-2003"
+          ],
+          "scope": "Delivery handling; it does not itself define a business invariant or guarantee end-to-end exactly-once effects."
+        },
+        {
+          "statement": "Pub/sub can reduce topology coupling, but event payload, schema, and semantic coupling remain and must be deliberately managed.",
+          "source_ids": [
+            "hohpe-event-driven-coupling-2023"
+          ],
+          "scope": "Event-driven integration; publication alone is not business or semantic decoupling."
+        },
+        {
+          "statement": "Adding subscribers can make source evolution harder, so internal and external event audiences need explicit ownership and change discipline.",
+          "source_ids": [
+            "hohpe-event-driven-coupling-2023"
+          ],
+          "scope": "Contract evolution and architecture governance, not a claim that every event should be private."
+        }
+      ],
+      "decision_questions": [
+        "Is this interaction a command, document, event, or request-reply, and why?",
+        "What duplicate, ordering, expiry, retry, and idempotency semantics are required?",
+        "Who owns and versions payload meaning, and which consumers are intentionally public versus internal?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Hohpe's later event-coupling article rejects the shortcut that event-driven publication automatically creates loose semantic coupling."
+        }
+      ],
+      "misuse_risks": [
+        "Assuming a broker supplies exactly-once business effects or eliminates the need for idempotency.",
+        "Treating pub/sub topology decoupling as proof that schemas, semantics, or source evolution are decoupled."
+      ],
+      "evidence_boundary": "Suitable for message interaction style, duplicate handling, schema ownership, and asynchronous-integration operating semantics; not sufficient alone for business invariants or domain-model ownership. These sources establish pattern and coupling guidance, not quantified broker performance or proof that one messaging topology is universally superior.",
+      "confidence": "medium"
+    },
+    {
+      "id": "fowler-lewis-microservices-fowler-cqrs-corpus",
+      "name": "Fowler–Lewis Microservices and Fowler CQRS source corpus",
+      "representation_type": "source_corpus",
+      "admission_status": "source_corpus",
+      "lens": "Use the jointly authored Fowler–Lewis microservices guidance and Fowler's CQRS guidance to test whether service autonomy, operational cost, and selective pattern use justify a proposed distributed boundary.",
+      "decision_functions": [
+        "service-boundary",
+        "operability",
+        "pattern-selection"
+      ],
+      "lineage_ids": [
+        "martin-fowler",
+        "james-lewis",
+        "microservices",
+        "enterprise-application-architecture"
+      ],
+      "primary_sources": [
+        {
+          "id": "fowler-lewis-microservices-2014",
+          "title": "Microservices",
+          "year": 2014,
+          "locator": "https://martinfowler.com/articles/microservices.html",
+          "evidence_locator": "Sections 'Organized around Business Capabilities', 'Decentralized Data Management', 'Design for Failure', and 'Evolutionary Design'; published 2014-03-25."
+        },
+        {
+          "id": "fowler-cqrs-2011",
+          "title": "CQRS",
+          "year": 2011,
+          "locator": "https://martinfowler.com/bliki/CQRS.html",
+          "evidence_locator": "Author article published 2011-07-14; opening definition and selective-use discussion."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Service decomposition should follow business capability and change independence, while independently deployable services require operational automation, monitoring, and failure handling.",
+          "source_ids": [
+            "fowler-lewis-microservices-2014"
+          ],
+          "scope": "Service and operability selection; not a definition that every small component must be independently deployed."
+        },
+        {
+          "statement": "Distributed updates make coordination and compensation business trade-offs, and repeated co-change is feedback that a service boundary may need to merge.",
+          "source_ids": [
+            "fowler-lewis-microservices-2014"
+          ],
+          "scope": "Evolutionary boundary review; does not prescribe a universal decomposition method."
+        },
+        {
+          "statement": "CQRS should be selective within portions of a system or bounded context because its additional complexity is not justified for most systems.",
+          "source_ids": [
+            "fowler-cqrs-2011"
+          ],
+          "scope": "A counterweight to estate-wide CQRS adoption, not a rejection of CQRS where read and write models materially differ."
+        }
+      ],
+      "decision_questions": [
+        "Which business capability and independently changing responsibility justify this service boundary?",
+        "What automation, monitoring, data ownership, and failure handling must exist before independent deployment is an advantage?",
+        "Where does CQRS earn its additional model and consistency cost, and where should one model remain?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "A well-modularized single deployment can preserve domain boundaries without paying distributed coordination and operations costs."
+        }
+      ],
+      "misuse_risks": [
+        "Treating an independently deployable component as automatically aligned to one business capability.",
+        "Applying microservices or CQRS across an estate because the patterns are named rather than because their forces are present."
+      ],
+      "evidence_boundary": "The Microservices article is jointly authored by James Lewis and Martin Fowler; the CQRS article is authored by Fowler. This bounded corpus preserves those distinct attributions and provides practitioner guidance and caveats, not controlled evidence that either pattern improves outcomes.",
+      "confidence": "medium"
+    }
+  ],
+  "rejected_candidates": [
+    "Martin Fowler is not admitted a second time as a person. The jointly authored Fowler–Lewis Microservices article and Fowler's CQRS article are represented as a source_corpus so their domain and enterprise positions are indexable without double-counting a named-person lens."
+  ],
+  "saturation": "Coverage is saturated across semantic model ownership, aggregate consistency, application behavior boundaries, behavior-rich writes and event history, service autonomy, messaging semantics, and a bounded enterprise-pattern corpus. Adding another candidate from the supplied pool would duplicate a decision function; no comparative empirical outcome claim is asserted."
+}

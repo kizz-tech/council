@@ -1,0 +1,518 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "distributed-systems",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "leslie-lamport",
+      "name": "Leslie Lamport",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Separate causal order, chosen total order, consensus safety, and the liveness assumptions needed for progress.",
+      "decision_functions": [
+        "causal-ordering",
+        "consensus-safety",
+        "replication-liveness"
+      ],
+      "lineage_ids": [
+        "logical-clocks",
+        "state-machine-replication",
+        "paxos"
+      ],
+      "primary_sources": [
+        {
+          "id": "lamport-time-clocks-1978",
+          "title": "Time, Clocks, and the Ordering of Events in a Distributed System",
+          "year": 1978,
+          "locator": "https://doi.org/10.1145/359545.359563",
+          "evidence_locator": "pp. 558-565; sections The Partial Ordering, Logical Clocks, and Ordering the Events Totally."
+        },
+        {
+          "id": "lamport-paxos-made-simple-2001",
+          "title": "Paxos Made Simple",
+          "year": 2001,
+          "locator": "https://lamport.azurewebsites.net/pubs/paxos-simple.pdf",
+          "evidence_locator": "pp. 51-58; sections 2.1, 2.4, and 3."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Happens-before defines a partial causal order, and logical-clock order is not converse proof of causality.",
+          "source_ids": [
+            "lamport-time-clocks-1978"
+          ],
+          "scope": "Events connected by local process order and message transmission."
+        },
+        {
+          "statement": "A total event order requires an arbitrary tie-breaker and should not be conflated with physical-time meaning.",
+          "source_ids": [
+            "lamport-time-clocks-1978"
+          ],
+          "scope": "Systems choosing a deterministic serialization of otherwise concurrent events."
+        },
+        {
+          "statement": "Paxos separates safety from progress: crash-model safety uses durable acceptor state, while progress needs a distinguished proposer that can communicate with a majority.",
+          "source_ids": [
+            "lamport-paxos-made-simple-2001"
+          ],
+          "scope": "Non-Byzantine asynchronous message passing with stable storage after restart."
+        }
+      ],
+      "decision_questions": [
+        "Which ordering semantics are required: causal, total, or physical time?",
+        "Which replica state must survive restart, and what fault model is excluded?",
+        "What establishes a stable leader and a reachable quorum for progress?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Paxos does not promise Byzantine tolerance or availability for an isolated minority, and state-machine replication requires deterministic execution."
+        }
+      ],
+      "misuse_risks": [
+        "Treating Lamport timestamps as proof of causality or physical time.",
+        "Treating Paxos as an always-available remote procedure call."
+      ],
+      "evidence_boundary": "The selected works support crash/non-Byzantine replication and protocol safety; they do not establish adversarial security or hard real-time correctness.",
+      "confidence": "high"
+    },
+    {
+      "id": "nancy-lynch",
+      "name": "Nancy Lynch",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make failure models, timing assumptions, and the distinction between safety and liveness explicit.",
+      "decision_functions": [
+        "failure-modeling",
+        "liveness-analysis",
+        "synchrony-assumptions"
+      ],
+      "lineage_ids": [
+        "flp-impossibility",
+        "partial-synchrony",
+        "failure-detectors"
+      ],
+      "primary_sources": [
+        {
+          "id": "fischer-lynch-paterson-1985",
+          "title": "Impossibility of Distributed Consensus with One Faulty Process",
+          "year": 1985,
+          "locator": "https://doi.org/10.1145/3149.214121",
+          "evidence_locator": "pp. 374-382; sections 1, 3, and 5."
+        },
+        {
+          "id": "dwork-lynch-stockmeyer-1988",
+          "title": "Consensus in the Presence of Partial Synchrony",
+          "year": 1988,
+          "locator": "https://doi.org/10.1145/42282.42283",
+          "evidence_locator": "pp. 288-323; sections 1-2."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "In the fully asynchronous deterministic crash model, consensus cannot guarantee termination in every admissible execution with one faulty process; this remains distinct from safety.",
+          "source_ids": [
+            "fischer-lynch-paterson-1985"
+          ],
+          "scope": "Fully asynchronous message passing with the paper's admissible-run definition."
+        },
+        {
+          "statement": "A timeout cannot by itself distinguish a failed process from an indefinitely slow process without additional timing or failure-detection assumptions.",
+          "source_ids": [
+            "fischer-lynch-paterson-1985"
+          ],
+          "scope": "Fully asynchronous systems without known relative-speed or delay bounds."
+        },
+        {
+          "statement": "Partial synchrony must state whether bounds exist but are initially unknown or become effective only after an unknown stabilization time.",
+          "source_ids": [
+            "dwork-lynch-stockmeyer-1988"
+          ],
+          "scope": "Consensus protocols with added timing assumptions."
+        }
+      ],
+      "decision_questions": [
+        "What exact process, message, and failure model applies?",
+        "Which requirement is safety, and which is eventual termination?",
+        "What stabilizes eventually, and how is that condition measured?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Partial synchrony changes the liveness analysis, so the fully asynchronous impossibility is not a claim that practical consensus can never progress."
+        }
+      ],
+      "misuse_risks": [
+        "Using FLP to dismiss practical consensus systems outright.",
+        "Claiming that a timeout proves remote failure."
+      ],
+      "evidence_boundary": "The selected papers establish formal crash-fault and timing models; they are not production SLOs, Byzantine analyses, or generic pessimism heuristics.",
+      "confidence": "high"
+    },
+    {
+      "id": "eric-brewer",
+      "name": "Eric Brewer",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Treat availability as graceful degradation and compatibility-aware recovery behavior during partial failure.",
+      "decision_functions": [
+        "graceful-degradation",
+        "compatibility-evolution",
+        "partial-failure-recovery"
+      ],
+      "lineage_ids": [
+        "cap-framing",
+        "yield-harvest",
+        "base"
+      ],
+      "primary_sources": [
+        {
+          "id": "brewer-robust-distributed-systems-2000",
+          "title": "Towards Robust Distributed Systems",
+          "year": 2000,
+          "locator": "https://doi.org/10.1145/343477.343502",
+          "evidence_locator": "PODC keynote slides 4 and 6-10."
+        },
+        {
+          "id": "brewer-cap-twelve-years-later-2012",
+          "title": "CAP Twelve Years Later: How the Rules Have Changed",
+          "year": 2012,
+          "locator": "https://doi.org/10.1109/MC.2012.37",
+          "evidence_locator": "pp. 23-29."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Partial failure cannot be made transparent by ordinary remote calls; protocols need explicit state, version, and compatibility handling.",
+          "source_ids": [
+            "brewer-robust-distributed-systems-2000"
+          ],
+          "scope": "Distributed service boundaries subject to partial failure."
+        },
+        {
+          "statement": "Yield and harvest distinguish the fraction of queries answered from the completeness of each result, enabling deliberate graceful degradation.",
+          "source_ids": [
+            "brewer-robust-distributed-systems-2000"
+          ],
+          "scope": "Systems that can return partial but useful results."
+        },
+        {
+          "statement": "Rolling upgrades require an explicit policy for coexistence, recovery, and handling partitions rather than a static CAP label.",
+          "source_ids": [
+            "brewer-cap-twelve-years-later-2012"
+          ],
+          "scope": "Evolving distributed systems with real partition and recovery paths."
+        }
+      ],
+      "decision_questions": [
+        "Which requests may return partial, stale, or degraded results?",
+        "How is result completeness disclosed to the caller?",
+        "Which versions can coexist, and what is the rollback and recovery contract?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The selected works provide an architectural degradation lens, not a formal proof of a universal CAP choice or application-invariant correctness rule."
+        }
+      ],
+      "misuse_risks": [
+        "Using pick-any-two as a design checklist.",
+        "Applying one availability or consistency setting to every operation."
+      ],
+      "evidence_boundary": "The selected works address product-facing degradation and compatibility policy; they do not supply a formal consistency theorem or invariant-proof method.",
+      "confidence": "medium"
+    },
+    {
+      "id": "pat-helland",
+      "name": "Pat Helland",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make autonomous data ownership, message identity, retries, and repartitioning behavior explicit.",
+      "decision_functions": [
+        "service-ownership",
+        "message-idempotence",
+        "workflow-compensation"
+      ],
+      "lineage_ids": [
+        "autonomous-services",
+        "entity-architecture",
+        "at-least-once-delivery"
+      ],
+      "primary_sources": [
+        {
+          "id": "helland-data-outside-inside-2005",
+          "title": "Data on the Outside versus Data on the Inside",
+          "year": 2005,
+          "locator": "https://www.cidrdb.org/cidr2005/papers/P12.pdf",
+          "evidence_locator": "pp. 144-153; sections 1-5."
+        },
+        {
+          "id": "helland-life-beyond-distributed-transactions-2007",
+          "title": "Life beyond Distributed Transactions: an Apostate's Opinion",
+          "year": 2007,
+          "locator": "https://www.cidrdb.org/cidr2007/papers/cidr07p15.pdf",
+          "evidence_locator": "pp. 132-141; sections 1-3."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Autonomous services own code and data, while inter-service communication carries business-level message format and sequencing semantics.",
+          "source_ids": [
+            "helland-data-outside-inside-2005"
+          ],
+          "scope": "Services defined as independent code-and-data owners."
+        },
+        {
+          "statement": "At-least-once delivery requires durable message identity and idempotent recipient handling rather than a generic end-to-end exactly-once claim.",
+          "source_ids": [
+            "helland-life-beyond-distributed-transactions-2007"
+          ],
+          "scope": "Message delivery to keyed entities with durable recipient state."
+        },
+        {
+          "statement": "Repartitioning and recovery can cause duplicate and out-of-order messages, so safe handling must be visible to the application.",
+          "source_ids": [
+            "helland-life-beyond-distributed-transactions-2007"
+          ],
+          "scope": "Scale-out and reconfiguration of entity-addressed message processing."
+        }
+      ],
+      "decision_questions": [
+        "Who owns the atomic state transition for this effect?",
+        "What message identity and deduplication lifetime are required?",
+        "Which outcomes need compensation, human review, or irreversible authority?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The 2007 argument is an explicitly scaling-oriented opinion that assumes away large-scale distributed transactions and high availability; it is not a universal prohibition on them."
+        }
+      ],
+      "misuse_risks": [
+        "Declaring all distributed transactions categorically wrong.",
+        "Calling a retried workflow exactly once without defining business-effect deduplication."
+      ],
+      "evidence_boundary": "The selected works address autonomous-service and long-running-workflow design; they do not prove a policy for global invariants, liability, or audit.",
+      "confidence": "medium"
+    },
+    {
+      "id": "kenneth-birman",
+      "name": "Kenneth Birman",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make group membership, ordering strength, recovery identity, and state transfer part of the system contract.",
+      "decision_functions": [
+        "membership-reconfiguration",
+        "ordering-strength",
+        "replica-state-transfer"
+      ],
+      "lineage_ids": [
+        "process-groups",
+        "virtual-synchrony",
+        "atomic-multicast"
+      ],
+      "primary_sources": [
+        {
+          "id": "birman-process-group-approach-1993",
+          "title": "The Process Group Approach to Reliable Distributed Computing",
+          "year": 1993,
+          "locator": "https://doi.org/10.1145/163298.163303",
+          "evidence_locator": "pp. 36-53; especially pp. 40-46."
+        },
+        {
+          "id": "birman-history-virtual-synchrony-2010",
+          "title": "A History of the Virtual Synchrony Replication Model",
+          "year": 2010,
+          "locator": "https://doi.org/10.1007/978-3-642-11294-2_6",
+          "evidence_locator": "pp. 91-120; especially pp. 92-94 and 106-107."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Membership views and state transfer are part of a virtual-synchrony consistency contract, not merely control-plane implementation details.",
+          "source_ids": [
+            "birman-history-virtual-synchrony-2010"
+          ],
+          "scope": "Dynamic process groups with common membership views."
+        },
+        {
+          "statement": "Exactly-once delivery claims depend on the stated transport and failure-reporting model; incorrect failure information can produce duplicates.",
+          "source_ids": [
+            "birman-process-group-approach-1993"
+          ],
+          "scope": "Fail-stop process-group transport and recovery semantics."
+        },
+        {
+          "statement": "Atomic multicast can align replicas but adds latency, so ordering may be relaxed when concurrent effects are independent or commute.",
+          "source_ids": [
+            "birman-process-group-approach-1993"
+          ],
+          "scope": "Replicated group operations with known commutativity properties."
+        }
+      ],
+      "decision_questions": [
+        "What membership set is authoritative at message commit?",
+        "Which operations require total order, and which commute?",
+        "How are view change, state transfer, recovery identity, and schema compatibility coupled?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The process-group account excludes hard real-time deadlines and persistent data from its main scope and does not establish Byzantine or open-internet semantics."
+        }
+      ],
+      "misuse_risks": [
+        "Calling ordinary pub/sub virtual synchrony.",
+        "Promising end-to-end exactly once across recovery and independent service boundaries."
+      ],
+      "evidence_boundary": "The selected works address trusted, fail-stop group replication and membership; they do not establish adversarial networking, hard real time, or autonomous cross-company workflow semantics.",
+      "confidence": "medium"
+    },
+    {
+      "id": "martin-kleppmann",
+      "name": "Martin Kleppmann",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Require precise CAP terms, latency-aware availability, and explicit offline conflict semantics.",
+      "decision_functions": [
+        "consistency-semantics",
+        "offline-conflict-resolution",
+        "latency-aware-availability"
+      ],
+      "lineage_ids": [
+        "cap-critique",
+        "local-first",
+        "crdts"
+      ],
+      "primary_sources": [
+        {
+          "id": "kleppmann-critique-cap-2015",
+          "title": "A Critique of the CAP Theorem",
+          "year": 2015,
+          "locator": "https://arxiv.org/abs/1509.05393",
+          "evidence_locator": "sections 1-3; submitted 17 September 2015 and revised 18 September 2015."
+        },
+        {
+          "id": "kleppmann-local-first-2019",
+          "title": "Local-First Software: You Own Your Data, in spite of the Cloud",
+          "year": 2019,
+          "locator": "https://doi.org/10.1145/3359591.3359737",
+          "evidence_locator": "pp. 154-178; sections 2 and 4."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Formal CAP availability is eventual response without a latency bound, while operational availability needs an explicit timeout or SLO.",
+          "source_ids": [
+            "kleppmann-critique-cap-2015"
+          ],
+          "scope": "Comparison of formal CAP definitions and operational service behavior."
+        },
+        {
+          "statement": "Consistency and partition tolerance are overloaded terms; a design discussion must state the actual safety property and fault model.",
+          "source_ids": [
+            "kleppmann-critique-cap-2015"
+          ],
+          "scope": "CAP-based reasoning about distributed databases and services."
+        },
+        {
+          "statement": "CRDT convergence can merge concurrent edits, but concurrent writes to the same property can still require application or user conflict resolution.",
+          "source_ids": [
+            "kleppmann-local-first-2019"
+          ],
+          "scope": "Local-first collaborative data synchronization."
+        }
+      ],
+      "decision_questions": [
+        "Which exact consistency, availability, and partition definitions are in use?",
+        "What latency is unavailable for the relevant user or workflow?",
+        "Who owns conflict resolution when concurrent edits converge structurally but not semantically?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The CAP critique is a preprint, and the local-first paper explicitly excludes banking and e-commerce from its target scope; neither supports universal transactional conclusions."
+        }
+      ],
+      "misuse_risks": [
+        "Saying that CAP is refuted and consistency costs therefore vanish.",
+        "Assuming CRDTs preserve every business invariant automatically."
+      ],
+      "evidence_boundary": "The selected works support conceptual and user-data synchronization analysis; they do not prove that critical transactional domains can avoid coordination.",
+      "confidence": "medium"
+    },
+    {
+      "id": "peter-bailis",
+      "name": "Peter Bailis",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Test coordination choices against stated application invariants, transaction behavior, and merge semantics.",
+      "decision_functions": [
+        "invariant-analysis",
+        "coordination-avoidance",
+        "transaction-guarantee-selection"
+      ],
+      "lineage_ids": [
+        "i-confluence",
+        "highly-available-transactions",
+        "coordination-avoidance"
+      ],
+      "primary_sources": [
+        {
+          "id": "bailis-coordination-avoidance-2014",
+          "title": "Coordination Avoidance in Database Systems",
+          "year": 2014,
+          "locator": "https://doi.org/10.14778/2735508.2735509",
+          "evidence_locator": "pp. 185-196; sections 4-5."
+        },
+        {
+          "id": "bailis-highly-available-transactions-2013",
+          "title": "Highly Available Transactions: Virtues and Limitations",
+          "year": 2013,
+          "locator": "https://doi.org/10.14778/2732232.2732237",
+          "evidence_locator": "pp. 181-192; sections 4-5."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "I-confluence is defined relative to specified transactions, an invariant, and merge behavior: independently reachable states sharing an ancestor must merge to an invariant-valid state.",
+          "source_ids": [
+            "bailis-coordination-avoidance-2014"
+          ],
+          "scope": "The paper's transaction, invariant, and convergence model."
+        },
+        {
+          "statement": "Within that model, coordination-free, convergent, invariant-preserving execution is possible if and only if the transactions are I-confluent.",
+          "source_ids": [
+            "bailis-coordination-avoidance-2014"
+          ],
+          "scope": "Globally valid transaction execution under the theorem's assumptions."
+        },
+        {
+          "statement": "Highly available transactions can provide useful atomic semantics but cannot prevent all concurrent-modification anomalies or guarantee recency; some session guarantees require stickiness.",
+          "source_ids": [
+            "bailis-highly-available-transactions-2013"
+          ],
+          "scope": "The HAT model and client-session guarantees."
+        }
+      ],
+      "decision_questions": [
+        "What exact invariant, transaction, and merge behavior must hold?",
+        "Can independent commits merge to a valid state without coordination?",
+        "Which operations require authority or quorum, and which can use scoped allocation or redesign?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The coordination-avoidance theorem cannot establish safety when the real business invariant, transaction set, or merge semantics are incomplete or misstated."
+        }
+      ],
+      "misuse_risks": [
+        "Equating coordination avoidance with no coordination under any semantics.",
+        "Generalizing historical HAT measurements as universal current performance evidence."
+      ],
+      "evidence_boundary": "The selected works provide formal database invariant and merge analysis; they do not substitute for discovering domain rules or justify blanket eventual-consistency approval.",
+      "confidence": "high"
+    }
+  ]
+}

@@ -25,13 +25,22 @@ failure paths, permissions, negative routing, and an evaluation gate.
 - Keep proposed, implemented, locally validated, committed, pushed, published,
   installed, observed, and outcome-proven states distinct.
 - Model agreement, named personas, and vote counts are not independent evidence.
+- Treat names in `knowledge/representatives/` as provenance anchors, never as
+  authority weights or permission to simulate a living or historical person.
+- Keep representative records, prompt sources, roster configurations, and run
+  manifests distinct. Moving information between these layers requires an
+  explicit reviewed change.
+- Preserve evaluated rosters as historical configurations. Never silently
+  redefine a baseline or call one composition optimal without a matched-budget
+  held-out evaluation.
 
 ## Change workflow
 
 1. Start from an observed failure, decision, or explicit experimental question.
 2. Keep routine and reversible work direct; do not invoke a council by ritual.
 3. Freeze behavior-changing candidates before held-out evaluation.
-4. Update source, tests, provenance, and the lock together.
+4. Update source, tests, provenance, the representative index when applicable,
+   and the lock together.
 5. Run `python3 tools/council_dist.py verify` and
    `python3 -m unittest discover -s tests -v`.
 6. For release candidates, validate the plugin, build from the allowlist, run

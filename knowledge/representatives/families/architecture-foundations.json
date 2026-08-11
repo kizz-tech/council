@@ -1,0 +1,454 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "architecture-foundations",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "david-parnas",
+      "name": "David Parnas",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Decompose systems around design decisions likely to change, and hide those decisions behind stable module interfaces.",
+      "decision_functions": [
+        "decomposition",
+        "changeability",
+        "product-variation"
+      ],
+      "lineage_ids": [
+        "information-hiding",
+        "program-families"
+      ],
+      "primary_sources": [
+        {
+          "id": "parnas-1972-modules",
+          "title": "On the Criteria To Be Used in Decomposing Systems into Modules",
+          "year": 1972,
+          "locator": "https://doi.org/10.1145/361598.361623",
+          "evidence_locator": "pp. 1053–1058; especially pp. 1055–1056 on information hiding and decomposition."
+        },
+        {
+          "id": "parnas-1979-extension-contraction",
+          "title": "Designing Software for Ease of Extension and Contraction",
+          "year": 1979,
+          "locator": "https://doi.org/10.1109/TSE.1979.234169",
+          "evidence_locator": "pp. 128–138; sections 2–4 on uses, hierarchy, extension, and contraction."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Module boundaries should hide design decisions rather than merely mirror the order of execution.",
+          "source_ids": [
+            "parnas-1972-modules"
+          ],
+          "scope": "Static modular decomposition."
+        },
+        {
+          "statement": "Information hiding improves changeability and comprehensibility when clients depend on interfaces instead of internal representations.",
+          "source_ids": [
+            "parnas-1972-modules"
+          ],
+          "scope": "Module interface design."
+        },
+        {
+          "statement": "A software family can support planned extension and contraction when configurations are organized through a hierarchy of uses.",
+          "source_ids": [
+            "parnas-1979-extension-contraction"
+          ],
+          "scope": "Product-family variation."
+        }
+      ],
+      "decision_questions": [
+        "Which design decisions are most likely to change, and are they hidden behind module interfaces?",
+        "Can the desired product variant be assembled by adding or removing uses without modifying unrelated modules?",
+        "Does any client require knowledge of a supplier's hidden representation?"
+      ],
+      "counterweights": [
+        {
+          "relation": "challenged-by",
+          "target_or_position": "Aspect-oriented programming argues that crosscutting concerns can require composition mechanisms beyond a single module decomposition."
+        }
+      ],
+      "misuse_risks": [
+        "Treating every class or package as a module without identifying the hidden decision.",
+        "Forcing a rigid hierarchy where independent or crosscutting variation must be expressed."
+      ],
+      "evidence_boundary": "The selected papers support static modular decomposition and product-family variation; they do not prescribe present-day service granularity or deployment topology.",
+      "confidence": "high"
+    },
+    {
+      "id": "edsger-dijkstra",
+      "name": "Edsger W. Dijkstra",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make complexity tractable by structuring programs and layers so that each can be reasoned about with bounded intellectual effort.",
+      "decision_functions": [
+        "complexity-management",
+        "layering",
+        "verifiability"
+      ],
+      "lineage_ids": [
+        "structured-programming",
+        "layered-virtual-machines"
+      ],
+      "primary_sources": [
+        {
+          "id": "dijkstra-1969-structured-programming",
+          "title": "Notes on Structured Programming",
+          "year": 1969,
+          "locator": "https://www.cs.utexas.edu/~EWD/transcriptions/EWD02xx/EWD249/EWD249.html",
+          "evidence_locator": "sections 1, 50, and 57 on qualitative complexity, program families, and layered virtual machines."
+        },
+        {
+          "id": "dijkstra-1972-humble-programmer",
+          "title": "The Humble Programmer",
+          "year": 1972,
+          "locator": "https://doi.org/10.1145/355604.361591",
+          "evidence_locator": "pp. 859–866 on human intellectual limits and disciplined program construction."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "At scale, programming requires deliberate organization of qualitative complexity rather than only more effort or testing.",
+          "source_ids": [
+            "dijkstra-1969-structured-programming"
+          ],
+          "scope": "Program construction at increasing scale."
+        },
+        {
+          "statement": "Layers should be understandable independently enough that compatible replacement remains possible.",
+          "source_ids": [
+            "dijkstra-1969-structured-programming"
+          ],
+          "scope": "Layered virtual-machine design."
+        },
+        {
+          "statement": "Programming practices must respect the limits of human reasoning and make rigorous construction feasible.",
+          "source_ids": [
+            "dijkstra-1972-humble-programmer"
+          ],
+          "scope": "Method selection for reliable programming."
+        }
+      ],
+      "decision_questions": [
+        "Can each layer be understood and changed without reconstructing the whole system?",
+        "What explicit reasoning obligation makes this control or dependency structure trustworthy?",
+        "Does a family of variants retain a common abstract structure rather than accumulate unrelated exceptions?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Knuth's analysis holds that a limited and disciplined use of goto can sometimes improve clarity rather than impair it."
+        }
+      ],
+      "misuse_risks": [
+        "Equating structured control flow with adequate architecture.",
+        "Demanding exhaustive proof before shipping where cost, change, and uncertain specifications dominate."
+      ],
+      "evidence_boundary": "The selected works address program construction, scale, and virtual machines; they do not provide a complete method for distributed-service or organizational design.",
+      "confidence": "high"
+    },
+    {
+      "id": "c-a-r-hoare",
+      "name": "C. A. R. Hoare",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Treat critical software behavior as explicit specifications and proof obligations, including the abstraction relation between data representation and meaning.",
+      "decision_functions": [
+        "formal-specification",
+        "invariant-design",
+        "correctness-assurance"
+      ],
+      "lineage_ids": [
+        "formal-methods",
+        "data-abstraction"
+      ],
+      "primary_sources": [
+        {
+          "id": "hoare-1969-axiomatic-basis",
+          "title": "An Axiomatic Basis for Computer Programming",
+          "year": 1969,
+          "locator": "https://doi.org/10.1145/363235.363259",
+          "evidence_locator": "pp. 576–580 on assertions, proof rules, and partial correctness."
+        },
+        {
+          "id": "hoare-1972-data-representations",
+          "title": "Proof of Correctness of Data Representations",
+          "year": 1972,
+          "locator": "https://doi.org/10.1007/BF00289507",
+          "evidence_locator": "pp. 271–281 on abstraction relations and correctness of concrete data representations."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Program correctness can be reasoned about with assertions attached to program statements and rules that preserve them.",
+          "source_ids": [
+            "hoare-1969-axiomatic-basis"
+          ],
+          "scope": "Sequential program correctness."
+        },
+        {
+          "statement": "Proof obligations distinguish partial correctness from the separate question of termination.",
+          "source_ids": [
+            "hoare-1969-axiomatic-basis"
+          ],
+          "scope": "Specification and verification of terminating behavior."
+        },
+        {
+          "statement": "A concrete data representation can be checked against an abstract type through an explicit relation that preserves its intended meaning.",
+          "source_ids": [
+            "hoare-1972-data-representations"
+          ],
+          "scope": "Abstract data type implementation."
+        }
+      ],
+      "decision_questions": [
+        "What preconditions, postconditions, and invariants define the behavior that must be preserved?",
+        "What relation connects the stored representation to the abstraction visible to clients?",
+        "Which high-risk paths merit proof, and what is established if the program terminates?"
+      ],
+      "counterweights": [
+        {
+          "relation": "challenged-by",
+          "target_or_position": "DeMillo, Lipton, and Perlis argue that software proof must also be justified and managed within social processes of review, change, and specification."
+        }
+      ],
+      "misuse_risks": [
+        "Treating an incomplete or wrong specification as proof of real-world correctness.",
+        "Spending formal-method effort uniformly instead of prioritizing high-risk invariants."
+      ],
+      "evidence_boundary": "The selected papers establish a proof-oriented lens for sequential programs and data representations; they do not by themselves settle distributed-system or operational correctness.",
+      "confidence": "high"
+    },
+    {
+      "id": "barbara-liskov",
+      "name": "Barbara Liskov",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Design abstractions and subtypes around observable behavior so that clients can rely on contracts rather than representations or inheritance syntax.",
+      "decision_functions": [
+        "abstraction-boundary",
+        "substitutability",
+        "contract-design"
+      ],
+      "lineage_ids": [
+        "data-abstraction",
+        "behavioral-subtyping"
+      ],
+      "primary_sources": [
+        {
+          "id": "liskov-zilles-1975-data-abstractions",
+          "title": "Specification Techniques for Data Abstractions",
+          "year": 1975,
+          "locator": "https://doi.org/10.1109/TSE.1975.6312816",
+          "evidence_locator": "pp. 7–19 on specifications for data abstractions and representation independence."
+        },
+        {
+          "id": "liskov-wing-1994-behavioral-subtyping",
+          "title": "A Behavioral Notion of Subtyping",
+          "year": 1994,
+          "locator": "https://doi.org/10.1145/197320.197383",
+          "evidence_locator": "pp. 1811–1841 on behavioral subtyping, method specifications, and history constraints."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Data abstractions should expose behavior through specifications while concealing the chosen representation.",
+          "source_ids": [
+            "liskov-zilles-1975-data-abstractions"
+          ],
+          "scope": "Abstract data type design."
+        },
+        {
+          "statement": "A subtype is valid when the properties proved for its supertype remain true for the subtype's behavior.",
+          "source_ids": [
+            "liskov-wing-1994-behavioral-subtyping"
+          ],
+          "scope": "Behavioral substitutability."
+        },
+        {
+          "statement": "Contracts for substitutability include more than method signatures: state constraints and histories can matter.",
+          "source_ids": [
+            "liskov-wing-1994-behavioral-subtyping"
+          ],
+          "scope": "Mutable object behavior."
+        }
+      ],
+      "decision_questions": [
+        "Can a client use the proposed subtype wherever the supertype is expected without losing relied-on properties?",
+        "Does the subtype strengthen preconditions, weaken guarantees, or violate a required state history?",
+        "What representation details must remain hidden for clients to rely on the abstraction?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Weak behavioral subtyping shows that controlled aliasing and mutability can permit useful relations that strict behavioral subtyping excludes."
+        }
+      ],
+      "misuse_risks": [
+        "Reducing substitutability to inheritance syntax or nominal typing.",
+        "Prohibiting useful adaptations without considering controlled aliases and mutable-state contracts."
+      ],
+      "evidence_boundary": "The selected work gives a formal lens for data abstractions and behavioral subtyping; it does not decide API versioning, migration, or deprecation policy.",
+      "confidence": "high"
+    },
+    {
+      "id": "frederick-brooks",
+      "name": "Frederick P. Brooks, Jr.",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Preserve conceptual integrity while planning around communication costs and distinguishing essential software complexity from accidental complexity.",
+      "decision_functions": [
+        "delivery-planning",
+        "architecture-governance",
+        "technology-evaluation"
+      ],
+      "lineage_ids": [
+        "conceptual-integrity",
+        "essential-complexity"
+      ],
+      "primary_sources": [
+        {
+          "id": "brooks-1995-mythical-man-month",
+          "title": "The Mythical Man-Month: Essays on Software Engineering, Anniversary Edition",
+          "year": 1995,
+          "locator": "https://www.oreilly.com/library/view/mythical-man-month-the/0201835959/",
+          "evidence_locator": "chapters 2, 4, 5, 7, and 11; the edition includes the 1975 essays."
+        },
+        {
+          "id": "brooks-1987-no-silver-bullet",
+          "title": "No Silver Bullet—Essence and Accidents of Software Engineering",
+          "year": 1987,
+          "locator": "https://doi.org/10.1109/MC.1987.1663532",
+          "evidence_locator": "pp. 10–19 on essential and accidental difficulties, complexity, conformity, changeability, and invisibility."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Adding people to a late software project can delay it further because training and communication work grow with team size.",
+          "source_ids": [
+            "brooks-1995-mythical-man-month"
+          ],
+          "scope": "Project staffing and schedule recovery."
+        },
+        {
+          "statement": "A system needs conceptual integrity, which is best protected by clear architectural authority rather than design by committee.",
+          "source_ids": [
+            "brooks-1995-mythical-man-month"
+          ],
+          "scope": "System design governance."
+        },
+        {
+          "statement": "No single technology or management technique should be expected to remove essential software difficulty by an order of magnitude.",
+          "source_ids": [
+            "brooks-1987-no-silver-bullet"
+          ],
+          "scope": "Technology and process investment."
+        }
+      ],
+      "decision_questions": [
+        "Would added staffing reduce delivery time after accounting for ramp-up and communication costs?",
+        "Who has the authority and context to preserve conceptual integrity across the system?",
+        "Which proposed improvement addresses essential difficulty rather than only accidental overhead?"
+      ],
+      "counterweights": [
+        {
+          "relation": "challenged-by",
+          "target_or_position": "Conway's organizational view holds that communication structures constrain system structures, so central architectural authority alone may not produce a coherent design."
+        }
+      ],
+      "misuse_risks": [
+        "Using Brooks's Law to oppose all staffing or team-scale experiments without measurement.",
+        "Treating conceptual integrity as a mandate for unilateral design rather than a coherent user-facing system."
+      ],
+      "evidence_boundary": "The selected authorial works support lenses for schedule, governance, and essential complexity; they do not provide contemporary empirical staffing coefficients or a complete organizational design method.",
+      "confidence": "medium"
+    },
+    {
+      "id": "mary-shaw",
+      "name": "Mary Shaw",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Use architectural abstractions that make both components and their interaction mechanisms explicit enough to reason about a system above the procedure-call level.",
+      "decision_functions": [
+        "architecture-description",
+        "interaction-design",
+        "quality-attribute-reasoning"
+      ],
+      "lineage_ids": [
+        "software-architecture",
+        "components-and-connectors"
+      ],
+      "primary_sources": [
+        {
+          "id": "shaw-1989-higher-level-abstractions",
+          "title": "Larger Scale Systems Require Higher-Level Abstractions",
+          "year": 1989,
+          "locator": "https://doi.org/10.1145/75199.75222",
+          "evidence_locator": "pp. 143–146 on the need for abstractions above individual algorithms and procedures."
+        },
+        {
+          "id": "shaw-1996-connectors",
+          "title": "Procedure Calls Are the Assembly Language of Software Interconnection: Connectors Deserve First-Class Status",
+          "year": 1996,
+          "locator": "https://doi.org/10.1007/BFb0030517",
+          "evidence_locator": "pp. 17–32 on components, connectors, and interaction semantics."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Larger software systems require abstractions above individual algorithms and procedures.",
+          "source_ids": [
+            "shaw-1989-higher-level-abstractions"
+          ],
+          "scope": "Large-scale software design."
+        },
+        {
+          "statement": "Procedure calls are not a sufficient universal model of software interconnection because interactions have independent semantics.",
+          "source_ids": [
+            "shaw-1996-connectors"
+          ],
+          "scope": "Intercomponent interaction design."
+        },
+        {
+          "statement": "Architectural descriptions should distinguish components from connectors in order to reason about system structure and its consequences.",
+          "source_ids": [
+            "shaw-1996-connectors"
+          ],
+          "scope": "Architecture representation."
+        }
+      ],
+      "decision_questions": [
+        "Is the concern primarily a component responsibility or an interaction protocol that needs its own abstraction?",
+        "Is a procedure call silently carrying lifecycle, concurrency, failure, or dataflow semantics that should be explicit?",
+        "What architectural abstraction makes the relevant quality constraint observable and evaluable?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Brooks's focus on conceptual integrity cautions that richer architectural notation alone does not make a system coherent."
+        }
+      ],
+      "misuse_risks": [
+        "Adopting architectural styles and connector taxonomies as documentation without constraining design or validation.",
+        "Elevating every interaction into a custom connector before its semantic burden justifies it."
+      ],
+      "evidence_boundary": "The selected work establishes an abstraction and description lens for architecture; it does not prescribe a single implementation style, runtime topology, or quality-attribute metric.",
+      "confidence": "high"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "Melvin Conway",
+      "reason": "Relevant organizational-structure evidence was found, but the lane did not establish the required two qualifying primary sources for admission."
+    },
+    {
+      "name": "W. P. Stevens, G. J. Myers, and L. L. Constantine",
+      "reason": "Structured Design substantially overlaps the admitted Parnas decomposition lens."
+    },
+    {
+      "name": "Niklaus Wirth",
+      "reason": "Stepwise refinement substantially overlaps the admitted Dijkstra program-construction lens."
+    }
+  ],
+  "saturation": "Stopped at exactly six admitted representations because the requested decision predicates are covered by distinct lenses; additional credible candidates repeated an existing lens or lacked the required qualifying source shape."
+}

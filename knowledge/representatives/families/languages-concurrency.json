@@ -1,0 +1,529 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "languages-concurrency",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "robin-milner",
+      "name": "Robin Milner",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Establish explicit static invariants, semantic boundaries, and module contracts before relying on runtime behavior or convention.",
+      "decision_functions": [
+        "type-and-interface-design",
+        "semantic-contracts",
+        "module-boundaries"
+      ],
+      "lineage_ids": [
+        "hindley-milner-type-inference",
+        "formal-language-semantics",
+        "standard-ml"
+      ],
+      "primary_sources": [
+        {
+          "id": "milner-1978-type-polymorphism",
+          "title": "A Theory of Type Polymorphism in Programming",
+          "year": 1978,
+          "locator": "https://doi.org/10.1016/0022-0000(78)90014-4",
+          "evidence_locator": "pp. 348–350; abstract and sections 1–2 on algorithm W, static typing, and semantic soundness."
+        },
+        {
+          "id": "milner-et-al-1997-standard-ml-definition",
+          "title": "The Definition of Standard ML (Revised)",
+          "year": 1997,
+          "locator": "https://smlfamily.github.io/sml97-defn.pdf",
+          "evidence_locator": "pp. 1–2; overview of parsing, elaboration, evaluation, and the Core, Modules, and Programs layers."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "A polymorphic language can infer static types and use soundness as a boundary against type violations within the formal model.",
+          "source_ids": [
+            "milner-1978-type-polymorphism"
+          ],
+          "scope": "Parametric polymorphism and compile-time type checking."
+        },
+        {
+          "statement": "A language definition should distinguish static elaboration and type checking from dynamic evaluation.",
+          "source_ids": [
+            "milner-et-al-1997-standard-ml-definition"
+          ],
+          "scope": "Formal language semantics and diagnostics."
+        },
+        {
+          "statement": "Modules are a separate programming-in-the-large layer with their own static and dynamic semantics.",
+          "source_ids": [
+            "milner-et-al-1997-standard-ml-definition"
+          ],
+          "scope": "Large-program structure and interface design."
+        }
+      ],
+      "decision_questions": [
+        "Which safety and interface properties should be established statically before runtime?",
+        "Can the module boundary state the required behavior without exposing its representation?",
+        "Which interaction properties remain dynamic and therefore need runtime observation or testing?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Hickey's predicate-based and generative specifications limit the claim that static type inference alone captures all operationally important properties."
+        }
+      ],
+      "misuse_risks": [
+        "Equating type soundness with complete system correctness, security, availability, or usability.",
+        "Demanding formal semantic work uniformly where measured operational validation is the more relevant control."
+      ],
+      "evidence_boundary": "The selected works support a lens for polymorphic type discipline, formal static/dynamic separation, and modules; they do not prescribe a current effect system, FFI policy, or distributed recovery design.",
+      "confidence": "high"
+    },
+    {
+      "id": "joe-armstrong",
+      "name": "Joe Armstrong",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Define the unit of failure, isolate it through message-passing processes, and make recovery an explicit supervisory responsibility.",
+      "decision_functions": [
+        "fault-isolation",
+        "recovery-topology",
+        "distributed-service-design"
+      ],
+      "lineage_ids": [
+        "actor-style-process-isolation",
+        "supervision-trees",
+        "erlang-otp"
+      ],
+      "primary_sources": [
+        {
+          "id": "armstrong-2003-reliable-distributed-systems",
+          "title": "Making Reliable Distributed Systems in the Presence of Software Errors",
+          "year": 2003,
+          "locator": "https://erlang.org/download/armstrong_thesis_2003.pdf",
+          "evidence_locator": "pp. 16–17 on continuous operation, p. 34 on isolation, and pp. 104–108 on supervision and recovery."
+        },
+        {
+          "id": "armstrong-2007-history-of-erlang",
+          "title": "A History of Erlang",
+          "year": 2007,
+          "locator": "https://doi.org/10.1145/1238844.1238850",
+          "evidence_locator": "pp. 1 and 17 on non-stop operation, live upgrade, and the historical absence of static type analysis."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Fault-tolerant continuous service should assume software errors and aim to preserve acceptable service despite them.",
+          "source_ids": [
+            "armstrong-2003-reliable-distributed-systems"
+          ],
+          "scope": "Long-lived distributed systems with software faults."
+        },
+        {
+          "statement": "Share-nothing processes that communicate asynchronously create an isolation boundary for failures.",
+          "source_ids": [
+            "armstrong-2003-reliable-distributed-systems"
+          ],
+          "scope": "Concurrent process architecture."
+        },
+        {
+          "statement": "When a worker has no sensible local recovery, another process should own classification and recovery through supervision rather than treating failure as silently resolved.",
+          "source_ids": [
+            "armstrong-2003-reliable-distributed-systems"
+          ],
+          "scope": "Supervision, restart, and error escalation."
+        }
+      ],
+      "decision_questions": [
+        "What is the smallest independently restartable unit, and what state must it reconstruct?",
+        "Which component owns supervision, error classification, and restart policy?",
+        "Are message contracts versioned, bounded, observable, and safe to replay?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The Erlang history records the absence of static type analysis, so supervision does not by itself establish message or interface correctness."
+        }
+      ],
+      "misuse_risks": [
+        "Using 'let it crash' as a slogan while omitting supervision, durable state, idempotency, and protocol evolution.",
+        "Applying restart-based recovery to irreversible external effects without compensation or reconciliation."
+      ],
+      "evidence_boundary": "The selected work supports process isolation, supervision, and recovery for long-lived distributed systems; it does not prove suitability for hard real time, one-shot workflows, or non-idempotent external actions.",
+      "confidence": "high"
+    },
+    {
+      "id": "rich-hickey",
+      "name": "Rich Hickey",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Preserve durable information contracts as data, reduce mutable sharing, and make flow control and executable specifications explicit.",
+      "decision_functions": [
+        "information-contracts",
+        "dataflow-decoupling",
+        "runtime-and-generative-validation"
+      ],
+      "lineage_ids": [
+        "csp-channels",
+        "persistent-values",
+        "data-specifications"
+      ],
+      "primary_sources": [
+        {
+          "id": "hickey-2013-core-async-channels",
+          "title": "Clojure core.async Channels",
+          "year": 2013,
+          "locator": "https://clojure.org/news/2013/06/28/clojure-clore-async-channels",
+          "evidence_locator": "Rationale; 'History' and 'The value of values' sections on channel indirection, bounded buffers, and persistent values."
+        },
+        {
+          "id": "hickey-2016-introducing-clojure-spec",
+          "title": "Introducing clojure.spec",
+          "year": 2016,
+          "locator": "https://clojure.org/news/2016/05/23/introducing-clojure-spec",
+          "evidence_locator": "'Better Communication,' 'More Leverage and Power,' and 'More Robust Software' sections on executable specifications and generative testing."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Queue-like channels can decouple producers from consumers so that their decisions, monitoring, and change are less coupled.",
+          "source_ids": [
+            "hickey-2013-core-async-channels"
+          ],
+          "scope": "CSP-style asynchronous flow between subsystems."
+        },
+        {
+          "statement": "Bounded buffering and blocking provide a pacing and backpressure role rather than assuming unbounded queues.",
+          "source_ids": [
+            "hickey-2013-core-async-channels"
+          ],
+          "scope": "Channel capacity and producer-consumer flow control."
+        },
+        {
+          "statement": "Executable specifications can communicate behavior and support validation, instrumentation, generated data, and generative testing beyond ordinary documentation.",
+          "source_ids": [
+            "hickey-2016-introducing-clojure-spec"
+          ],
+          "scope": "Dynamic-language data and function contracts."
+        }
+      ],
+      "decision_questions": [
+        "Can the boundary transfer durable values and information contracts rather than mutable implementation objects?",
+        "What are the buffer, backpressure, timeout, cancellation, and deadlock semantics?",
+        "Which properties need executable and generative checks rather than prose documentation alone?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The channels note explicitly recognizes deadlock risk and says channels are not intended for fine-grained computational parallelism."
+        }
+      ],
+      "misuse_risks": [
+        "Treating immutable data as a substitute for transactions, durability, ordering, or distributed consistency.",
+        "Generalizing a producer-consumer critique into a blanket rejection of actor or supervision architectures."
+      ],
+      "evidence_boundary": "The selected owner design notes support a lens for Clojure channels and executable specifications; they do not prove a general distributed protocol, static soundness, or real-time scheduling model.",
+      "confidence": "high"
+    },
+    {
+      "id": "simon-peyton-jones",
+      "name": "Simon Peyton Jones",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Keep I/O, concurrency, exceptions, cancellation, and FFI inside an explicit semantic contract, while pricing the complexity of type-system evolution.",
+      "decision_functions": [
+        "effect-boundaries",
+        "concurrency-semantics",
+        "type-system-evolution"
+      ],
+      "lineage_ids": [
+        "functional-programming",
+        "monadic-effects",
+        "haskell-type-system"
+      ],
+      "primary_sources": [
+        {
+          "id": "peyton-jones-2001-awkward-squad",
+          "title": "Tackling the Awkward Squad: Monadic Input/Output, Concurrency, Exceptions, and Foreign-Language Calls in Haskell",
+          "year": 2001,
+          "locator": "https://simon.peytonjones.org/assets/pdfs/tackling-awkward-squad.pdf",
+          "evidence_locator": "p. 1, p. 10, pp. 13–15, and pp. 29 and 33–35 on explicit I/O, operational semantics, and asynchronous exceptions."
+        },
+        {
+          "id": "hudak-hughes-peyton-jones-wadler-2007-history-of-haskell",
+          "title": "A History of Haskell: Being Lazy With Class",
+          "year": 2007,
+          "locator": "https://simon.peytonjones.org/assets/pdfs/haskell-being-lazy-with-class.pdf",
+          "evidence_locator": "pp. 20–21 on the benefits and complexity costs of type-system innovation."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "A practical functional language must explicitly address I/O, exceptions, concurrency, and foreign-language calls rather than relying on a pure core alone.",
+          "source_ids": [
+            "peyton-jones-2001-awkward-squad"
+          ],
+          "scope": "Practical lazy functional-language design."
+        },
+        {
+          "statement": "Concurrency, optimization, and effects require precise operational semantics because a simple denotational account does not automatically settle their behavior.",
+          "source_ids": [
+            "peyton-jones-2001-awkward-squad"
+          ],
+          "scope": "Observable behavior under implementation transformations."
+        },
+        {
+          "statement": "Type-system innovation can accelerate exploration while also creating major language and compiler complexity.",
+          "source_ids": [
+            "hudak-hughes-peyton-jones-wadler-2007-history-of-haskell"
+          ],
+          "scope": "Evolution of a production language and compiler ecosystem."
+        }
+      ],
+      "decision_questions": [
+        "Where do I/O, cancellation, exceptions, cleanup, and FFI live in the API contract?",
+        "Which compiler or runtime transformations must preserve observable concurrent and effectful behavior?",
+        "Does a proposed type feature justify its inference, explainability, and tooling complexity?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The Haskell history itself documents type-system complexity and incomplete formalization, so an effect abstraction is not a general simplicity or reliability guarantee."
+        }
+      ],
+      "misuse_risks": [
+        "Using purity or monads as a slogan that blocks necessary stateful or operational design.",
+        "Attributing current compiler behavior or modern library guarantees to the historical Haskell reports."
+      ],
+      "evidence_boundary": "The selected sources support a language and API semantics lens for effects and type evolution; they do not prescribe a distributed recovery topology or a complete operational runbook.",
+      "confidence": "high"
+    },
+    {
+      "id": "bjarne-stroustrup",
+      "name": "Bjarne Stroustrup",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Test abstractions against real resource costs, domain reach, compatibility, and evolutionary constraints rather than treating elegance as sufficient evidence.",
+      "decision_functions": [
+        "resource-aware-abstraction",
+        "language-evolution",
+        "systems-design"
+      ],
+      "lineage_ids": [
+        "systems-language-design",
+        "zero-overhead-abstraction",
+        "multi-paradigm-language"
+      ],
+      "primary_sources": [
+        {
+          "id": "stroustrup-1993-history-of-cpp",
+          "title": "A History of C++: 1979–1991",
+          "year": 1993,
+          "locator": "https://stroustrup.com/hopl2.pdf",
+          "evidence_locator": "p. 1 on abstraction and efficiency, p. 4 on concurrency models, and pp. 11 and 15–16 on experience, explainability, and representative systems."
+        },
+        {
+          "id": "stroustrup-2005-design-of-cpp0x",
+          "title": "The Design of C++0x",
+          "year": 2005,
+          "locator": "https://stroustrup.com/rules.pdf",
+          "evidence_locator": "p. 3 on resource costs, direct machine mapping, zero-overhead principles, and hard-real-time limits."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "A systems language should combine program organization and abstraction with efficiency and flexibility demonstrated in real projects.",
+          "source_ids": [
+            "stroustrup-1993-history-of-cpp"
+          ],
+          "scope": "Systems-language goals and design evaluation."
+        },
+        {
+          "statement": "When applications lack one dominant concurrency model, a language should avoid prematurely forcing a single application-specific model.",
+          "source_ids": [
+            "stroustrup-1993-history-of-cpp"
+          ],
+          "scope": "Language mechanisms and concurrency-model choice."
+        },
+        {
+          "statement": "A facility requiring runtime support should impose cost only when used, and its resource behavior must fit the intended machine model.",
+          "source_ids": [
+            "stroustrup-2005-design-of-cpp0x"
+          ],
+          "scope": "Native systems with latency, memory, and code-size constraints."
+        }
+      ],
+      "decision_questions": [
+        "What latency, memory, power, code-size, and interoperability envelope must the abstraction meet?",
+        "Does a proposed concurrency mechanism preserve needed domain choice or prematurely exclude viable models?",
+        "Has the design been tested against representative full-system workloads rather than only small examples?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The selected C++ design work retains difficult safety trade-offs and notes that exception behavior is not a predictable foundation for hard real time."
+        }
+      ],
+      "misuse_risks": [
+        "Treating a zero-overhead design aim as proof of workload performance without measurement.",
+        "Using compatibility or direct machine control to justify avoidable safety, security, or maintenance risk."
+      ],
+      "evidence_boundary": "The selected works support a historical systems-language and resource-cost lens; they do not establish present-day C++ performance, safety, or ecosystem claims for a specific workload.",
+      "confidence": "high"
+    },
+    {
+      "id": "rob-pike",
+      "name": "Rob Pike",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Evaluate language design by whole-system software-engineering effects—readability, tools, dependency shape, and concurrency structure—not feature count or presumed speed alone.",
+      "decision_functions": [
+        "language-and-tooling-design",
+        "dependency-structure",
+        "concurrency-decomposition"
+      ],
+      "lineage_ids": [
+        "csp",
+        "language-toolchain-design",
+        "dependency-management"
+      ],
+      "primary_sources": [
+        {
+          "id": "pike-2012-go-at-google",
+          "title": "Go at Google: Language Design in the Service of Software Engineering",
+          "year": 2012,
+          "locator": "https://go.dev/talks/2012/splash.article",
+          "evidence_locator": "Design, package/dependency, tooling, and concurrency sections on large-system maintenance, imports, tools, and shared-pointer limits."
+        },
+        {
+          "id": "pike-2012-concurrency-is-not-parallelism",
+          "title": "Concurrency is not Parallelism",
+          "year": 2012,
+          "locator": "https://go.dev/talks/2012/waza.slide",
+          "evidence_locator": "slides 5–8 on concurrency as composition of independently executing processes and parallelism as simultaneous execution."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Language design for large systems should optimize reading, debugging, maintenance, tooling, and evolution rather than isolated feature appeal.",
+          "source_ids": [
+            "pike-2012-go-at-google"
+          ],
+          "scope": "Large-team software engineering and language/tool ecosystem design."
+        },
+        {
+          "statement": "Enforceable package and dependency constraints, including acyclic imports, can prevent a codebase from becoming structurally entangled.",
+          "source_ids": [
+            "pike-2012-go-at-google"
+          ],
+          "scope": "Package boundaries and source-tree maintainability."
+        },
+        {
+          "statement": "Concurrency is structural composition, whereas parallelism is simultaneous execution, so a concurrent decomposition does not by itself establish a speedup.",
+          "source_ids": [
+            "pike-2012-concurrency-is-not-parallelism"
+          ],
+          "scope": "Concurrent program decomposition and performance reasoning."
+        }
+      ],
+      "decision_questions": [
+        "Does this choice reduce or increase codebase, dependency, and tooling entropy?",
+        "Are package boundaries and dependency directions enforceable and acyclic where that matters?",
+        "Is the concurrent decomposition correct independently of core count, and what separate evidence supports parallel performance?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The Go discussion permits shared pointers, so channel-oriented structure alone does not supply a complete memory-safety or race-freedom argument."
+        }
+      ],
+      "misuse_risks": [
+        "Using simplicity to reject necessary safety, observability, or domain-specific capabilities.",
+        "Equating concurrency with speed without workload, bottleneck, and measurement evidence."
+      ],
+      "evidence_boundary": "The selected talks support a language/tooling and structural-concurrency lens rooted in Go's historical context; they do not prove current Go performance or dictate every dependency policy.",
+      "confidence": "high"
+    },
+    {
+      "id": "herb-sutter",
+      "name": "Herb Sutter",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make mutable shared-state ownership and synchronization explicit, and reserve low-level atomics and memory ordering for architectures that require them.",
+      "decision_functions": [
+        "shared-state-ownership",
+        "synchronization-correctness",
+        "native-concurrency"
+      ],
+      "lineage_ids": [
+        "cxx-memory-model",
+        "shared-memory-concurrency",
+        "synchronization-ownership"
+      ],
+      "primary_sources": [
+        {
+          "id": "sutter-2014-gotw-95-thread-safety",
+          "title": "GotW #95 Solution: Thread Safety and Synchronization",
+          "year": 2014,
+          "locator": "https://herbsutter.com/2014/01/13/gotw-95-solution-thread-safety-and-synchronization/",
+          "evidence_locator": "sections 1, 2, 4(a), and 5 on races, correct synchronization, ownership of writable shared state, and internally synchronized types."
+        },
+        {
+          "id": "sutter-2013-atomic-weapons",
+          "title": "atomic<> Weapons: The C++ Memory Model and Modern Hardware",
+          "year": 2013,
+          "locator": "https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/",
+          "evidence_locator": "introductory guidance and 'Stuff You Shouldn't Need To Know' material on locks, atomics, fences, barriers, and relaxed ordering."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "A data race involves concurrent shared access with at least one writer, and correct synchronization must cover competing reads and writes.",
+          "source_ids": [
+            "sutter-2014-gotw-95-thread-safety"
+          ],
+          "scope": "C++ shared-memory execution and analogous mainstream language models."
+        },
+        {
+          "statement": "The code that owns writable shared state normally owns responsibility for synchronizing access to it.",
+          "source_ids": [
+            "sutter-2014-gotw-95-thread-safety"
+          ],
+          "scope": "Ownership and synchronization responsibilities in concurrent components."
+        },
+        {
+          "statement": "Atomics, fences, and memory ordering need a defined architectural purpose; standalone barriers and relaxed atomics are not casual defaults.",
+          "source_ids": [
+            "sutter-2013-atomic-weapons"
+          ],
+          "scope": "Low-level C++ concurrency and hardware mapping."
+        }
+      ],
+      "decision_questions": [
+        "What mutable state is shared, who owns it, and what synchronization establishes its visibility and ordering?",
+        "Can ownership transfer, queues, or process isolation remove the shared mutable state instead of protecting it?",
+        "Does the remaining low-level atomic or fence have a documented invariant and measured reason to exist?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The atomic guidance itself warns against casual low-level barriers and relaxed ordering, so this is a last-mile correctness lens rather than a default abstraction choice."
+        }
+      ],
+      "misuse_risks": [
+        "Adding locks, atomics, or fences mechanically instead of changing an unsafe ownership or communication design.",
+        "Treating historical concurrency-transition arguments as current hardware or workload performance evidence."
+      ],
+      "evidence_boundary": "The selected material supports a native shared-memory and C++ memory-model lens; it does not substitute for distributed failure handling, managed-runtime semantics, or current performance measurement.",
+      "confidence": "high"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "Herb Sutter in a six-seat roster variant",
+      "reason": "Not rejected from this seven-representation library. For a six-seat run, this lens may be merged with or deferred to Bjarne Stroustrup unless a native memory-model, data-race, or low-level synchronization concern is material."
+    },
+    {
+      "name": "Additional language or community figures",
+      "reason": "Not admitted in this family without two qualifying primary sources and a decision-relevant contribution that is not already covered by the seven named lenses."
+    }
+  ],
+  "saturation": "Stopped at the requested seven admitted representations. The library covers distinct predicates for static invariants, failure recovery, information flow, effect semantics, resource-aware abstraction, language/tooling structure, and shared-memory synchronization. No claim is made that seven is optimal; a six-seat roster may merge or defer Sutter to Stroustrup unless native memory-model concerns are material."
+}

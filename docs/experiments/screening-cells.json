@@ -1,0 +1,55 @@
+{
+  "schema_version": "council.screening-cells/1",
+  "model_configuration_count": 4,
+  "packs_per_cell": 10,
+  "runs_per_pack": 3,
+  "cell_families": [
+    {
+      "id": "T0",
+      "applicability": "each-model-configuration",
+      "n": [1],
+      "groupings": ["holistic"],
+      "rounds": [0]
+    },
+    {
+      "id": "T1",
+      "applicability": "each-model-configuration",
+      "n": [1],
+      "groupings": ["internal-lens-sequence"],
+      "rounds": [0]
+    },
+    {
+      "id": "T2",
+      "applicability": "each-model-configuration",
+      "n": [1, 2, 4, 6, 8, 16],
+      "groupings": ["unlensed-independent-samples"],
+      "rounds": [0]
+    },
+    {
+      "id": "T3-breadth",
+      "applicability": "each-model-configuration",
+      "n": [1, 2, 4, 6, 8, 16],
+      "groupings": ["breadth"],
+      "rounds": [0, 1, 2]
+    },
+    {
+      "id": "T3-paired-counterweight",
+      "applicability": "each-model-configuration",
+      "n": [2, 4, 6, 8, 16],
+      "groupings": ["paired-counterweight"],
+      "rounds": [0, 1, 2]
+    }
+  ],
+  "incumbent_baseline": {
+    "id": "G-1",
+    "applicability": "one-exact-incumbent-model-configuration-only",
+    "cell_count": 1
+  },
+  "expected": {
+    "cells_per_model_configuration": 41,
+    "cross_configuration_cells": 164,
+    "incumbent_baseline_cells": 1,
+    "total_core_cells": 165,
+    "total_core_system_runs": 4950
+  }
+}

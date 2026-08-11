@@ -1,0 +1,449 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "systems-performance",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "ken-thompson",
+      "name": "Ken Thompson",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Keep privileged mechanisms narrow, and evaluate a build chain at the level where its behavior can actually be trusted.",
+      "decision_functions": [
+        "trusted-build-boundaries",
+        "kernel-policy",
+        "system-minimalism"
+      ],
+      "lineage_ids": [
+        "trusted-compiler-chain",
+        "unix-kernel-design"
+      ],
+      "primary_sources": [
+        {
+          "id": "thompson-1984-trusting-trust",
+          "title": "Reflections on Trusting Trust",
+          "year": 1984,
+          "locator": "https://doi.org/10.1145/358198.358210",
+          "evidence_locator": "pp. 761–763; compiler/login alteration and self-reproducing bootstrap construction."
+        },
+        {
+          "id": "thompson-1978-unix-implementation",
+          "title": "UNIX Time-Sharing System: UNIX Implementation",
+          "year": 1978,
+          "locator": "https://www.nokia.com/bell-labs/publications-and-media/publications/unix-time-sharing-system-unix-implementation/",
+          "evidence_locator": "Section I, Introduction; least-common-denominator kernel policy and replaceable user programs."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Source inspection alone cannot establish the behavior of a program when the compiler or its bootstrap path can introduce behavior not present in the apparent source.",
+          "source_ids": [
+            "thompson-1984-trusting-trust"
+          ],
+          "scope": "Compiler and bootstrap trust for the demonstrated class of self-reproducing compiler alteration."
+        },
+        {
+          "statement": "A build-integrity review must include the compiler and bootstrap path, not only the source being compiled.",
+          "source_ids": [
+            "thompson-1984-trusting-trust"
+          ],
+          "scope": "Evaluation of trust assumptions in a software build chain."
+        },
+        {
+          "statement": "The resident UNIX kernel should make few policy decisions and provide a least-common-denominator base while user programs remain replaceable.",
+          "source_ids": [
+            "thompson-1978-unix-implementation"
+          ],
+          "scope": "1978 UNIX kernel and user-program design."
+        }
+      ],
+      "decision_questions": [
+        "Which component can alter the resulting artifact while remaining outside the review boundary?",
+        "Which policy is irreducibly privileged, and which can remain in replaceable user-space or application code?",
+        "What evidence would make the compiler and bootstrap path trustworthy enough for this decision?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The trusting-trust construction demonstrates a trust-boundary failure mode; it does not estimate its prevalence in a specific contemporary toolchain or select a complete mitigation."
+        }
+      ],
+      "misuse_risks": [
+        "Treating the demonstration as proof that every compiled binary is untrustworthy without evaluating the actual supply chain.",
+        "Treating a least-common-denominator kernel as a mandate to remove all policy from higher layers."
+      ],
+      "evidence_boundary": "The selected sources support a compiler/bootstrap trust lens and a historically bounded UNIX-kernel policy lens. They do not prescribe a modern software-supply-chain control set, service architecture, or general security assurance level.",
+      "confidence": "high"
+    },
+    {
+      "id": "dennis-ritchie",
+      "name": "Dennis Ritchie",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Preserve portable systems-level leverage through simple implementation contracts, then measure and isolate the cost-bearing path rather than guessing about it.",
+      "decision_functions": [
+        "portable-systems-design",
+        "cost-isolation",
+        "language-contracts"
+      ],
+      "lineage_ids": [
+        "unix-c",
+        "portable-systems-programming"
+      ],
+      "primary_sources": [
+        {
+          "id": "ritchie-1978-unix-retrospective",
+          "title": "The UNIX Time-sharing System — A Retrospective",
+          "year": 1978,
+          "locator": "https://www.nokia.com/bell-labs/about/dennis-m-ritchie/retroindex.html",
+          "evidence_locator": "PDF pp. 9–11; implementation language, portability, and performance-tuning discussion."
+        },
+        {
+          "id": "ritchie-1993-c-history",
+          "title": "The Development of the C Language",
+          "year": 1993,
+          "locator": "https://www.bell-labs.com/usr/dmr/www/chist.pdf",
+          "evidence_locator": "PDF pp. 1–2 and 11–12; C's systems-programming origin, type checking, and compatibility evolution."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Implementing UNIX in a high-level language created portability and maintainability benefits, while preserving the need to account for its runtime and storage costs.",
+          "source_ids": [
+            "ritchie-1978-unix-retrospective"
+          ],
+          "scope": "Historical UNIX implementation and porting decisions."
+        },
+        {
+          "statement": "Performance-sensitive code should be identified from the cost-bearing fraction of the system rather than assumed from the choice of implementation language alone.",
+          "source_ids": [
+            "ritchie-1978-unix-retrospective"
+          ],
+          "scope": "Tuning a systems implementation after its dominant costs are known."
+        },
+        {
+          "statement": "Language compatibility and type checking are practical systems contracts whose historical omissions create real migration and correctness costs.",
+          "source_ids": [
+            "ritchie-1993-c-history"
+          ],
+          "scope": "Evolution of C and interfaces compiled across versions or declarations."
+        }
+      ],
+      "decision_questions": [
+        "What portability or maintenance leverage is gained by this implementation boundary, and what measured cost does it introduce?",
+        "Which small fraction of the path is actually responsible for the relevant resource or latency cost?",
+        "Which language, ABI, or type assumptions must remain compatible across independently changed components?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The selected UNIX and C histories document historical trade-offs; they do not establish that C is appropriate for every system or that source portability substitutes for safety properties."
+        }
+      ],
+      "misuse_risks": [
+        "Interpreting portability as a requirement to suppress every hardware-specific optimization, including a measured hotspot.",
+        "Treating the historical C trade-offs as an endorsement of unchecked assumptions in a new interface."
+      ],
+      "evidence_boundary": "The selected sources support a historical systems-language and UNIX implementation lens. They do not prescribe a current language choice, memory-safety strategy, distributed protocol, or benchmark result.",
+      "confidence": "high"
+    },
+    {
+      "id": "michael-abrash",
+      "name": "Michael Abrash",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Treat performance as a whole-system constraint: locate the limiting work, challenge the architecture, and exchange work across time or space only against the actual workload.",
+      "decision_functions": [
+        "bottleneck-reframing",
+        "realtime-performance",
+        "architecture-level-optimization"
+      ],
+      "lineage_ids": [
+        "measurement-led-optimization",
+        "realtime-graphics"
+      ],
+      "primary_sources": [
+        {
+          "id": "abrash-1997-graphics-programming-black-book",
+          "title": "Michael Abrash's Graphics Programming Black Book",
+          "year": 1997,
+          "locator": "https://www.jagregory.com/abrash-black-book/",
+          "evidence_locator": "Chapters 1 and 3; optimization perspective, bottleneck identification, and system-level performance reasoning."
+        },
+        {
+          "id": "abrash-1996-ramblings-in-realtime",
+          "title": "Ramblings in Realtime",
+          "year": 1996,
+          "locator": "https://valvedev.info/archives/abrash/abrash.pdf",
+          "evidence_locator": "PDF pp. 1–2 and 9–10; alternative visibility designs, simplification, and precomputation/caching trade-offs."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "When optimization produces increasing complexity without a proportional gain, reconsider the design rather than continuing to tune a frozen approach.",
+          "source_ids": [
+            "abrash-1996-ramblings-in-realtime"
+          ],
+          "scope": "Reported realtime-graphics design practice and architecture selection."
+        },
+        {
+          "statement": "The performance-relevant problem is the workload-dependent limiter, so an optimization must be judged in the complete system rather than by isolated local speed.",
+          "source_ids": [
+            "abrash-1997-graphics-programming-black-book"
+          ],
+          "scope": "Performance engineering for software that interacts with contemporary hardware and workload constraints."
+        },
+        {
+          "statement": "Precomputing or caching a result can be preferable to accelerating its repeated computation when the time, memory, and variability trade-off fits the workload.",
+          "source_ids": [
+            "abrash-1996-ramblings-in-realtime"
+          ],
+          "scope": "Quake visible-surface determination and analogous repeated-computation trade-offs."
+        }
+      ],
+      "decision_questions": [
+        "What measured limiter governs the user-visible constraint, and is the current optimization targeting it?",
+        "Would a different algorithm, representation, or precomputation move work out of the critical path more effectively than micro-tuning?",
+        "What memory, build-time, correctness, and worst-case variability costs accompany the proposed cache or precomputation?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The selected writings report graphics and realtime practice; a simplification or cache can be unsuitable when its memory, invalidation, startup, or correctness cost dominates the actual workload."
+        }
+      ],
+      "misuse_risks": [
+        "Using a reported graphics optimization pattern as a substitute for measuring an unrelated workload.",
+        "Adding caches or precomputation without an explicit invalidation, memory-capacity, and tail-latency analysis."
+      ],
+      "evidence_boundary": "The book and PDF archive are authored technical writings accessed through third-party hosts. They support the reported performance practices and examples, not universal modern hardware claims or an instruction to emulate an author's style.",
+      "confidence": "medium"
+    },
+    {
+      "id": "brendan-gregg",
+      "name": "Brendan Gregg",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Diagnose production performance systematically: enumerate resources and failure signals before drilling into workload-specific causality, then use visualization to make sampled evidence inspectable.",
+      "decision_functions": [
+        "systems-triage",
+        "observability-method",
+        "profiling-interpretation"
+      ],
+      "lineage_ids": [
+        "use-method",
+        "flame-graph-profiling"
+      ],
+      "primary_sources": [
+        {
+          "id": "gregg-2012-use-method",
+          "title": "The USE Method",
+          "year": 2012,
+          "locator": "https://www.brendangregg.com/Articles/The_USE_Method.pdf",
+          "evidence_locator": "PDF pp. 1, 4–6, and 8–9; definition, resource checklist, strategy, and stated limits."
+        },
+        {
+          "id": "gregg-2011-flame-graphs",
+          "title": "Flame Graphs",
+          "year": 2011,
+          "locator": "https://www.brendangregg.com/Articles/Flame_Graphs.pdf",
+          "evidence_locator": "PDF pp. 1–5; fixed-rate sampling, stack aggregation, graph construction, and interpretation."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "For each relevant resource, check utilization, saturation, and errors before assuming a single bottleneck explains the incident.",
+          "source_ids": [
+            "gregg-2012-use-method"
+          ],
+          "scope": "Initial server and operating-system performance triage."
+        },
+        {
+          "statement": "A resource-first checklist makes unmeasured areas explicit, allowing a fast initial investigation to distinguish known evidence from known unknowns.",
+          "source_ids": [
+            "gregg-2012-use-method"
+          ],
+          "scope": "Performance investigations constrained by time or available telemetry."
+        },
+        {
+          "statement": "A flame graph aggregates sampled stack traces so horizontal width represents sample prevalence; it identifies on-CPU hot paths but is not a complete latency analysis.",
+          "source_ids": [
+            "gregg-2011-flame-graphs"
+          ],
+          "scope": "Fixed-rate stack-sampling profile interpretation."
+        }
+      ],
+      "decision_questions": [
+        "Which resources have verified utilization, saturation, and error evidence, and which remain unmeasured?",
+        "Is the observed problem on-CPU, waiting, or an error/queueing condition that requires a different measurement?",
+        "What workload characterization or drill-down would discriminate the first apparent bottleneck from the causal one?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Gregg states that USE is one tool in a larger toolbox: it finds bottlenecks and errors efficiently but does not solve every performance problem, and sampled flame graphs describe on-CPU observations."
+        }
+      ],
+      "misuse_risks": [
+        "Treating a high utilization percentage or wide flame-graph frame as causal proof without saturation, workload, and experiment context.",
+        "Running a checklist as a ritual while ignoring absent metrics, measurement interval, sampling bias, or user-visible latency."
+      ],
+      "evidence_boundary": "The selected works support an operational triage and sampled-profile interpretation method. They do not prescribe a universal SLO, telemetry product, root-cause guarantee, or production remediation.",
+      "confidence": "high"
+    },
+    {
+      "id": "mike-acton",
+      "name": "Mike Acton",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Design data and transformations around the work the machine performs for the common case, then validate the resulting layout and access pattern against the target hardware and workload.",
+      "decision_functions": [
+        "data-layout",
+        "common-case-specialization",
+        "hardware-aware-performance"
+      ],
+      "lineage_ids": [
+        "data-oriented-design",
+        "hardware-aware-data-layout"
+      ],
+      "primary_sources": [
+        {
+          "id": "acton-2010-three-big-lies",
+          "title": "Three Big Lies: Typical Design Failures in Game Programming",
+          "year": 2010,
+          "locator": "https://gdcvault.com/play/1012200/Three-Big-Lies-Typical-Design",
+          "evidence_locator": "Official GDC session overview and presentation on data-oriented alternatives, hardware costs, and data-over-code design."
+        },
+        {
+          "id": "acton-2014-data-oriented-design-cppcon",
+          "title": "Data-Oriented Design and C++",
+          "year": 2014,
+          "locator": "https://github.com/CppCon/CppCon2014/blob/7b15ec44ac01de0ff3e65a7194b84aca2d4e2366/Presentations/Data-Oriented%20Design%20and%20C%2B%2B/Data-Oriented%20Design%20and%20C%2B%2B%20-%20Mike%20Acton%20-%20CppCon%202014.pptx",
+          "evidence_locator": "Immutable commit 7b15ec44ac01de0ff3e65a7194b84aca2d4e2366; slides titled Data-Oriented Design Principles and Solve for the most common case first."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Data should be organized around the transformations and access patterns the program actually performs, rather than around a generic object taxonomy alone.",
+          "source_ids": [
+            "acton-2010-three-big-lies"
+          ],
+          "scope": "Data-oriented software design for performance-sensitive processing."
+        },
+        {
+          "statement": "The common case should drive the primary design; uncommon cases can be handled explicitly rather than imposing their cost on every operation.",
+          "source_ids": [
+            "acton-2014-data-oriented-design-cppcon"
+          ],
+          "scope": "Workload-informed performance design where case frequencies are known or can be measured."
+        },
+        {
+          "statement": "Performance-relevant abstraction decisions need to expose actual data, movement, and access costs to the target machine rather than assuming code structure is the operative unit.",
+          "source_ids": [
+            "acton-2010-three-big-lies",
+            "acton-2014-data-oriented-design-cppcon"
+          ],
+          "scope": "Design review of data layout and processing pipelines on a specified hardware and workload."
+        }
+      ],
+      "decision_questions": [
+        "What data is touched in the dominant path, in what order, and with what measured frequency?",
+        "Which rare cases are currently imposing indirection, branching, allocation, or layout costs on the common case?",
+        "What target-machine measurement would show that the proposed layout improves the relevant throughput, latency, or memory constraint?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "A common-case layout is justified only by the stated workload and hardware constraints; it can be inferior when maintainability, variability, memory use, or a different access pattern dominates."
+        }
+      ],
+      "misuse_risks": [
+        "Applying data-oriented layout changes before identifying the workload, data volume, and target-machine constraint they are meant to improve.",
+        "Treating object-oriented design as categorically invalid rather than selecting the representation that fits the measured work."
+      ],
+      "evidence_boundary": "The official 2010 GDC session and commit-pinned 2014 speaker deck support a data-oriented design lens. The deck is preserved at repository commit 7b15ec44ac01de0ff3e65a7194b84aca2d4e2366; neither source supplies a benchmark result for a different workload.",
+      "confidence": "medium"
+    },
+    {
+      "id": "martin-thompson",
+      "name": "Martin Thompson",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "For low-latency concurrent paths, remove contended writes through clear ownership and separated coordination, while treating queue, wait, and CPU costs as explicit workload trade-offs.",
+      "decision_functions": [
+        "contention-reduction",
+        "concurrent-dataflow",
+        "latency-throughput-tradeoffs"
+      ],
+      "lineage_ids": [
+        "mechanical-sympathy",
+        "single-writer-principle",
+        "disruptor-pattern"
+      ],
+      "primary_sources": [
+        {
+          "id": "thompson-2011-disruptor",
+          "title": "Disruptor: High performance alternative to bounded queues for exchanging data between concurrent threads",
+          "year": 2011,
+          "locator": "https://lmax-exchange.github.io/disruptor/files/Disruptor-1.0.pdf",
+          "evidence_locator": "PDF pp. 1–2 and 4–6; contention model, ownership, ring-buffer design, and wait-strategy trade-offs."
+        },
+        {
+          "id": "thompson-2011-single-writer-principle",
+          "title": "The Single Writer Principle",
+          "year": 2011,
+          "locator": "https://mechanical-sympathy.blogspot.com/2011/09/single-writer-principle.html",
+          "evidence_locator": "Sections The Single Writer Principle and Impact on Performance; ownership rule and comparative measurements."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "If one thread owns writes to a resource, the need for mutual exclusion on those updates can be removed, while visibility to readers still requires an ordering mechanism.",
+          "source_ids": [
+            "thompson-2011-disruptor"
+          ],
+          "scope": "Shared-state concurrency with an ownership model that can assign a single writer."
+        },
+        {
+          "statement": "Concurrent queue costs arise from coordination and contention as well as storage, so separating producer, consumer, and data-storage concerns can change the performance shape.",
+          "source_ids": [
+            "thompson-2011-disruptor"
+          ],
+          "scope": "The described LMAX Java pipeline and comparable concurrent exchange paths."
+        },
+        {
+          "statement": "The single-writer principle is a design rule for reducing contention, not a claim that all work must be serialized; the appropriate partition is determined by the resource and workload.",
+          "source_ids": [
+            "thompson-2011-single-writer-principle"
+          ],
+          "scope": "Architectures that can route updates to one owner per mutable resource."
+        }
+      ],
+      "decision_questions": [
+        "Which mutable resource has contended writes, and can one owner perform its updates without violating throughput or availability needs?",
+        "Are producer coordination, consumer notification, and data storage unnecessarily coupled in the current exchange mechanism?",
+        "What CPU, latency, jitter, backpressure, and correctness trade-off does the selected wait or queue strategy make under peak load?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "The Disruptor paper explicitly treats waiting as a CPU-versus-latency/throughput trade-off and notes that multi-producer coordination reintroduces contention; the cited measurements are configuration-specific."
+        }
+      ],
+      "misuse_risks": [
+        "Replacing every queue or lock with a busy-spin single-writer design without checking CPU budget, backpressure, failure handling, and fairness.",
+        "Generalizing the paper's configuration-specific Java and financial-exchange measurements to a different runtime, topology, or workload."
+      ],
+      "evidence_boundary": "The Disruptor paper is co-authored and reports a specific LMAX design and measurements; the selected sources support the represented ownership and contention lens, not a universal claim that lock-free or ring-buffer designs are always faster or simpler.",
+      "confidence": "high"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "John Carmack",
+      "admission_status": "hold",
+      "reason": "Hold on evidence sufficiency only: this bounded lane did not establish the required two stable, independently attributable primary technical sources for a distinct generalizable systems-performance lens. This is not a judgment of technical expertise."
+    }
+  ],
+  "saturation": "Stopped at exactly six admitted representations because the bounded decision predicates have distinct coverage across trust boundaries, portable systems implementation, architecture-level optimization, systems triage, data layout, and concurrent ownership. Further expansion would duplicate an admitted lens or require additional qualifying primary evidence; John Carmack remains on hold solely for the latter reason."
+}

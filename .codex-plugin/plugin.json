@@ -1,20 +1,20 @@
 {
   "name": "council",
-  "version": "0.1.0",
-  "description": "Adaptive, evidence-bound decision councils for complex product and engineering work.",
+  "version": "0.2.0",
+  "description": "An evidence-bound decision council for consequential software-engineering work.",
   "author": {
     "name": "Council Project"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Council",
-    "shortDescription": "Adaptive specialist councils for consequential decisions.",
-    "longDescription": "Council packages evidence-bound decision workflows, specialist advisor profiles, and evaluation contracts for complex product work.",
+    "shortDescription": "Specialist review for consequential engineering decisions.",
+    "longDescription": "This release packages the Engineering Council workflow for consequential software-engineering decisions. Product, research, and other domain councils remain roadmap candidates rather than installed capabilities.",
     "developerName": "Council Project",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
-      "Use Council to evaluate this consequential decision with the smallest useful set of independent specialist lenses."
+      "Use Engineering Council to evaluate this consequential software-engineering decision with independent specialist lenses."
     ]
   }
 }

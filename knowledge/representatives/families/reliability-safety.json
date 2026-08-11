@@ -1,0 +1,526 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "reliability-safety",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "richard-cook",
+      "name": "Richard Cook",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Treat production failure as a system-state problem shaped by interacting contributors, degraded work, and recovery capacity rather than a single root cause.",
+      "decision_functions": [
+        "incident-analysis",
+        "system-safety",
+        "capacity-and-coupling"
+      ],
+      "lineage_ids": [
+        "cognitive-systems-engineering",
+        "complex-systems-safety"
+      ],
+      "primary_sources": [
+        {
+          "id": "cook-1998-complex-systems-fail",
+          "title": "How Complex Systems Fail",
+          "year": 1998,
+          "locator": "https://how.complexsystems.fail/",
+          "evidence_locator": "Numbered propositions 3, 5, 7–8, 12, and 17–18 on multiple contributors, degraded mode, hindsight, and adaptive safety work."
+        },
+        {
+          "id": "cook-rasmussen-2005-going-solid",
+          "title": "Going Solid: A Model of System Dynamics and Consequences for Patient Safety",
+          "year": 2005,
+          "locator": "https://doi.org/10.1136/qshc.2003.009530",
+          "evidence_locator": "Abstract; Reactions and consequences; Implications; and Key messages on loss of slack, tight coupling, and recovery."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Complex-system failure is better reconstructed as a combination of contributors than reduced to one root cause.",
+          "source_ids": [
+            "cook-1998-complex-systems-fail"
+          ],
+          "scope": "Post-incident analysis of complex, defended systems."
+        },
+        {
+          "statement": "Successful operations depend on people adaptively creating safety while systems operate with changing latent conditions and degradation.",
+          "source_ids": [
+            "cook-1998-complex-systems-fail"
+          ],
+          "scope": "Work-as-done in high-consequence operational systems."
+        },
+        {
+          "statement": "Loss of slack and tighter coupling can make ordinary events consequential and reduce opportunities for recovery.",
+          "source_ids": [
+            "cook-rasmussen-2005-going-solid"
+          ],
+          "scope": "System dynamics under efficiency pressure and partial failure."
+        }
+      ],
+      "decision_questions": [
+        "Which people, workarounds, or buffers currently bridge gaps between design and operation?",
+        "Does this change remove slack or increase coupling in a way that weakens recovery?",
+        "Does the incident account distinguish contemporaneous knowledge, degraded conditions, and multiple contributors from hindsight?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "A bounded component fault can still require an immediate, specific containment and repair path; distributed-contributor analysis does not eliminate local technical responsibility."
+        }
+      ],
+      "misuse_risks": [
+        "Using the rejection of a singular root cause to avoid causal analysis or remediation ownership.",
+        "Treating systemic context as an excuse to ignore a concrete unsafe defect."
+      ],
+      "evidence_boundary": "The selected work is conceptual safety research rooted largely in high-consequence and healthcare settings; it does not supply predictive thresholds or controlled evidence for every software intervention.",
+      "confidence": "high"
+    },
+    {
+      "id": "david-woods",
+      "name": "David Woods",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Ask whether a system can extend adaptive capacity as surprises approach its operating boundary, rather than calling any continued service resilient.",
+      "decision_functions": [
+        "resilience-design",
+        "capacity-management",
+        "escalation-design"
+      ],
+      "lineage_ids": [
+        "resilience-engineering",
+        "adaptive-capacity"
+      ],
+      "primary_sources": [
+        {
+          "id": "woods-2015-four-concepts-resilience",
+          "title": "Four Concepts for Resilience and the Implications for the Future of Resilience Engineering",
+          "year": 2015,
+          "locator": "https://doi.org/10.1016/j.ress.2015.03.018",
+          "evidence_locator": "Abstract on rebound, robustness, graceful extensibility, and sustained adaptability."
+        },
+        {
+          "id": "woods-2018-graceful-extensibility",
+          "title": "The Theory of Graceful Extensibility: Basic Rules That Govern Adaptive Systems",
+          "year": 2018,
+          "locator": "https://doi.org/10.1007/s10669-018-9708-3",
+          "evidence_locator": "Sections 3.5–4 on capacity for maneuver, saturation, buffering limits, and the need for further tests."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Rebound, robustness, graceful extensibility, and sustained adaptability are different resilience concepts with different implications.",
+          "source_ids": [
+            "woods-2015-four-concepts-resilience"
+          ],
+          "scope": "Definition and evaluation of resilience claims."
+        },
+        {
+          "statement": "Graceful extensibility is the capacity to extend adaptation when surprise challenges the boundary of current capability.",
+          "source_ids": [
+            "woods-2015-four-concepts-resilience",
+            "woods-2018-graceful-extensibility"
+          ],
+          "scope": "Adaptive systems facing escalating demand or novel conditions."
+        },
+        {
+          "statement": "Buffers alone are insufficient because finite resources and continuing change can produce saturation and loss of maneuvering capacity.",
+          "source_ids": [
+            "woods-2018-graceful-extensibility"
+          ],
+          "scope": "Capacity planning and early warning of adaptive limits."
+        }
+      ],
+      "decision_questions": [
+        "What skill, queue, dependency, or buffer is approaching saturation?",
+        "Can the system extend adaptation when its normal operating boundary is exceeded?",
+        "Which apparent success depends on capacity that is already being consumed?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Service objectives and explicit risk limits are still needed: resilience language without an observable user outcome or operating boundary is not an operational decision rule."
+        }
+      ],
+      "misuse_risks": [
+        "Using resilience as an approval label without defining the boundary, resources, or failure signal.",
+        "Treating adaptive capacity as a reason to defer measurable capacity, recovery, or reliability commitments."
+      ],
+      "evidence_boundary": "The selected papers present a cross-domain theory and explicitly call for further explanatory testing; they do not provide a universal resilience metric or a release gate.",
+      "confidence": "high"
+    },
+    {
+      "id": "john-allspaw",
+      "name": "John Allspaw",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Design incident debriefs to recover how work made sense at the time, retain multiple operational accounts, and keep learning distinct from immediate fixing.",
+      "decision_functions": [
+        "incident-debriefing",
+        "organizational-learning",
+        "facilitation"
+      ],
+      "lineage_ids": [
+        "software-incident-learning",
+        "new-view-safety"
+      ],
+      "primary_sources": [
+        {
+          "id": "allspaw-2012-blameless-postmortems",
+          "title": "Blameless PostMortems and a Just Culture",
+          "year": 2012,
+          "locator": "https://www.etsy.com/de/codeascraft/blameless-postmortems",
+          "evidence_locator": "A Blameless Post-Mortem; A Second Story; and Allowing Engineers to Own Their Own Stories."
+        },
+        {
+          "id": "allspaw-2016-debriefing-facilitation-guide",
+          "title": "Etsy’s Debriefing Facilitation Guide for Blameless Postmortems",
+          "year": 2016,
+          "locator": "https://www.etsy.com/codeascraft/debriefing-facilitation-guide",
+          "evidence_locator": "The Questions Are As Important as the Answers and the sections on multiple perspectives, artifacts, and facilitation."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Blamelessness does not remove accountability; it enables examination of actions, assumptions, and effects without retribution.",
+          "source_ids": [
+            "allspaw-2012-blameless-postmortems"
+          ],
+          "scope": "Software incident review and follow-up."
+        },
+        {
+          "statement": "A useful incident account explains why an action made sense locally instead of treating the actor as the whole explanation.",
+          "source_ids": [
+            "allspaw-2012-blameless-postmortems"
+          ],
+          "scope": "Reconstruction of operator and engineer decisions."
+        },
+        {
+          "statement": "Facilitated debriefs need multiple perspectives and contextual dialogue because event artifacts alone do not contain the full operational story.",
+          "source_ids": [
+            "allspaw-2016-debriefing-facilitation-guide"
+          ],
+          "scope": "Collaborative learning from operational incidents."
+        }
+      ],
+      "decision_questions": [
+        "Can participants describe what they expected, observed, and believed without retaliation?",
+        "Which materially different account of the incident has not yet been heard?",
+        "Are proposed fixes closing the event before the organization has learned how work unfolded?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Immediate mitigation, security containment, and statutory reporting can be time-critical; a learning debrief must not delay or replace those processes."
+        }
+      ],
+      "misuse_risks": [
+        "Interpreting blamelessness as blanket amnesty or absence of accountability.",
+        "Replacing concrete incident mitigation with open-ended discussion."
+      ],
+      "evidence_boundary": "These are primary practitioner accounts from Etsy and related operational practice, not controlled evidence that one postmortem format improves incident rates or psychological safety in every organization.",
+      "confidence": "high"
+    },
+    {
+      "id": "sidney-dekker",
+      "name": "Sidney Dekker",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Evaluate human contribution and accountability through contemporaneous context, fair procedure, and restorative repair rather than retrospective blame alone.",
+      "decision_functions": [
+        "just-culture",
+        "accountability-design",
+        "human-contribution-analysis"
+      ],
+      "lineage_ids": [
+        "new-view-safety",
+        "restorative-justice"
+      ],
+      "primary_sources": [
+        {
+          "id": "dekker-2002-human-contributions",
+          "title": "Reconstructing Human Contributions to Accidents: The New View on Error and Performance",
+          "year": 2002,
+          "locator": "https://doi.org/10.1016/S0022-4375(02)00032-4",
+          "evidence_locator": "Abstract on reconstructing human contribution in context rather than retrospectively listing error."
+        },
+        {
+          "id": "dekker-breakey-2016-just-culture",
+          "title": "Just Culture: Improving Safety by Achieving Substantive, Procedural and Restorative Justice",
+          "year": 2016,
+          "locator": "https://doi.org/10.1016/j.ssci.2016.01.018",
+          "evidence_locator": "Abstract and sections 1–2 on substantive, procedural, restorative justice and limits of outcome evidence."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Human contribution should be reconstructed inside the conditions and knowledge available at the time so that behavior can be understood rather than merely labeled erroneous.",
+          "source_ids": [
+            "dekker-2002-human-contributions"
+          ],
+          "scope": "Accident and incident investigation."
+        },
+        {
+          "statement": "A just culture requires substantive fairness of rules, procedural fairness in judgment, and restorative attention to repair.",
+          "source_ids": [
+            "dekker-breakey-2016-just-culture"
+          ],
+          "scope": "Safety and accountability policy."
+        },
+        {
+          "statement": "The just-culture framework should not be treated as a demonstrated performance guarantee because the paper identifies limited outcome evidence for retributive approaches improving learning.",
+          "source_ids": [
+            "dekker-breakey-2016-just-culture"
+          ],
+          "scope": "Claims about organizational-learning effectiveness."
+        }
+      ],
+      "decision_questions": [
+        "Does the review reconstruct work-as-done and the constraints that made decisions locally rational?",
+        "Were the rule, investigation process, and treatment of participants substantively and procedurally fair?",
+        "What repair is owed to affected people or systems beyond determining fault?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Fair process does not itself establish technical causality, legal liability, or the adequacy of a remediation; those require separate evidence and authority."
+        }
+      ],
+      "misuse_risks": [
+        "Using just culture to mean that intentional or reckless conduct cannot be addressed.",
+        "Treating a fair process as a substitute for technical root-contributor analysis and corrective action."
+      ],
+      "evidence_boundary": "The selected works establish a conceptual and normative framework from safety research; they do not establish a universal software-outcome effect or decide individual legal or employment cases.",
+      "confidence": "high"
+    },
+    {
+      "id": "michael-nygard",
+      "name": "Michael Nygard",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make failure semantics and fault containment explicit so that a degraded response is safer than error propagation and service stability is assessed from the requester's perspective.",
+      "decision_functions": [
+        "failure-containment",
+        "availability-design",
+        "remediation-analysis"
+      ],
+      "lineage_ids": [
+        "release-it-patterns",
+        "fault-error-failure"
+      ],
+      "primary_sources": [
+        {
+          "id": "nygard-2016-fault-error-failure",
+          "title": "Fault, Error, Failure",
+          "year": 2016,
+          "locator": "https://www.michaelnygard.com/blog/2016/11/fault-error-failure/",
+          "evidence_locator": "Full post defining fault, error, failure, and the distinction between fault tolerance and error propagation."
+        },
+        {
+          "id": "nygard-2016-availability-stability",
+          "title": "Availability and Stability",
+          "year": 2016,
+          "locator": "https://www.michaelnygard.com/blog/2016/11/availability-and-stability/",
+          "evidence_locator": "Full post on request-facing availability, partial failure, severability, tolerance, recoverability, and resilience."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Fault, error, and failure are distinct, and a visible failure may be safer than allowing an erroneous state to propagate.",
+          "source_ids": [
+            "nygard-2016-fault-error-failure"
+          ],
+          "scope": "Failure semantics and error containment."
+        },
+        {
+          "statement": "Availability is experienced at the request boundary, where an extremely slow response may be equivalent to failure.",
+          "source_ids": [
+            "nygard-2016-availability-stability"
+          ],
+          "scope": "User- and client-facing service behavior."
+        },
+        {
+          "statement": "Stability during partial failure depends on severability, tolerance, recoverability, and resilience, with mechanisms such as timeouts, bulkheads, and circuit breakers as possible supports.",
+          "source_ids": [
+            "nygard-2016-availability-stability"
+          ],
+          "scope": "Distributed-service architecture under dependency failure."
+        }
+      ],
+      "decision_questions": [
+        "Which dependency should be severed, and what is the safe degraded behavior?",
+        "Does a fallback preserve correctness or merely conceal an erroneous state?",
+        "Is availability evaluated from the requester's experience, including timeout and partial-failure behavior?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Local containment patterns need a system-level check for changed coupling, load, and recovery work; a circuit breaker or retry policy can create a new failure mode."
+        }
+      ],
+      "misuse_risks": [
+        "Cargo-culting retries, circuit breakers, or bulkheads without an explicit correctness and recovery contract.",
+        "Equating request availability with acceptable user, data-integrity, safety, or security outcomes."
+      ],
+      "evidence_boundary": "The selected sources are expert architecture guidance, not controlled evidence that any named pattern improves reliability across systems or workloads.",
+      "confidence": "medium"
+    },
+    {
+      "id": "charity-majors",
+      "name": "Charity Majors",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Preserve enough high-context production telemetry to investigate unfamiliar system states, while making cost, privacy, and retention trade-offs explicit.",
+      "decision_functions": [
+        "observability-design",
+        "telemetry-governance",
+        "incident-investigation"
+      ],
+      "lineage_ids": [
+        "observability-engineering",
+        "event-oriented-telemetry"
+      ],
+      "primary_sources": [
+        {
+          "id": "majors-2022-observability-engineering",
+          "title": "Observability Engineering",
+          "year": 2022,
+          "locator": "https://www.oreilly.com/library/view/observability-engineering/9781492076438/colophon01.html",
+          "evidence_locator": "Chapters 1–2 on observability and debugging practices, and Chapter 21 on maturity."
+        },
+        {
+          "id": "majors-2024-build-observability-tool",
+          "title": "So You Want To Build An Observability Tool…",
+          "year": 2024,
+          "locator": "https://www.honeycomb.io/blog/so-you-want-to-build-an-observability-tool",
+          "evidence_locator": "Sections on event data, high cardinality and dimensionality, raw events, dynamic sampling, and interactive exploration."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Monitoring is oriented to predefined conditions, whereas observability supports asking new questions after an unfamiliar system state occurs.",
+          "source_ids": [
+            "majors-2022-observability-engineering",
+            "majors-2024-build-observability-tool"
+          ],
+          "scope": "Production investigation and debugging."
+        },
+        {
+          "statement": "High-context per-event data, high-cardinality dimensions, and trace context enable inquiry into unusual requests and dependencies.",
+          "source_ids": [
+            "majors-2024-build-observability-tool"
+          ],
+          "scope": "Telemetry schema and investigative capability."
+        },
+        {
+          "statement": "Pre-aggregation constrains future questions, so dynamic sampling is proposed as a trade-off for retaining useful raw context.",
+          "source_ids": [
+            "majors-2024-build-observability-tool"
+          ],
+          "scope": "Telemetry retention, cost, and query design."
+        }
+      ],
+      "decision_questions": [
+        "What consequential incident question can the current telemetry not answer?",
+        "Which request, business, and dependency context is useful and lawful to retain?",
+        "Which events require full retention or sampling, and what decision justifies the cost?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "A compact set of user-centered service objectives is still needed to control agreed reliability; rich event telemetry does not replace explicit outcomes, privacy controls, or data minimization."
+        }
+      ],
+      "misuse_risks": [
+        "Treating observability as authority to collect every available datum regardless of privacy, security, retention, or cost.",
+        "Using a vendor-authored architecture preference as a universal product-selection rule."
+      ],
+      "evidence_boundary": "One selected source is a Honeycomb publication by a company founder; it supports an attributable practice position, not an independent efficacy, ROI, or vendor-selection claim.",
+      "confidence": "medium"
+    },
+    {
+      "id": "google-sre-governance",
+      "name": "Google SRE governance corpus",
+      "representation_type": "source_corpus",
+      "admission_status": "source_corpus",
+      "lens": "Set user-relevant reliability objectives and explicit error-budget risk boundaries so that service health and change velocity can be governed as an observable trade-off.",
+      "decision_functions": [
+        "service-level-governance",
+        "change-risk-policy",
+        "user-outcome-measurement"
+      ],
+      "lineage_ids": [
+        "google-sre",
+        "service-level-objectives",
+        "error-budgets"
+      ],
+      "primary_sources": [
+        {
+          "id": "google-sre-2016-service-level-objectives",
+          "title": "Service Level Objectives",
+          "year": 2016,
+          "locator": "https://sre.google/sre-book/service-level-objectives/",
+          "evidence_locator": "Indicators; Defining Objectives; Choosing Targets; and Control Measures."
+        },
+        {
+          "id": "google-sre-2016-embracing-risk",
+          "title": "Embracing Risk",
+          "year": 2016,
+          "locator": "https://sre.google/sre-book/embracing-risk/",
+          "evidence_locator": "Managing Risk; Motivation for Error Budgets; and Key Insights."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "An SLI is a precisely defined quantitative measure, and an SLO should be selected around user-relevant service behavior rather than every available metric.",
+          "source_ids": [
+            "google-sre-2016-service-level-objectives"
+          ],
+          "scope": "Service reliability objective design."
+        },
+        {
+          "statement": "Reliability targets express a cost, risk, and velocity trade-off; maximizing availability to 100 percent is not generally the stated objective.",
+          "source_ids": [
+            "google-sre-2016-embracing-risk"
+          ],
+          "scope": "Product and service risk governance."
+        },
+        {
+          "statement": "An error budget can make the relationship between release activity and reliability work explicit through a pre-agreed control policy.",
+          "source_ids": [
+            "google-sre-2016-service-level-objectives",
+            "google-sre-2016-embracing-risk"
+          ],
+          "scope": "Change-management and service-level policy."
+        }
+      ],
+      "decision_questions": [
+        "Which user behavior does this SLO protect, and is the chosen SLI a faithful proxy?",
+        "What pre-agreed action follows sustained error-budget consumption?",
+        "Which safety, security, privacy, or data-integrity constraints must remain outside availability-budget trade-offs?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "A service-level metric cannot by itself reveal adaptive work, saturation, or all harmful degradation; pair objective governance with capacity and incident-learning evidence."
+        }
+      ],
+      "misuse_risks": [
+        "Treating Google’s operating guidance as a universal risk-acceptance formula for regulated, safety-critical, or irreversible-data systems.",
+        "Attributing the multi-author corpus to Betsy Beyer or any other individual as a personal belief or runtime persona."
+      ],
+      "evidence_boundary": "This is a bounded multi-author Google SRE source corpus, not a person or a unified worldview. It describes an operating approach and does not independently prove outcomes or authorize a named individual attribution.",
+      "confidence": "medium"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "Betsy Beyer as an individual representative",
+      "reason": "The available direct material establishes editorial and collaborative roles in a multi-author Google SRE corpus, not three technical positions safely attributable as personal beliefs. The useful material is therefore retained only as google-sre-governance, a source_corpus."
+    },
+    {
+      "name": "Google SRE error-budget policy templates as outcome evidence",
+      "reason": "Operational templates are examples of a policy shape, not controlled evidence of reliability improvement or a single-author worldview."
+    }
+  ],
+  "saturation": "Stopped at exactly seven representation units after two qualifying HTTPS primary or official source works and three locator-bound positions per unit. The requested predicates are covered by distinct safety, adaptation, debrief, accountability, containment, observability, and governance lenses. Further search added secondary explainers, source variants, current editions, or insufficiently attributable material rather than a new decision-relevant lineage. The residual gap is controlled software-outcome evidence: practitioner and official guidance is retained for documented positions, not causal effectiveness claims."
+}

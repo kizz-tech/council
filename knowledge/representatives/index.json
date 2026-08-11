@@ -1,0 +1,73 @@
+{
+  "families": [
+    {
+      "family_id": "architecture-foundations",
+      "path": "knowledge/representatives/families/architecture-foundations.json",
+      "representation_count": 6,
+      "sha256": "7c6e3f7f09ba14429a98027a5a74cae8192cc44c5745df8f989ead47c7406caa"
+    },
+    {
+      "family_id": "database-data",
+      "path": "knowledge/representatives/families/database-data.json",
+      "representation_count": 7,
+      "sha256": "fc7003c015dd7575154e93f9d85bde03786ff31e625a3e42e2a867f879a7c29b"
+    },
+    {
+      "family_id": "distributed-systems",
+      "path": "knowledge/representatives/families/distributed-systems.json",
+      "representation_count": 7,
+      "sha256": "8912cb326dfbca63639b47a57cf10916a1a5e09e23cbefb7b9eaa8616369fa95"
+    },
+    {
+      "family_id": "domain-enterprise",
+      "path": "knowledge/representatives/families/domain-enterprise.json",
+      "representation_count": 7,
+      "sha256": "ba75aafbb0936895eb0dafa127594ba77f3f8a7bfc8a4e86321e4e6b7d293d75"
+    },
+    {
+      "family_id": "languages-concurrency",
+      "path": "knowledge/representatives/families/languages-concurrency.json",
+      "representation_count": 7,
+      "sha256": "2e07d8ba7d8cfc621aab639ce50db6ceab71e0e2fb0cf8b3f1fc053c75f49f72"
+    },
+    {
+      "family_id": "object-design",
+      "path": "knowledge/representatives/families/object-design.json",
+      "representation_count": 8,
+      "sha256": "3457615575c4068e02a4aa546d1b8586136ba25df3f594f5947c3cab4de9cbd0"
+    },
+    {
+      "family_id": "reliability-safety",
+      "path": "knowledge/representatives/families/reliability-safety.json",
+      "representation_count": 7,
+      "sha256": "485e75ab01f94d44723b2681cd0cde576ac39807fd9444934090d1d02e97871e"
+    },
+    {
+      "family_id": "security-privacy",
+      "path": "knowledge/representatives/families/security-privacy.json",
+      "representation_count": 7,
+      "sha256": "193c6e57ba6d9c2849a46d7680ac7df5e838fae5733759fc67592b8bc1d54801"
+    },
+    {
+      "family_id": "sociotechnical-delivery",
+      "path": "knowledge/representatives/families/sociotechnical-delivery.json",
+      "representation_count": 7,
+      "sha256": "91971dd15d85a742fe962aee3519874fb999d3e333fa7586f6d669396df1f631"
+    },
+    {
+      "family_id": "systems-performance",
+      "path": "knowledge/representatives/families/systems-performance.json",
+      "representation_count": 6,
+      "sha256": "174d5f8d674d6424bc227d37be7305205e9bd9caf697228a406ef4bab603c14c"
+    }
+  ],
+  "family_count": 10,
+  "knowledge_as_of": "2026-08-11",
+  "library_manifest_sha256": "04c372c33fa6439a81d54ace023601c5be697a161d7f906fe5739e104b86373e",
+  "library_version": "0.2.0",
+  "position_count": 207,
+  "primary_source_binding_count": 138,
+  "representation_count": 69,
+  "schema_version": "council.representative-index/1",
+  "unique_source_locator_count": 134
+}

@@ -18,6 +18,7 @@ import tempfile
 import time
 import tomllib
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Iterable
 
@@ -28,6 +29,33 @@ LOCK_PATH = Path("council.lock.json")
 SKILL_PATH = Path("skills/engineering-council")
 ADVISOR_PATH = Path("advisors/engineering-council")
 PROVENANCE_PATH = Path("provenance/engineering-council/generation-1.json")
+ROSTER_RECONSTRUCTION_PATH = Path(
+    "provenance/engineering-council/generation-1-roster-reconstruction.json"
+)
+GENERATION_ONE_ROSTER_PATH = Path("rosters/engineering-council/generation-1.json")
+REPRESENTATIVE_FAMILY_PATH = Path("knowledge/representatives/families")
+REPRESENTATIVE_LIBRARY_PATH = Path("knowledge/representatives/library.json")
+REPRESENTATIVE_INDEX_PATH = Path("knowledge/representatives/index.json")
+ROSTER_PATH = Path("rosters")
+REPRESENTATIVE_SCHEMA_PATH = Path("schemas/representative.schema.json")
+ROSTER_SCHEMA_PATH = Path("schemas/roster.schema.json")
+SCREENING_CELL_REGISTRY_PATH = Path("docs/experiments/screening-cells.json")
+GENERATION_ONE_PROVENANCE_SHA256 = (
+    "3d0712562c3db115cfabe15e02c43940e9fd626b6ee862cf630fbc31141db6ed"
+)
+
+REPRESENTATION_KEYS = {
+    "id", "name", "representation_type", "admission_status", "lens",
+    "decision_functions", "lineage_ids", "primary_sources", "positions",
+    "decision_questions", "counterweights", "misuse_risks",
+    "evidence_boundary", "confidence",
+}
+SOURCE_KEYS = {"id", "title", "year", "locator", "evidence_locator"}
+POSITION_KEYS = {"statement", "source_ids", "scope"}
+COUNTERWEIGHT_KEYS = {"relation", "target_or_position"}
+COUNTERWEIGHT_RELATIONS = {
+    "challenged-by", "bounded-by", "counterbalances", "competes-with", "gap",
+}
 
 EXPECTED_ADVISORS = {
     "clean-boundary-architect.toml": "clean_boundary_architect",
@@ -46,6 +74,25 @@ PERSONAL_PATH_PATTERNS = (
     re.compile(re.escape("/" + "Users/")),
     re.compile(re.escape("C:" + "\\Users\\"), re.IGNORECASE),
 )
+MUTABLE_SOURCE_LOCATOR_PATTERNS = (
+    re.compile(r"^https://github\.com/[^/]+/[^/]+/blob/(?:main|master)/"),
+)
+GENERATED_REPOSITORY_ROOTS = (
+    Path(".agents"),
+    Path(".codex/agents"),
+    Path(".council-local"),
+    Path("dist"),
+    Path("build"),
+    Path(".pytest_cache"),
+    Path(".idea"),
+    Path(".vscode"),
+)
+MATERIALIZATION_REPOSITORY_ROOTS = (
+    Path(".agents"),
+    Path(".codex/agents"),
+    Path(".council-local"),
+)
+BUILD_REPOSITORY_ROOTS = (Path("dist"), Path("build"))
 
 
 class CouncilError(RuntimeError):
@@ -91,6 +138,38 @@ def regular_files(root: Path) -> list[Path]:
     return sorted(path for path in root.rglob("*") if path.is_file())
 
 
+def path_within(path: Path, parent: Path) -> bool:
+    return path == parent or parent in path.parents
+
+
+def paths_overlap(left: Path, right: Path) -> bool:
+    return path_within(left, right) or path_within(right, left)
+
+
+def relative_within(relative: Path, parent: Path) -> bool:
+    return relative == parent or parent in relative.parents
+
+
+def ignored_repository_source(relative: Path) -> bool:
+    if any(relative_within(relative, ignored) for ignored in GENERATED_REPOSITORY_ROOTS):
+        return True
+    if any(
+        part == ".git"
+        or part == "__pycache__"
+        or ".council-backup-" in part
+        or ".council-stage-" in part
+        for part in relative.parts
+    ):
+        return True
+    if relative.suffix == ".pyc" or relative.name == ".DS_Store":
+        return True
+    if relative.name == ".env" or (
+        relative.name.startswith(".env.") and relative.name != ".env.example"
+    ):
+        return True
+    return False
+
+
 def repository_source_files(root: Path) -> list[Path]:
     """Return every versioned source candidate except the self-referential lock."""
     paths: list[Path] = []
@@ -100,9 +179,7 @@ def repository_source_files(root: Path) -> list[Path]:
         relative = path.relative_to(root)
         if relative == LOCK_PATH:
             continue
-        if ".git" in relative.parts or "__pycache__" in relative.parts:
-            continue
-        if path.suffix == ".pyc" or path.name == ".DS_Store":
+        if ignored_repository_source(relative):
             continue
         paths.append(path)
     return sorted(paths)
@@ -254,6 +331,13 @@ def validate_public_surface(root: Path) -> None:
 
 
 def validate_provenance(root: Path) -> None:
+    actual_provenance_hash = sha256(root / PROVENANCE_PATH)
+    if actual_provenance_hash != GENERATION_ONE_PROVENANCE_SHA256:
+        raise CouncilError(
+            "generation-one evaluation receipt is immutable: "
+            f"expected {GENERATION_ONE_PROVENANCE_SHA256}, "
+            f"found {actual_provenance_hash}"
+        )
     provenance = json_load(root / PROVENANCE_PATH)
     imports = provenance.get("import_identity")
     if not isinstance(imports, dict):
@@ -275,6 +359,604 @@ def validate_provenance(root: Path) -> None:
     actual_advisors = validate_advisors(root)
     if expected_advisors != actual_advisors:
         raise CouncilError("imported advisor hashes differ from generation-one identity")
+    baseline = json_load(root / ROSTER_RECONSTRUCTION_PATH)
+    require_keys(
+        baseline,
+        {
+            "schema_version", "generation", "evaluation_receipt_path",
+            "evaluation_receipt_sha256", "roster_path", "roster_sha256",
+            "status", "claim_boundary",
+        },
+        str(ROSTER_RECONSTRUCTION_PATH),
+    )
+    if baseline["schema_version"] != "council.provenance-link/1":
+        raise CouncilError("roster reconstruction sidecar has unsupported schema_version")
+    if baseline["generation"] != provenance.get("generation"):
+        raise CouncilError("roster reconstruction generation must match its receipt")
+    if baseline["evaluation_receipt_path"] != PROVENANCE_PATH.as_posix():
+        raise CouncilError("roster reconstruction points to an unexpected receipt path")
+    if baseline["evaluation_receipt_sha256"] != actual_provenance_hash:
+        raise CouncilError("roster reconstruction receipt hash does not match")
+    if baseline["roster_path"] != GENERATION_ONE_ROSTER_PATH.as_posix():
+        raise CouncilError("generation-one provenance points to an unexpected roster path")
+    if baseline["status"] != "reconstructed-post-evaluation-baseline":
+        raise CouncilError("generation-one roster identity must disclose reconstruction status")
+    require_string(
+        baseline["claim_boundary"],
+        f"{ROSTER_RECONSTRUCTION_PATH}.claim_boundary",
+        minimum=30,
+    )
+    actual_roster_hash = sha256(root / GENERATION_ONE_ROSTER_PATH)
+    if baseline["roster_sha256"] != actual_roster_hash:
+        raise CouncilError(
+            "generation-one roster differs from its repository baseline identity"
+        )
+
+
+def require_keys(value: dict, expected: set[str], context: str) -> None:
+    actual = set(value)
+    if actual != expected:
+        raise CouncilError(
+            f"{context} key mismatch; missing={sorted(expected - actual)}, "
+            f"extra={sorted(actual - expected)}"
+        )
+
+
+def require_string(value: object, context: str, *, minimum: int = 1) -> str:
+    if not isinstance(value, str) or len(value.strip()) < minimum:
+        raise CouncilError(f"{context} must be a string of length >= {minimum}")
+    return value
+
+
+def require_slug(value: object, context: str) -> str:
+    text = require_string(value, context)
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", text):
+        raise CouncilError(f"{context} must be a lowercase kebab-case identifier")
+    return text
+
+
+def require_string_list(
+    value: object,
+    context: str,
+    *,
+    exact: int | None = None,
+    minimum: int = 1,
+    item_minimum: int = 3,
+    slugs: bool = False,
+) -> list[str]:
+    if not isinstance(value, list):
+        raise CouncilError(f"{context} must be an array")
+    if exact is not None and len(value) != exact:
+        raise CouncilError(f"{context} must contain exactly {exact} items")
+    if exact is None and len(value) < minimum:
+        raise CouncilError(f"{context} must contain at least {minimum} items")
+    items = [
+        require_slug(item, f"{context}[{index}]")
+        if slugs
+        else require_string(item, f"{context}[{index}]", minimum=item_minimum)
+        for index, item in enumerate(value)
+    ]
+    if len(set(items)) != len(items):
+        raise CouncilError(f"{context} contains duplicate values")
+    return items
+
+
+def validate_representative_unit(
+    value: object, context: str, *, max_source_year: int
+) -> tuple[str, str, str]:
+    if not isinstance(value, dict):
+        raise CouncilError(f"{context} must be an object")
+    require_keys(value, REPRESENTATION_KEYS, context)
+    representation_id = require_slug(value["id"], f"{context}.id")
+    require_string(value["name"], f"{context}.name", minimum=2)
+    representation_type = value["representation_type"]
+    if representation_type not in {
+        "person", "joint_authors", "school", "functional_lens", "source_corpus",
+    }:
+        raise CouncilError(f"{context}.representation_type is unsupported")
+    admission_status = value["admission_status"]
+    if admission_status not in {"admitted", "qualified_counterweight", "source_corpus"}:
+        raise CouncilError(f"{context}.admission_status is unsupported")
+    if (representation_type == "source_corpus") != (admission_status == "source_corpus"):
+        raise CouncilError(f"{context} source_corpus type and status must agree")
+    require_string(value["lens"], f"{context}.lens", minimum=20)
+    require_string_list(
+        value["decision_functions"], f"{context}.decision_functions", slugs=True
+    )
+    require_string_list(value["lineage_ids"], f"{context}.lineage_ids", slugs=True)
+
+    sources = value["primary_sources"]
+    if not isinstance(sources, list) or not sources:
+        raise CouncilError(f"{context}.primary_sources must be non-empty")
+    if representation_type != "source_corpus" and len(sources) != 2:
+        raise CouncilError(
+            f"{context}.primary_sources must contain exactly 2 sources "
+            "unless representation_type is source_corpus"
+        )
+    source_ids: set[str] = set()
+    source_locators: set[str] = set()
+    for index, source in enumerate(sources):
+        source_context = f"{context}.primary_sources[{index}]"
+        if not isinstance(source, dict):
+            raise CouncilError(f"{source_context} must be an object")
+        require_keys(source, SOURCE_KEYS, source_context)
+        source_id = require_slug(source["id"], f"{source_context}.id")
+        if source_id in source_ids:
+            raise CouncilError(f"{context} contains duplicate source id {source_id!r}")
+        source_ids.add(source_id)
+        require_string(source["title"], f"{source_context}.title", minimum=3)
+        year = source["year"]
+        if (
+            not isinstance(year, int)
+            or isinstance(year, bool)
+            or not 1940 <= year <= max_source_year
+        ):
+            raise CouncilError(
+                f"{source_context}.year must be from 1940 through {max_source_year}"
+            )
+        locator = require_string(source["locator"], f"{source_context}.locator")
+        if not locator.startswith("https://"):
+            raise CouncilError(f"{source_context}.locator must use HTTPS")
+        if locator in source_locators:
+            raise CouncilError(f"{context} contains duplicate source locator {locator!r}")
+        source_locators.add(locator)
+        if any(pattern.search(locator) for pattern in MUTABLE_SOURCE_LOCATOR_PATTERNS):
+            raise CouncilError(
+                f"{source_context}.locator uses a mutable repository branch; "
+                "pin an immutable commit"
+            )
+        require_string(source["evidence_locator"], f"{source_context}.evidence_locator", minimum=8)
+
+    positions = value["positions"]
+    if not isinstance(positions, list) or len(positions) != 3:
+        raise CouncilError(f"{context}.positions must contain exactly 3 positions")
+    for index, position in enumerate(positions):
+        position_context = f"{context}.positions[{index}]"
+        if not isinstance(position, dict):
+            raise CouncilError(f"{position_context} must be an object")
+        require_keys(position, POSITION_KEYS, position_context)
+        require_string(position["statement"], f"{position_context}.statement", minimum=20)
+        references = require_string_list(
+            position["source_ids"], f"{position_context}.source_ids", slugs=True
+        )
+        if set(references) - source_ids:
+            raise CouncilError(f"{position_context}.source_ids contains an unknown source")
+        require_string(position["scope"], f"{position_context}.scope", minimum=8)
+
+    require_string_list(
+        value["decision_questions"],
+        f"{context}.decision_questions",
+        exact=3,
+        item_minimum=12,
+    )
+    counterweights = value["counterweights"]
+    if not isinstance(counterweights, list) or not counterweights:
+        raise CouncilError(f"{context}.counterweights must be non-empty")
+    for index, counterweight in enumerate(counterweights):
+        counterweight_context = f"{context}.counterweights[{index}]"
+        if not isinstance(counterweight, dict):
+            raise CouncilError(f"{counterweight_context} must be an object")
+        require_keys(counterweight, COUNTERWEIGHT_KEYS, counterweight_context)
+        if counterweight["relation"] not in COUNTERWEIGHT_RELATIONS:
+            raise CouncilError(f"{counterweight_context}.relation is unsupported")
+        require_string(
+            counterweight["target_or_position"],
+            f"{counterweight_context}.target_or_position",
+            minimum=12,
+        )
+    require_string_list(
+        value["misuse_risks"],
+        f"{context}.misuse_risks",
+        exact=2,
+        item_minimum=12,
+    )
+    require_string(value["evidence_boundary"], f"{context}.evidence_boundary", minimum=30)
+    if value["confidence"] not in {"high", "medium", "limited"}:
+        raise CouncilError(f"{context}.confidence must be high, medium, or limited")
+    return representation_id, representation_type, admission_status
+
+
+def load_representative_library_manifest(root: Path) -> tuple[dict, date]:
+    manifest = json_load(root / REPRESENTATIVE_LIBRARY_PATH)
+    require_keys(
+        manifest,
+        {"schema_version", "library_version", "knowledge_as_of", "families"},
+        str(REPRESENTATIVE_LIBRARY_PATH),
+    )
+    if manifest["schema_version"] != "council.representative-library/1":
+        raise CouncilError("representative library manifest has unsupported schema_version")
+    library_version = require_string(
+        manifest["library_version"],
+        f"{REPRESENTATIVE_LIBRARY_PATH}.library_version",
+    )
+    if library_version != plugin_version(root):
+        raise CouncilError("representative library version must match the product version")
+    cutoff_text = require_string(
+        manifest["knowledge_as_of"],
+        f"{REPRESENTATIVE_LIBRARY_PATH}.knowledge_as_of",
+    )
+    try:
+        cutoff = date.fromisoformat(cutoff_text)
+    except ValueError as exc:
+        raise CouncilError("representative library knowledge_as_of must be an ISO date") from exc
+    if cutoff > date.today():
+        raise CouncilError("representative library knowledge_as_of cannot be future-dated")
+    families = require_string_list(
+        manifest["families"],
+        f"{REPRESENTATIVE_LIBRARY_PATH}.families",
+        slugs=True,
+    )
+    if families != sorted(families):
+        raise CouncilError("representative library families must be sorted")
+    return manifest, cutoff
+
+
+def representative_family_files(root: Path, expected_family_ids: set[str]) -> list[Path]:
+    directory = root / REPRESENTATIVE_FAMILY_PATH
+    files = sorted(directory.glob("*.json")) if directory.is_dir() else []
+    family_ids = {path.stem for path in files}
+    if family_ids != expected_family_ids:
+        raise CouncilError(
+            "representative family set mismatch: "
+            f"expected {sorted(expected_family_ids)}, "
+            f"found {sorted(family_ids)}"
+        )
+    return files
+
+
+def build_representative_index(
+    root: Path, manifest: dict, cutoff: date
+) -> tuple[dict, dict[str, dict[str, str]]]:
+    family_rows: list[dict] = []
+    representation_metadata: dict[str, dict[str, str]] = {}
+    source_binding_count = 0
+    unique_locators: set[str] = set()
+    position_count = 0
+    required = {"schema_version", "family_id", "knowledge_as_of", "representations"}
+    optional = {
+        "rejected_candidates", "saturation", "open_gaps", "shared_lineages",
+        "contradictions",
+    }
+    expected_family_ids = set(manifest["families"])
+    for path in representative_family_files(root, expected_family_ids):
+        relative = path.relative_to(root)
+        family = json_load(path)
+        missing = required - set(family)
+        unexpected = set(family) - required - optional
+        if missing or unexpected:
+            raise CouncilError(
+                f"{relative} top-level key mismatch; missing={sorted(missing)}, "
+                f"extra={sorted(unexpected)}"
+            )
+        if family["schema_version"] != "council.representative-family/1":
+            raise CouncilError(f"{relative} has unsupported schema_version")
+        if family["family_id"] != path.stem:
+            raise CouncilError(f"{relative} family_id must match its filename")
+        if family["knowledge_as_of"] != cutoff.isoformat():
+            raise CouncilError(f"{relative} knowledge_as_of must match the research cutoff")
+        representations = family["representations"]
+        if not isinstance(representations, list) or not representations:
+            raise CouncilError(f"{relative}.representations must be a non-empty array")
+        for index, representation in enumerate(representations):
+            representation_id, representation_type, admission_status = (
+                validate_representative_unit(
+                    representation,
+                    f"{relative}.representations[{index}]",
+                    max_source_year=cutoff.year,
+                )
+            )
+            if representation_id in representation_metadata:
+                raise CouncilError(f"duplicate representation id {representation_id!r}")
+            representation_metadata[representation_id] = {
+                "representation_type": representation_type,
+                "admission_status": admission_status,
+            }
+            source_binding_count += len(representation["primary_sources"])
+            unique_locators.update(
+                source["locator"] for source in representation["primary_sources"]
+            )
+            position_count += len(representation["positions"])
+        family_rows.append({
+            "family_id": path.stem,
+            "path": relative.as_posix(),
+            "representation_count": len(representations),
+            "sha256": sha256(path),
+        })
+    index = {
+        "schema_version": "council.representative-index/1",
+        "library_version": manifest["library_version"],
+        "library_manifest_sha256": sha256(root / REPRESENTATIVE_LIBRARY_PATH),
+        "knowledge_as_of": cutoff.isoformat(),
+        "family_count": len(family_rows),
+        "representation_count": len(representation_metadata),
+        "primary_source_binding_count": source_binding_count,
+        "unique_source_locator_count": len(unique_locators),
+        "position_count": position_count,
+        "families": family_rows,
+    }
+    return index, representation_metadata
+
+
+def validate_representative_library(
+    root: Path, *, check_index: bool = True
+) -> tuple[dict, dict[str, dict[str, str]]]:
+    for schema_path in (REPRESENTATIVE_SCHEMA_PATH, ROSTER_SCHEMA_PATH):
+        schema = json_load(root / schema_path)
+        if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
+            raise CouncilError(f"unsupported JSON Schema declaration at {schema_path}")
+    manifest, cutoff = load_representative_library_manifest(root)
+    current_index, representation_metadata = build_representative_index(
+        root, manifest, cutoff
+    )
+    if check_index and json_load(root / REPRESENTATIVE_INDEX_PATH) != current_index:
+        raise CouncilError(
+            "knowledge/representatives/index.json is stale; "
+            "review changes, then run index --write"
+        )
+    return current_index, representation_metadata
+
+
+def validate_roster_prompt_source(
+    root: Path, prompt_source_value: object, runtime_profile: str, context: str
+) -> None:
+    prompt_source_text = require_string(
+        prompt_source_value, f"{context}.prompt_source", minimum=3
+    )
+    relative = Path(prompt_source_text)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or len(relative.parts) < 3
+        or relative.parts[0] != "advisors"
+        or relative.suffix != ".toml"
+    ):
+        raise CouncilError(
+            f"{context}.prompt_source must be an advisors/<council>/*.toml file"
+        )
+    prompt_source = (root / relative).resolve()
+    if not prompt_source.is_file() or root.resolve() not in prompt_source.parents:
+        raise CouncilError(f"{context}.prompt_source must resolve inside the repository")
+    try:
+        prompt = tomllib.loads(prompt_source.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        raise CouncilError(f"invalid roster prompt TOML at {relative}: {exc}") from exc
+    for field in ("name", "description", "developer_instructions"):
+        require_string(prompt.get(field), f"{context}.prompt_source.{field}")
+    if prompt["name"] != runtime_profile:
+        raise CouncilError(
+            f"{context}.runtime_profile {runtime_profile!r} does not match "
+            f"prompt source name {prompt['name']!r}"
+        )
+    if prompt.get("sandbox_mode") != "read-only":
+        raise CouncilError(f"{context}.prompt_source must declare sandbox_mode = 'read-only'")
+
+
+def validate_rosters(
+    root: Path, representation_metadata: dict[str, dict[str, str]]
+) -> dict:
+    roster_files = sorted((root / ROSTER_PATH).rglob("*.json"))
+    if not roster_files:
+        raise CouncilError("at least one roster JSON is required")
+    roster_revisions: set[tuple[str, int]] = set()
+    slot_count = 0
+    expected_top = {
+        "schema_version", "roster_id", "revision", "status", "domain", "purpose",
+        "source_generation", "slots", "independence_claim", "known_limits",
+    }
+    required_slot = {
+        "slot_id", "runtime_profile", "representation_mode", "decision_function",
+        "lineage_cluster", "prompt_source",
+    }
+    for path in roster_files:
+        relative = path.relative_to(root)
+        roster = json_load(path)
+        require_keys(roster, expected_top, str(relative))
+        if roster["schema_version"] != "council.roster/1":
+            raise CouncilError(f"{relative} has unsupported schema_version")
+        roster_id = require_slug(roster["roster_id"], f"{relative}.roster_id")
+        if (
+            not isinstance(roster["revision"], int)
+            or isinstance(roster["revision"], bool)
+            or roster["revision"] < 1
+        ):
+            raise CouncilError(f"{relative}.revision must be a positive integer")
+        roster_revision = (roster_id, roster["revision"])
+        if roster_revision in roster_revisions:
+            raise CouncilError(
+                f"duplicate roster revision {roster_id!r} revision {roster['revision']}"
+            )
+        roster_revisions.add(roster_revision)
+        if roster["status"] not in {"historical-baseline", "candidate", "retired"}:
+            raise CouncilError(f"{relative}.status is unsupported")
+        require_string(roster["domain"], f"{relative}.domain", minimum=3)
+        require_string(roster["purpose"], f"{relative}.purpose", minimum=20)
+        require_string(
+            roster["source_generation"],
+            f"{relative}.source_generation",
+            minimum=3,
+        )
+        slots = roster["slots"]
+        if not isinstance(slots, list) or not slots:
+            raise CouncilError(f"{relative}.slots must be non-empty")
+        local_slots: set[str] = set()
+        for index, slot in enumerate(slots):
+            context = f"{relative}.slots[{index}]"
+            if not isinstance(slot, dict):
+                raise CouncilError(f"{context} must be an object")
+            allowed = required_slot | {"representation_ids"}
+            missing = required_slot - set(slot)
+            extra = set(slot) - allowed
+            if missing or extra:
+                raise CouncilError(
+                    f"{context} key mismatch; missing={sorted(missing)}, extra={sorted(extra)}"
+                )
+            slot_id = require_slug(slot["slot_id"], f"{context}.slot_id")
+            if slot_id in local_slots:
+                raise CouncilError(f"duplicate slot id {slot_id!r} in {relative}")
+            local_slots.add(slot_id)
+            profile = require_string(slot["runtime_profile"], f"{context}.runtime_profile")
+            if not re.fullmatch(r"[a-z0-9_]+", profile):
+                raise CouncilError(f"{context}.runtime_profile must be snake_case")
+            mode = slot["representation_mode"]
+            if mode not in {"functional_lens", "library_bound", "hybrid"}:
+                raise CouncilError(f"{context}.representation_mode is unsupported")
+            bound_ids = slot.get("representation_ids", [])
+            if mode == "functional_lens" and bound_ids:
+                raise CouncilError(f"{context} functional_lens must not bind library identities")
+            if mode != "functional_lens":
+                references = require_string_list(
+                    bound_ids, f"{context}.representation_ids", slugs=True
+                )
+                unknown = set(references) - set(representation_metadata)
+                if unknown:
+                    raise CouncilError(f"{context} references unknown ids {sorted(unknown)}")
+                for representation_id in references:
+                    if (
+                        representation_metadata[representation_id]["admission_status"]
+                        == "qualified_counterweight"
+                    ):
+                        raise CouncilError(
+                            f"{context}.representation_ids contains counterweight-only "
+                            f"representation {representation_id!r}; a qualified_counterweight "
+                            "cannot be bound to a roster slot"
+                        )
+            require_string(
+                slot["decision_function"],
+                f"{context}.decision_function",
+                minimum=8,
+            )
+            require_string(
+                slot["lineage_cluster"],
+                f"{context}.lineage_cluster",
+                minimum=3,
+            )
+            validate_roster_prompt_source(
+                root, slot["prompt_source"], profile, context
+            )
+        slot_count += len(slots)
+        independence = roster["independence_claim"]
+        if not isinstance(independence, dict):
+            raise CouncilError(f"{relative}.independence_claim must be an object")
+        require_keys(
+            independence, {"lineage", "runtime", "outcome"},
+            f"{relative}.independence_claim",
+        )
+        for key in ("lineage", "runtime", "outcome"):
+            require_string(independence[key], f"{relative}.independence_claim.{key}", minimum=8)
+        require_string_list(
+            roster["known_limits"],
+            f"{relative}.known_limits",
+            item_minimum=12,
+        )
+        if roster_revision == ("engineering-council-generation-1", 1):
+            profiles = {slot["runtime_profile"] for slot in slots}
+            if roster["status"] != "historical-baseline" or len(slots) != 4:
+                raise CouncilError("generation-one roster must remain a four-slot historical baseline")
+            if profiles != set(EXPECTED_ADVISORS.values()):
+                raise CouncilError("generation-one roster differs from the frozen advisor set")
+    return {"roster_count": len(roster_files), "slot_count": slot_count}
+
+
+def validate_screening_cell_registry(root: Path) -> dict:
+    registry = json_load(root / SCREENING_CELL_REGISTRY_PATH)
+    require_keys(
+        registry,
+        {
+            "schema_version", "model_configuration_count", "packs_per_cell",
+            "runs_per_pack", "cell_families", "incumbent_baseline", "expected",
+        },
+        str(SCREENING_CELL_REGISTRY_PATH),
+    )
+    if registry["schema_version"] != "council.screening-cells/1":
+        raise CouncilError("screening cell registry has unsupported schema_version")
+    for key in ("model_configuration_count", "packs_per_cell", "runs_per_pack"):
+        value = registry[key]
+        if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+            raise CouncilError(f"screening cell registry {key} must be positive")
+    families = registry["cell_families"]
+    if not isinstance(families, list) or not families:
+        raise CouncilError("screening cell registry cell_families must be non-empty")
+    by_id: dict[str, dict] = {}
+    cells_per_model = 0
+    family_keys = {"id", "applicability", "n", "groupings", "rounds"}
+    for index, family in enumerate(families):
+        context = f"{SCREENING_CELL_REGISTRY_PATH}.cell_families[{index}]"
+        if not isinstance(family, dict):
+            raise CouncilError(f"{context} must be an object")
+        require_keys(family, family_keys, context)
+        family_id = require_string(family["id"], f"{context}.id")
+        if family_id in by_id:
+            raise CouncilError(f"duplicate screening cell family {family_id!r}")
+        by_id[family_id] = family
+        if family["applicability"] != "each-model-configuration":
+            raise CouncilError(f"{context}.applicability is unsupported")
+        n_values = family["n"]
+        rounds = family["rounds"]
+        if (
+            not isinstance(n_values, list)
+            or not n_values
+            or any(
+                not isinstance(value, int) or isinstance(value, bool) or value < 1
+                for value in n_values
+            )
+            or len(set(n_values)) != len(n_values)
+        ):
+            raise CouncilError(f"{context}.n must contain unique positive integers")
+        if (
+            not isinstance(rounds, list)
+            or not rounds
+            or any(
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or value not in {0, 1, 2}
+                for value in rounds
+            )
+            or len(set(rounds)) != len(rounds)
+        ):
+            raise CouncilError(f"{context}.rounds must contain unique values from 0, 1, 2")
+        groupings = require_string_list(
+            family["groupings"], f"{context}.groupings", slugs=True
+        )
+        cells_per_model += len(n_values) * len(rounds) * len(groupings)
+    if set(by_id) != {"T0", "T1", "T2", "T3-breadth", "T3-paired-counterweight"}:
+        raise CouncilError("screening cell registry must declare the five core families")
+    for baseline_id in ("T0", "T1"):
+        baseline = by_id[baseline_id]
+        if baseline["n"] != [1] or baseline["rounds"] != [0]:
+            raise CouncilError(f"{baseline_id} must remain a one-state, round-zero baseline")
+    if by_id["T2"]["rounds"] != [0]:
+        raise CouncilError("T2 must remain a round-zero independent ensemble")
+
+    incumbent = registry["incumbent_baseline"]
+    require_keys(incumbent, {"id", "applicability", "cell_count"}, "incumbent_baseline")
+    if (
+        incumbent["id"] != "G-1"
+        or incumbent["applicability"]
+        != "one-exact-incumbent-model-configuration-only"
+        or incumbent["cell_count"] != 1
+    ):
+        raise CouncilError("G-1 must be one exact incumbent-only baseline cell")
+    cross_configuration_cells = cells_per_model * registry["model_configuration_count"]
+    total_core_cells = cross_configuration_cells + incumbent["cell_count"]
+    total_core_system_runs = (
+        total_core_cells * registry["packs_per_cell"] * registry["runs_per_pack"]
+    )
+    calculated = {
+        "cells_per_model_configuration": cells_per_model,
+        "cross_configuration_cells": cross_configuration_cells,
+        "incumbent_baseline_cells": incumbent["cell_count"],
+        "total_core_cells": total_core_cells,
+        "total_core_system_runs": total_core_system_runs,
+    }
+    require_keys(registry["expected"], set(calculated), "screening cell expected totals")
+    if registry["expected"] != calculated:
+        raise CouncilError(
+            f"screening cell expected totals are stale; calculated {calculated}"
+        )
+    return {
+        "screening_core_cells": total_core_cells,
+        "screening_core_system_runs": total_core_system_runs,
+    }
 
 
 def verify(root: Path, *, check_lock: bool = True) -> dict:
@@ -282,6 +964,9 @@ def verify(root: Path, *, check_lock: bool = True) -> dict:
     validate_skill(root)
     advisor_hashes = validate_advisors(root)
     validate_provenance(root)
+    representative_index, representation_metadata = validate_representative_library(root)
+    roster_report = validate_rosters(root, representation_metadata)
+    screening_report = validate_screening_cell_registry(root)
     validate_public_surface(root)
     current_lock = build_lock(root)
     if check_lock:
@@ -294,6 +979,13 @@ def verify(root: Path, *, check_lock: bool = True) -> dict:
         "version": manifest["version"],
         "skill_sha256": sha256(root / SKILL_PATH / "SKILL.md"),
         "advisor_sha256": advisor_hashes,
+        "representative_families": representative_index["family_count"],
+        "representations": representative_index["representation_count"],
+        "primary_source_bindings": representative_index["primary_source_binding_count"],
+        "unique_source_locators": representative_index["unique_source_locator_count"],
+        "positions": representative_index["position_count"],
+        **roster_report,
+        **screening_report,
         "locked_files": len(current_lock["files"]),
     }
 
@@ -305,13 +997,26 @@ def artifact_files(root: Path) -> list[Path]:
 
 
 def build_artifact(root: Path, output: Path) -> dict:
-    verification = verify(root)
+    root = root.resolve()
     output = output.resolve()
+    canonical_roots = ((root / "skills").resolve(), (root / "advisors").resolve())
+    if any(paths_overlap(output, source_root) for source_root in canonical_roots):
+        raise CouncilError("build output must not overlap canonical skills or advisors")
+    if path_within(root, output):
+        raise CouncilError("build output must not contain the canonical repository")
+    if path_within(output, root) and not any(
+        path_within(output, (root / allowed).resolve())
+        for allowed in BUILD_REPOSITORY_ROOTS
+    ):
+        raise CouncilError(
+            "repository-local build output must be under dist/ or build/"
+        )
+    verification = verify(root)
     output.parent.mkdir(parents=True, exist_ok=True)
-    if output.exists() and any(output.iterdir()):
-        raise CouncilError(f"build output must be absent or empty: {output}")
     if output.exists() and not output.is_dir():
         raise CouncilError(f"build output is not a directory: {output}")
+    if output.exists() and any(output.iterdir()):
+        raise CouncilError(f"build output must be absent or empty: {output}")
     stage = Path(tempfile.mkdtemp(prefix=f".{output.name}.council-stage-", dir=output.parent))
     try:
         built: dict[str, str] = {}
@@ -592,6 +1297,7 @@ def materialize(
     *,
     apply: bool,
 ) -> dict:
+    root = root.resolve()
     verification = verify(root)
     units: list[tuple[str, list[TargetFile], Path]] = []
     for skill_root in skill_roots:
@@ -604,6 +1310,32 @@ def materialize(
         units.append(("advisors", files, resolved / ".council-engineering-council-install.json"))
     if not units:
         raise CouncilError("materialize requires at least one --skill-root or --agent-root")
+
+    canonical_roots = ((root / "skills").resolve(), (root / "advisors").resolve())
+    unit_roots = [receipt_path.parent.resolve() for _, _, receipt_path in units]
+    for unit_root in unit_roots:
+        if any(paths_overlap(unit_root, source_root) for source_root in canonical_roots):
+            raise CouncilError(
+                "materialization target must not overlap canonical skills or advisors"
+            )
+        if path_within(root, unit_root):
+            raise CouncilError(
+                "materialization target must not contain the canonical repository"
+            )
+        if path_within(unit_root, root) and not any(
+            path_within(unit_root, (root / allowed).resolve())
+            for allowed in MATERIALIZATION_REPOSITORY_ROOTS
+        ):
+            raise CouncilError(
+                "repository-local materialization target must be under "
+                ".agents/, .codex/agents/, or .council-local/"
+            )
+    for index, left in enumerate(unit_roots):
+        for right in unit_roots[index + 1:]:
+            if paths_overlap(left, right):
+                raise CouncilError(
+                    "materialization units must not overlap or contain one another"
+                )
 
     plans: list[dict] = []
     for kind, files, receipt_path in units:
@@ -652,6 +1384,11 @@ def parser() -> argparse.ArgumentParser:
     lock = subparsers.add_parser("lock", help="Regenerate the canonical component lock.")
     lock.add_argument("--write", action="store_true", help="Required acknowledgement for the write.")
 
+    index = subparsers.add_parser(
+        "index", help="Regenerate the representative-library index."
+    )
+    index.add_argument("--write", action="store_true", help="Required acknowledgement for the write.")
+
     build = subparsers.add_parser("build", help="Build an allowlisted plugin artifact.")
     build.add_argument("--output", type=Path, required=True)
 
@@ -680,6 +1417,17 @@ def main(argv: list[str] | None = None) -> int:
             value = build_lock(root)
             write_json_atomic(root / LOCK_PATH, value)
             emit({"status": "written", "path": str(root / LOCK_PATH), **value})
+            return 0
+        if args.command == "index":
+            if not args.write:
+                raise CouncilError("index is read-only unless --write is supplied")
+            value, _ = validate_representative_library(root, check_index=False)
+            write_json_atomic(root / REPRESENTATIVE_INDEX_PATH, value)
+            emit({
+                "status": "written",
+                "path": str(root / REPRESENTATIVE_INDEX_PATH),
+                **value,
+            })
             return 0
         if args.command == "build":
             emit(build_artifact(root, args.output))

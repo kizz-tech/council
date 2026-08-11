@@ -1,0 +1,530 @@
+{
+  "schema_version": "council.representative-family/1",
+  "family_id": "database-data",
+  "knowledge_as_of": "2026-08-11",
+  "representations": [
+    {
+      "id": "jim-gray",
+      "name": "Jim Gray",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make transaction invariants, compensation, recovery, and availability assumptions explicit and testable.",
+      "decision_functions": [
+        "transaction-boundary",
+        "recovery-design",
+        "availability-analysis"
+      ],
+      "lineage_ids": [
+        "transactions-recovery",
+        "fault-tolerant-execution"
+      ],
+      "primary_sources": [
+        {
+          "id": "gray-1981-transaction-concept",
+          "title": "The Transaction Concept: Virtues and Limitations",
+          "year": 1981,
+          "locator": "https://www.cs.utexas.edu/~dahlin/Classes/GradOS/papers/Gray81.pdf",
+          "evidence_locator": "p. 144, abstract and introduction; pp. 145-153, A General Model, Nested Transactions, Long-Lived Transactions, and Integration With Programming Languages."
+        },
+        {
+          "id": "gray-1985-why-computers-stop",
+          "title": "Why Do Computers Stop and What Can Be Done About It?",
+          "year": 1985,
+          "locator": "https://jimgray.azurewebsites.net/papers/TandemTR85.7_WhyDoComputersStop.pdf",
+          "evidence_locator": "p. 1, abstract; pp. 3-19, Hardware Availability, Analysis of Failures, and Fault-Tolerant Execution."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Define a transaction as the smallest state transformation for which consistency, atomicity, and durability are required.",
+          "source_ids": [
+            "gray-1981-transaction-concept"
+          ],
+          "scope": "Conventional data-management transactions."
+        },
+        {
+          "statement": "Long-lived or irreversible work needs explicit decomposition and compensation or recovery reasoning rather than an unbounded ordinary transaction.",
+          "source_ids": [
+            "gray-1981-transaction-concept"
+          ],
+          "scope": "Nested and long-lived transaction design."
+        },
+        {
+          "statement": "Availability design must address containment, redundancy, and recovery while observing operational and software failure paths as well as hardware failures.",
+          "source_ids": [
+            "gray-1985-why-computers-stop"
+          ],
+          "scope": "Fault-tolerant system design and recovery."
+        }
+      ],
+      "decision_questions": [
+        "What invariant must be atomic, and what exact state change establishes it?",
+        "Which effects are irreversible, and what compensation or recovery contract applies?",
+        "Which failure class dominates in the target environment, and how has recovery been exercised?"
+      ],
+      "counterweights": [
+        {
+          "relation": "counterbalances",
+          "target_or_position": "Replication design also requires an explicit normal-operation consistency and latency contract; strict coordination is not cost-free."
+        }
+      ],
+      "misuse_risks": [
+        "Treating an early transaction model as a universal fit for human workflows or external side effects.",
+        "Treating historical Tandem availability observations as current fleet statistics."
+      ],
+      "evidence_boundary": "The selected works support bounded transaction, compensation, recovery, and historical fault-tolerance claims; they do not prescribe current cloud implementations or unrecorded views.",
+      "confidence": "high"
+    },
+    {
+      "id": "michael-stonebraker",
+      "name": "Michael Stonebraker",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Choose topology and engine boundaries from workload shape, locality, skew, and lifecycle cost rather than architectural slogans.",
+      "decision_functions": [
+        "topology-selection",
+        "workload-segmentation",
+        "engine-boundaries"
+      ],
+      "lineage_ids": [
+        "shared-nothing-architecture",
+        "workload-specialized-engines"
+      ],
+      "primary_sources": [
+        {
+          "id": "stonebraker-1986-shared-nothing",
+          "title": "The Case for Shared Nothing",
+          "year": 1986,
+          "locator": "https://dsf.berkeley.edu/papers/hpts85-nothing.pdf",
+          "evidence_locator": "pp. 4-9; abstract and sections 1-6, especially the Simple Analysis of coordination, placement, and balancing costs."
+        },
+        {
+          "id": "stonebraker-cetintemel-2005-one-size",
+          "title": "One Size Fits All: An Idea Whose Time Has Come and Gone",
+          "year": 2005,
+          "locator": "https://doi.org/10.1109/ICDE.2005.1",
+          "evidence_locator": "pp. 2-11; abstract and sections 1-7 on workload classes, specialized engines, and code-line costs."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Shared-nothing can be a favorable scale-out topology only when data locality, partitioning, and balancing conditions are met.",
+          "source_ids": [
+            "stonebraker-1986-shared-nothing"
+          ],
+          "scope": "High-transaction-rate multiprocessor databases."
+        },
+        {
+          "statement": "Hotspots and imbalance are architectural constraints that need explicit mitigation rather than treatment as a minor implementation detail.",
+          "source_ids": [
+            "stonebraker-1986-shared-nothing"
+          ],
+          "scope": "Distributed data placement and load balancing."
+        },
+        {
+          "statement": "Different workload classes can justify different storage and execution designs, but engine boundaries create maintenance and interoperability costs.",
+          "source_ids": [
+            "stonebraker-cetintemel-2005-one-size"
+          ],
+          "scope": "Warehouse, transactional, and stream-engine architecture."
+        }
+      ],
+      "decision_questions": [
+        "Is the target workload sufficiently local and partitionable for the selected topology?",
+        "Which keys, joins, or transactions create skew or hotspots, and what is the mitigation?",
+        "Which runtime must specialize, and what data or interface contract makes the boundary operable?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Specialization and partitioning can add reconciliation, migration, and operational complexity that may exceed measured workload benefit."
+        }
+      ],
+      "misuse_risks": [
+        "Treating shared-nothing as a universal answer without a skew, locality, or transaction-cost analysis.",
+        "Creating specialist services without an ownership and interoperability contract."
+      ],
+      "evidence_boundary": "The selected works provide architecture arguments under historical technical and economic assumptions; they do not prove a current benchmark ranking or automatic benefit from more engines.",
+      "confidence": "high"
+    },
+    {
+      "id": "joseph-hellerstein",
+      "name": "Joseph M. Hellerstein",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Expose when changing data and costs require adaptive continuous processing or explicit declarative coordination semantics.",
+      "decision_functions": [
+        "adaptive-execution",
+        "continuous-query-sharing",
+        "coordination-semantics"
+      ],
+      "lineage_ids": [
+        "adaptive-query-processing",
+        "declarative-distributed-logic"
+      ],
+      "primary_sources": [
+        {
+          "id": "madden-shah-hellerstein-raman-2002-cacq",
+          "title": "Continuously Adaptive Continuous Queries over Streams",
+          "year": 2002,
+          "locator": "https://doi.org/10.1145/564691.564698",
+          "evidence_locator": "pp. 49-60; abstract and sections 1-6 on eddy-based adaptation and fine-grained cross-query sharing."
+        },
+        {
+          "id": "hellerstein-2010-declarative-imperative",
+          "title": "The Declarative Imperative: Experiences and Conjectures in Distributed Logic",
+          "year": 2010,
+          "locator": "https://www2.eecs.berkeley.edu/Pubs/TechRpts/2010/EECS-2010-90.html",
+          "evidence_locator": "pp. 3-6; abstract and sections 1-2 on distributed logic, time, state, and asynchronous communication."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Continuous-query execution can adapt operator choices to changing input delivery and performance conditions.",
+          "source_ids": [
+            "madden-shah-hellerstein-raman-2002-cacq"
+          ],
+          "scope": "Telegraph CACQ continuous-query execution."
+        },
+        {
+          "statement": "Fine-grained physical sharing across standing queries can reduce repeated work and state when continuous queries overlap.",
+          "source_ids": [
+            "madden-shah-hellerstein-raman-2002-cacq"
+          ],
+          "scope": "Multiple continuous queries with shared operators."
+        },
+        {
+          "statement": "A declarative data or logic model can make distributed state, time, and asynchronous coordination explicit for reasoning and implementation.",
+          "source_ids": [
+            "hellerstein-2010-declarative-imperative"
+          ],
+          "scope": "The report's stated experiences and conjectures."
+        }
+      ],
+      "decision_questions": [
+        "Which input or cost variables drift enough to justify adaptive execution?",
+        "Which standing queries share enough work or state to make physical sharing valuable?",
+        "Where must time, state, and asynchronous coordination be explicit to make the design auditable?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Adaptation can reduce reproducibility and explainability unless execution policy, inputs, and changes are retained; deterministic ordering may fit another contract."
+        }
+      ],
+      "misuse_risks": [
+        "Using adaptation as a substitute for a declared correctness, replay, or audit contract.",
+        "Promoting a prototype performance result or stated conjecture to a universal production rule."
+      ],
+      "evidence_boundary": "The sources support adaptive continuous-query mechanisms and a conjectural declarative-coordination lens; they do not provide universal production guarantees or a complete stream platform design.",
+      "confidence": "medium"
+    },
+    {
+      "id": "jennifer-widom",
+      "name": "Jennifer Widom",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Make continual-query semantics, uncertainty, and lineage explicit where result meaning and derivation affect a decision.",
+      "decision_functions": [
+        "stream-semantics",
+        "data-provenance",
+        "uncertainty-modeling"
+      ],
+      "lineage_ids": [
+        "continuous-query-semantics",
+        "uncertainty-lineage-data-models"
+      ],
+      "primary_sources": [
+        {
+          "id": "arasu-babu-widom-2006-cql",
+          "title": "The CQL Continuous Query Language: Semantic Foundations and Query Execution",
+          "year": 2006,
+          "locator": "https://doi.org/10.1007/s00778-004-0147-z",
+          "evidence_locator": "pp. 121-142; sections 2-6 on stream-to-relation, relation-to-stream, windows, and execution."
+        },
+        {
+          "id": "benjelloun-das-sarma-halevy-widom-2006-uldb",
+          "title": "ULDBs: Databases with Uncertainty and Lineage",
+          "year": 2006,
+          "locator": "https://www.vldb.org/conf/2006/p953-benjelloun.pdf",
+          "evidence_locator": "p. 953, abstract and section 1; pp. 954-956, section 2 on the uncertainty-lineage model."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Continuous query results need explicit stream-to-relation, relation-to-stream, and window semantics before their meaning can be evaluated consistently.",
+          "source_ids": [
+            "arasu-babu-widom-2006-cql"
+          ],
+          "scope": "CQL language and continuous-query execution."
+        },
+        {
+          "statement": "A stream design should expose its transformations and timing choices so corrections and updates can be interpreted rather than silently redefined.",
+          "source_ids": [
+            "arasu-babu-widom-2006-cql"
+          ],
+          "scope": "Inference bounded to CQL semantic transformations."
+        },
+        {
+          "statement": "Lineage and uncertainty can be represented together so derived results retain relationships to uncertain input data.",
+          "source_ids": [
+            "benjelloun-das-sarma-halevy-widom-2006-uldb"
+          ],
+          "scope": "ULDB representation and relational operations."
+        }
+      ],
+      "decision_questions": [
+        "What do windows and stream or relation transformations mean for each consumer?",
+        "How are late data, corrections, and retained state represented in the data contract?",
+        "Which results require queryable lineage or explicit uncertainty rather than an unqualified value?"
+      ],
+      "counterweights": [
+        {
+          "relation": "counterbalances",
+          "target_or_position": "Richer semantic and provenance state can impose storage, compute, and usability costs, so it should be retained where its decision value is material."
+        }
+      ],
+      "misuse_risks": [
+        "Treating a confidence signal or lineage record as proof that data is true.",
+        "Mandating full semantic or provenance machinery for simple paths with no decision need."
+      ],
+      "evidence_boundary": "The selected works establish semantic and data-model possibilities; they do not specify every event-time policy or prove that full provenance is economical for every workload.",
+      "confidence": "high"
+    },
+    {
+      "id": "daniel-j-abadi",
+      "name": "Daniel J. Abadi",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Demand workload-labeled physical-design evidence and precise consistency or latency contracts for replicated systems.",
+      "decision_functions": [
+        "physical-design",
+        "benchmark-interpretation",
+        "replication-tradeoffs"
+      ],
+      "lineage_ids": [
+        "analytical-executor-storage-co-design",
+        "consistency-latency-tradeoffs"
+      ],
+      "primary_sources": [
+        {
+          "id": "abadi-madden-hachem-2008-column-row",
+          "title": "Column-Stores vs. Row-Stores: How Different Are They Really?",
+          "year": 2008,
+          "locator": "https://doi.org/10.1145/1376616.1376712",
+          "evidence_locator": "pp. 967-980; abstract, sections 1 and 4-7 on executor and storage design under the stated experiment."
+        },
+        {
+          "id": "abadi-2012-pacelc",
+          "title": "Consistency Tradeoffs in Modern Distributed Database System Design: CAP Is Only Part of the Story",
+          "year": 2012,
+          "locator": "https://doi.org/10.1109/MC.2012.33",
+          "evidence_locator": "pp. 37-39; CAP Is for Failures, Consistency/Latency Tradeoff, and Data Replication."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Analytical performance should be evaluated as storage-layout and executor co-design, not as a row-versus-column label alone.",
+          "source_ids": [
+            "abadi-madden-hachem-2008-column-row"
+          ],
+          "scope": "The cited C-Store and row-store comparison."
+        },
+        {
+          "statement": "A physical-design decision needs recorded workload, data, hardware, and execution conditions to make a performance result interpretable.",
+          "source_ids": [
+            "abadi-madden-hachem-2008-column-row"
+          ],
+          "scope": "Inference bounded to the paper's comparative experiment."
+        },
+        {
+          "statement": "Replicated-system design should separately state partition behavior and the normal-operation consistency and latency tradeoff.",
+          "source_ids": [
+            "abadi-2012-pacelc"
+          ],
+          "scope": "Distributed database replication framing."
+        }
+      ],
+      "decision_questions": [
+        "Which query mix, data layout, executor behavior, and hardware define the claimed performance advantage?",
+        "What measurement contract makes a storage or execution comparison reproducible and decision-relevant?",
+        "What consistency and latency behavior is required during normal replication and during a partition?"
+      ],
+      "counterweights": [
+        {
+          "relation": "counterbalances",
+          "target_or_position": "A bounded benchmark can overfit its workload, and stronger coordination may be justified when a stated correctness invariant outweighs latency cost."
+        }
+      ],
+      "misuse_risks": [
+        "Treating a bounded benchmark result as a current vendor- or workload-independent ranking.",
+        "Using CAP or PACELC terminology without declaring actual consistency, latency, and failure behavior."
+      ],
+      "evidence_boundary": "The physical-design experiment is dated and bounded, while PACELC is a tradeoff framing; neither source establishes a current product-independent optimum.",
+      "confidence": "high"
+    },
+    {
+      "id": "jeff-dean",
+      "name": "Jeff Dean",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Surface end-to-end tail SLOs and the runtime responsibilities hidden by constrained large-scale dataflow interfaces.",
+      "decision_functions": [
+        "tail-latency",
+        "runtime-boundary",
+        "failure-handling"
+      ],
+      "lineage_ids": [
+        "tail-at-scale",
+        "mapreduce-2004-shared-dean-ghemawat"
+      ],
+      "primary_sources": [
+        {
+          "id": "dean-barroso-2013-tail-at-scale",
+          "title": "The Tail at Scale",
+          "year": 2013,
+          "locator": "https://doi.org/10.1145/2408776.2408794",
+          "evidence_locator": "pp. 74-80; abstract and discussion of tail causes and tail-tolerant techniques."
+        },
+        {
+          "id": "dean-ghemawat-2004-mapreduce",
+          "title": "MapReduce: Simplified Data Processing on Large Clusters",
+          "year": 2004,
+          "locator": "https://www.usenix.org/conference/osdi-04/mapreduce-simplified-data-processing-large-clusters",
+          "evidence_locator": "pp. 137-150; abstract and sections 1-3, 5, and 6 on restricted dataflow, runtime distribution, failures, and experience."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "For high-fan-out services, tail latency can dominate user-visible end-to-end behavior even when average component latency is good.",
+          "source_ids": [
+            "dean-barroso-2013-tail-at-scale"
+          ],
+          "scope": "Large online services with broad fan-out."
+        },
+        {
+          "statement": "A constrained dataflow interface can transfer partitioning, scheduling, failure handling, and communication mechanics from application code to a runtime.",
+          "source_ids": [
+            "dean-ghemawat-2004-mapreduce"
+          ],
+          "scope": "MapReduce batch computations on commodity clusters."
+        },
+        {
+          "statement": "At cluster scale, retry-safe work units and runtime telemetry make re-execution, straggler handling, and worker failure normal operational concerns.",
+          "source_ids": [
+            "dean-ghemawat-2004-mapreduce"
+          ],
+          "scope": "MapReduce implementation and reported experience."
+        }
+      ],
+      "decision_questions": [
+        "What is the end-to-end tail SLO, and how does fan-out amplify component variance?",
+        "Which distribution, retry, and placement responsibilities should the runtime own?",
+        "Can units be safely rerun, and what telemetry identifies stragglers or failed work?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Runtime abstraction and tail tolerance consume capacity and constrain programming semantics, so they need a measured scale and SLO justification."
+        }
+      ],
+      "misuse_risks": [
+        "Importing large-fleet tail-tolerance techniques into a simple system without a measured fan-out or SLO need.",
+        "Counting the shared MapReduce paper as independent evidence for Jeff Dean and Sanjay Ghemawat."
+      ],
+      "evidence_boundary": "The selected sources address large-service tails and a historical Google batch runtime; they do not speak for all online services, all dataflows, or independent author agreement.",
+      "confidence": "medium"
+    },
+    {
+      "id": "sanjay-ghemawat",
+      "name": "Sanjay Ghemawat",
+      "representation_type": "person",
+      "admission_status": "admitted",
+      "lens": "Test storage design against actual workload shape and treat component failure as normal operating input at fleet scale.",
+      "decision_functions": [
+        "storage-assumptions",
+        "failure-normal-design",
+        "dataflow-fit"
+      ],
+      "lineage_ids": [
+        "gfs-workload-first-storage",
+        "mapreduce-2004-shared-dean-ghemawat"
+      ],
+      "primary_sources": [
+        {
+          "id": "ghemawat-gobioff-leung-2003-gfs",
+          "title": "The Google File System",
+          "year": 2003,
+          "locator": "https://doi.org/10.1145/945445.945450",
+          "evidence_locator": "pp. 29-34; abstract and sections 1-2 on component failure, large files, append-heavy workload, and design overview."
+        },
+        {
+          "id": "dean-ghemawat-2004-mapreduce",
+          "title": "MapReduce: Simplified Data Processing on Large Clusters",
+          "year": 2004,
+          "locator": "https://www.usenix.org/conference/osdi-04/mapreduce-simplified-data-processing-large-clusters",
+          "evidence_locator": "pp. 137-150; abstract and sections 1-3, 5, and 6 on restricted dataflow, runtime distribution, failures, and experience."
+        }
+      ],
+      "positions": [
+        {
+          "statement": "Storage architecture can depart from conventional file-system assumptions when measured workloads are very large, append-heavy, and failure-prone.",
+          "source_ids": [
+            "ghemawat-gobioff-leung-2003-gfs"
+          ],
+          "scope": "Google File System design assumptions."
+        },
+        {
+          "statement": "In a large commodity fleet, component failure should be treated as normal operating input to storage and runtime design.",
+          "source_ids": [
+            "ghemawat-gobioff-leung-2003-gfs"
+          ],
+          "scope": "Distributed file-system fault handling."
+        },
+        {
+          "statement": "A restricted dataflow interface can make distribution and failure recovery routine runtime responsibilities when the computation fits the model.",
+          "source_ids": [
+            "dean-ghemawat-2004-mapreduce"
+          ],
+          "scope": "MapReduce batch computation model."
+        }
+      ],
+      "decision_questions": [
+        "What measured file-size, append-or-mutate, locality, and throughput profile is the storage system serving?",
+        "Which failures are normal at the target scale, and how are detection, repair, and degraded operation specified?",
+        "Which interface restrictions make automatic distribution or recovery safe, and which requirements fall outside them?"
+      ],
+      "counterweights": [
+        {
+          "relation": "bounded-by",
+          "target_or_position": "Workload-first departures from conventional storage assumptions can be harmful when the target needs fine-grained mutation, low latency, or transaction semantics outside the source model."
+        }
+      ],
+      "misuse_risks": [
+        "Copying GFS assumptions into a workload with materially different mutation, latency, or isolation requirements.",
+        "Counting the shared MapReduce paper as independent evidence for Sanjay Ghemawat and Jeff Dean."
+      ],
+      "evidence_boundary": "The selected works describe Google-scale storage and batch dataflow contexts; they do not establish a general answer for mutable transactional data or independent author agreement.",
+      "confidence": "medium"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "M. Tamer Özsu",
+      "admission_status": "reserve",
+      "reason": "With a fixed seven-unit cap, the distributed-data-management and formal-query perspective overlaps the selected transaction, partitioning, stream-semantic, and replication lenses more than it adds a distinct decision axis. This is not a quality judgment."
+    }
+  ],
+  "saturation": "Stopped at exactly seven admitted representations because the bounded predicates have distinct coverage across transaction and recovery boundaries, topology and specialization, adaptive processing, stream semantics and lineage, physical design and replication tradeoffs, tail behavior, and workload-first storage. Further expansion would duplicate an admitted axis; M. Tamer Özsu remains a reserve for a formal distributed-query or data-model taxonomy question.",
+  "shared_lineages": [
+    {
+      "lineage_id": "mapreduce-2004-shared-dean-ghemawat",
+      "source_id": "dean-ghemawat-2004-mapreduce",
+      "representation_ids": [
+        "jeff-dean",
+        "sanjay-ghemawat"
+      ],
+      "handling": "This source root is shared lineage and must not be counted as independent agreement between the two representations."
+    }
+  ]
+}
