@@ -1,0 +1,11 @@
+.git
+.agents
+.codex/agents
+.council-local
+build
+dist
+__pycache__
+*.pyc
+.DS_Store
+.env
+.env.*

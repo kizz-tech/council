@@ -1,0 +1,26 @@
+name: Experiment proposal
+description: Propose a falsifiable Council comparison
+title: "[Experiment]: "
+labels: [experiment]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Decision question
+      description: State the comparison and what decision its result could change.
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Matched-budget design
+      description: Define tasks, conditions, repetitions, budgets, metrics, and stop rules.
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Claim boundary
+      description: State what the proposed evidence would not establish.
+    validations:
+      required: true

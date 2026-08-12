@@ -111,7 +111,7 @@ There is no global prestige score or composite “representativeness” score.
 Selection is a coverage and falsifiability decision, recorded in the roster
 manifest.
 
-## Semantic model and the 0.2.0 projection
+## Semantic model and the 0.2.0-alpha.1 projection
 
 The normative machine contract for this release is the standard-library-only
 repository validator in `tools/council_dist.py`. The JSON Schemas under
@@ -141,11 +141,11 @@ deliberately compact projection:
 
 The richer fields below are the semantic design target for future source
 registries, roster manifests, and evaluated outputs. They are not claimed to be
-present or validated in every 0.2.0 family file. Promoting one requires a new
+present or validated in every 0.2.0-alpha.1 family file. Promoting one requires a new
 schema version, migration, tests, and an ADR; documentation alone cannot add a
 machine-enforced guarantee.
 
-The 0.2.0 index therefore reports both the number of bindings and the number of
+The 0.2.0-alpha.1 index therefore reports both the number of bindings and the number of
 unique locators. The current projection contains 138 bindings over 134 unique
 HTTPS locators; neither number is a count of independent works or independent
 views.

@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 
@@ -48,7 +49,7 @@ class DistributionContractTest(unittest.TestCase):
     def test_verify_current_tree(self) -> None:
         report, _ = self.run_tool("verify")
         self.assertEqual(report["status"], "ok")
-        self.assertEqual(report["version"], "0.2.0")
+        self.assertEqual(report["version"], "0.2.0-alpha.1")
         lock = json.loads((ROOT / "council.lock.json").read_text())
         self.assertEqual(report["locked_files"], len(lock["files"]))
         self.assertEqual(report["representative_families"], 10)
@@ -89,6 +90,12 @@ class DistributionContractTest(unittest.TestCase):
         self.assertIn("software-engineering", manifest["description"])
         self.assertTrue(all("Engineering Council" in prompt for prompt in prompts))
         self.assertIn("roadmap", manifest["interface"]["longDescription"])
+        self.assertEqual(manifest["version"], "0.2.0-alpha.1")
+        self.assertEqual(manifest["author"]["name"], "Kizz")
+        self.assertEqual(manifest["repository"], "https://github.com/kizz-tech/council")
+        self.assertEqual(manifest["license"], "Apache-2.0")
+        self.assertTrue(manifest["keywords"])
+        self.assertTrue(manifest["interface"]["capabilities"])
 
     def test_representative_index_is_exact_and_source_bound(self) -> None:
         index = json.loads(
@@ -508,6 +515,132 @@ class DistributionContractTest(unittest.TestCase):
             )
             self.assertEqual(report["status"], "error")
             self.assertIn("not a directory", result.stdout)
+
+    def test_release_archives_are_allowlisted_installable_and_reproducible(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            first = base / "first"
+            second = base / "second"
+            first_report, _ = self.run_tool("release", "--output", str(first))
+            second_report, _ = self.run_tool("release", "--output", str(second))
+
+            self.assertEqual(first_report["version"], "0.2.0-alpha.1")
+            self.assertEqual(first_report["artifacts"], second_report["artifacts"])
+            self.assertEqual(
+                (first / "SHA256SUMS").read_text(),
+                (second / "SHA256SUMS").read_text(),
+            )
+
+            full_name = first_report["artifacts"]["full"]["name"]
+            plugin_name = first_report["artifacts"]["plugin"]["name"]
+            self.assertEqual(full_name, "council-full-0.2.0-alpha.1.zip")
+            self.assertEqual(plugin_name, "council-plugin-0.2.0-alpha.1.zip")
+            self.assertEqual(digest(first / full_name), digest(second / full_name))
+            self.assertEqual(digest(first / plugin_name), digest(second / plugin_name))
+
+            with zipfile.ZipFile(first / plugin_name) as archive:
+                self.assertEqual(
+                    archive.namelist(),
+                    [
+                        "council-plugin-0.2.0-alpha.1/.codex-plugin/plugin.json",
+                        "council-plugin-0.2.0-alpha.1/skills/engineering-council/SKILL.md",
+                        "council-plugin-0.2.0-alpha.1/skills/engineering-council/agents/openai.yaml",
+                    ],
+                )
+
+            extract_root = base / "extracted"
+            shutil.unpack_archive(first / full_name, extract_root)
+            full_root = extract_root / "council-full-0.2.0-alpha.1"
+            self.assertTrue((full_root / "LICENSE").is_file())
+            self.assertFalse((full_root / ".git").exists())
+            verified, _ = self.run_repo_tool(full_root, "verify")
+            self.assertEqual(verified["status"], "ok")
+
+            skill_root = base / "installed-skills"
+            agent_root = base / "installed-agents"
+            self.run_repo_tool(
+                full_root,
+                "materialize",
+                "--skill-root", str(skill_root),
+                "--agent-root", str(agent_root),
+                "--apply",
+            )
+            status, _ = self.run_repo_tool(
+                full_root,
+                "status",
+                "--skill-root", str(skill_root),
+                "--agent-root", str(agent_root),
+            )
+            self.assertEqual(status["status"], "match")
+
+    def test_release_rejects_unclassified_repository_source(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            repo = base / "repo"
+            shutil.copytree(ROOT, repo, ignore=shutil.ignore_patterns("__pycache__"))
+            (repo / "UNCLASSIFIED.md").write_text("new source\n")
+            self.run_repo_tool(repo, "lock", "--write")
+            report, result = self.run_repo_tool(
+                repo,
+                "release",
+                "--output", str(base / "release"),
+                expected=2,
+            )
+            self.assertEqual(report["status"], "error")
+            self.assertIn("UNCLASSIFIED.md", result.stdout)
+
+    def test_source_tree_rejects_file_directory_and_broken_symlinks(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            for case in ("file", "directory", "broken"):
+                with self.subTest(case=case):
+                    repo = base / case / "repo"
+                    shutil.copytree(
+                        ROOT,
+                        repo,
+                        ignore=shutil.ignore_patterns("__pycache__"),
+                    )
+                    link = repo / "docs" / f"{case}-link"
+                    if case == "file":
+                        link.symlink_to(ROOT / "README.md")
+                    elif case == "directory":
+                        link.symlink_to(ROOT / "skills", target_is_directory=True)
+                    else:
+                        link.symlink_to(base / "missing-target")
+
+                    for command in (
+                        ("verify",),
+                        ("lock", "--write"),
+                        ("index", "--write"),
+                        ("release", "--output", str(base / case / "release")),
+                    ):
+                        report, result = self.run_repo_tool(
+                            repo,
+                            *command,
+                            expected=2,
+                        )
+                        self.assertEqual(report["status"], "error")
+                        self.assertIn("symbolic links are not allowed", result.stdout)
+
+    def test_materialization_rejects_symlinked_canonical_source(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            repo = base / "repo"
+            shutil.copytree(ROOT, repo, ignore=shutil.ignore_patterns("__pycache__"))
+            source = repo / "skills/engineering-council/agents/openai.yaml"
+            source.unlink()
+            source.symlink_to(ROOT / "skills/engineering-council/agents/openai.yaml")
+
+            report, result = self.run_repo_tool(
+                repo,
+                "materialize",
+                "--skill-root", str(base / "installed"),
+                "--apply",
+                expected=2,
+            )
+            self.assertEqual(report["status"], "error")
+            self.assertIn("symbolic links are not allowed", result.stdout)
+            self.assertFalse((base / "installed").exists())
 
     def test_repo_local_generated_outputs_remain_verify_clean(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

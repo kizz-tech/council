@@ -3,7 +3,9 @@
 All notable changes to Council are documented here. The project follows
 Semantic Versioning for repository releases while it remains pre-1.0.
 
-## [0.2.0] - 2026-08-11
+## [0.2.0-alpha.1] - 2026-08-12
+
+This is the first public alpha release.
 
 ### Added
 
@@ -31,3 +33,18 @@ Semantic Versioning for repository releases while it remains pre-1.0.
 - The installable `engineering-council` skill and its four runtime advisor
   prompts remain byte-identical to generation one.
 - No public release, marketplace install, or remote publication is implied.
+
+### Release boundary
+
+- The full release bundle installs the skill and four advisor profiles through
+  the drift-checked materializer.
+- The Codex plugin artifact is skill-only because Codex CLI 0.146.0 does not
+  declare custom-agent profiles as a plugin component.
+- The published capability does not establish superiority over a strong single
+  agent, roster optimality, or production-outcome improvement.
+
+### Security
+
+- Reject symbolic links and non-regular entries before verification, lock
+  generation, release building, or materialization so an allowlisted source
+  cannot read outside the canonical repository.

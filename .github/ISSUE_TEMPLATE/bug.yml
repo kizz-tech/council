@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible Council defect
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Council version
+      placeholder: 0.2.0-alpha.1
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include the command, target layout, expected result, and actual result.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Paste concise output with secrets and personal paths removed.
+    validations:
+      required: true
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Security boundary
+      options:
+        - label: This report does not disclose an unpatched vulnerability.
+          required: true

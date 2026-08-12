@@ -1,18 +1,34 @@
 {
   "name": "council",
-  "version": "0.2.0",
+  "version": "0.2.0-alpha.1",
   "description": "An evidence-bound decision council for consequential software-engineering work.",
   "author": {
-    "name": "Council Project"
+    "name": "Kizz",
+    "url": "https://github.com/kizz-tech"
   },
+  "homepage": "https://github.com/kizz-tech/council#readme",
+  "repository": "https://github.com/kizz-tech/council",
+  "license": "Apache-2.0",
+  "keywords": [
+    "agents",
+    "codex",
+    "engineering",
+    "decision-making",
+    "evaluation"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Council",
     "shortDescription": "Specialist review for consequential engineering decisions.",
     "longDescription": "This release packages the Engineering Council workflow for consequential software-engineering decisions. Product, research, and other domain councils remain roadmap candidates rather than installed capabilities.",
-    "developerName": "Council Project",
+    "developerName": "Kizz",
     "category": "Productivity",
-    "capabilities": [],
+    "capabilities": [
+      "Read-only specialist consultation",
+      "Adaptive multi-agent orchestration",
+      "Evidence and stop contracts"
+    ],
+    "websiteURL": "https://github.com/kizz-tech/council",
     "defaultPrompt": [
       "Use Engineering Council to evaluate this consequential software-engineering decision with independent specialist lenses."
     ]

@@ -1,6 +1,6 @@
 {
   "schema_version": "council.representative-library/1",
-  "library_version": "0.2.0",
+  "library_version": "0.2.0-alpha.1",
   "knowledge_as_of": "2026-08-11",
   "families": [
     "architecture-foundations",

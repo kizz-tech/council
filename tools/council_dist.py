@@ -13,10 +13,12 @@ import json
 import os
 import re
 import shutil
+import stat
 import sys
 import tempfile
 import time
 import tomllib
+import zipfile
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -42,6 +44,14 @@ ROSTER_SCHEMA_PATH = Path("schemas/roster.schema.json")
 SCREENING_CELL_REGISTRY_PATH = Path("docs/experiments/screening-cells.json")
 GENERATION_ONE_PROVENANCE_SHA256 = (
     "3d0712562c3db115cfabe15e02c43940e9fd626b6ee862cf630fbc31141db6ed"
+)
+SEMVER_PATTERN = re.compile(
+    r"(?:0|[1-9]\d*)\."
+    r"(?:0|[1-9]\d*)\."
+    r"(?:0|[1-9]\d*)"
+    r"(?:-(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)"
+    r"(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*)?"
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
 )
 
 REPRESENTATION_KEYS = {
@@ -93,6 +103,36 @@ MATERIALIZATION_REPOSITORY_ROOTS = (
     Path(".council-local"),
 )
 BUILD_REPOSITORY_ROOTS = (Path("dist"), Path("build"))
+FULL_ARTIFACT_ROOT_FILES = {
+    Path(".dockerignore"),
+    Path(".gitignore"),
+    Path("AGENTS.md"),
+    Path("CHANGELOG.md"),
+    Path("CITATION.cff"),
+    Path("CODE_OF_CONDUCT.md"),
+    Path("CONTRIBUTING.md"),
+    Path("Dockerfile"),
+    Path("GOVERNANCE.md"),
+    Path("LICENSE"),
+    Path("NOTICE"),
+    Path("README.md"),
+    Path("SECURITY.md"),
+    Path("SUPPORT.md"),
+    LOCK_PATH,
+}
+FULL_ARTIFACT_ROOTS = {
+    Path(".codex-plugin"),
+    Path(".github"),
+    Path("advisors"),
+    Path("docs"),
+    Path("knowledge"),
+    Path("provenance"),
+    Path("rosters"),
+    Path("schemas"),
+    Path("skills"),
+    Path("tests"),
+    Path("tools"),
+}
 
 
 class CouncilError(RuntimeError):
@@ -108,10 +148,43 @@ class TargetFile:
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
+    if path.is_symlink():
+        raise CouncilError(f"symbolic links are not allowed: {path}")
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0)
+    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    try:
+        descriptor = os.open(path, flags | no_follow)
+    except OSError as exc:
+        raise CouncilError(f"unable to open regular file {path}: {exc}") from exc
+    try:
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise CouncilError(f"expected a regular file: {path}")
+        with os.fdopen(descriptor, "rb", closefd=False) as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(chunk)
+    finally:
+        os.close(descriptor)
     return digest.hexdigest()
+
+
+def read_regular_bytes(path: Path) -> bytes:
+    if path.is_symlink():
+        raise CouncilError(f"symbolic links are not allowed: {path}")
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0)
+    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    try:
+        descriptor = os.open(path, flags | no_follow)
+    except OSError as exc:
+        raise CouncilError(f"unable to open regular file {path}: {exc}") from exc
+    try:
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise CouncilError(f"expected a regular file: {path}")
+        with os.fdopen(descriptor, "rb", closefd=False) as handle:
+            return handle.read()
+    finally:
+        os.close(descriptor)
 
 
 def json_load(path: Path) -> dict:
@@ -133,9 +206,19 @@ def emit(value: object) -> None:
 
 
 def regular_files(root: Path) -> list[Path]:
+    if root.is_symlink():
+        raise CouncilError(f"symbolic links are not allowed: {root}")
     if not root.is_dir():
         raise CouncilError(f"missing directory: {root}")
-    return sorted(path for path in root.rglob("*") if path.is_file())
+    paths: list[Path] = []
+    for path in root.rglob("*"):
+        if path.is_symlink():
+            raise CouncilError(f"symbolic links are not allowed: {path}")
+        if path.is_file():
+            paths.append(path)
+        elif not path.is_dir():
+            raise CouncilError(f"unsupported filesystem entry: {path}")
+    return sorted(paths)
 
 
 def path_within(path: Path, parent: Path) -> bool:
@@ -174,15 +257,23 @@ def repository_source_files(root: Path) -> list[Path]:
     """Return every versioned source candidate except the self-referential lock."""
     paths: list[Path] = []
     for path in root.rglob("*"):
-        if not path.is_file():
-            continue
         relative = path.relative_to(root)
-        if relative == LOCK_PATH:
-            continue
         if ignored_repository_source(relative):
+            continue
+        if path.is_symlink():
+            raise CouncilError(f"symbolic links are not allowed: {relative}")
+        if not path.is_file():
+            if path.is_dir():
+                continue
+            raise CouncilError(f"unsupported filesystem entry: {relative}")
+        if relative == LOCK_PATH:
             continue
         paths.append(path)
     return sorted(paths)
+
+
+def validate_source_tree(root: Path) -> None:
+    repository_source_files(root)
 
 
 def component_paths(root: Path) -> list[Path]:
@@ -228,10 +319,7 @@ def validate_plugin(root: Path) -> dict:
         raise CouncilError(f"plugin manifest missing fields: {', '.join(missing)}")
     if manifest["name"] != "council":
         raise CouncilError("plugin name must remain 'council' before an explicit rename decision")
-    if not re.fullmatch(
-        r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)",
-        manifest["version"],
-    ):
+    if not SEMVER_PATTERN.fullmatch(manifest["version"]):
         raise CouncilError(f"plugin version is not strict SemVer: {manifest['version']!r}")
     if manifest["skills"] != "./skills/":
         raise CouncilError("plugin skills path must be './skills/'")
@@ -960,6 +1048,7 @@ def validate_screening_cell_registry(root: Path) -> dict:
 
 
 def verify(root: Path, *, check_lock: bool = True) -> dict:
+    validate_source_tree(root)
     manifest = validate_plugin(root)
     validate_skill(root)
     advisor_hashes = validate_advisors(root)
@@ -992,11 +1081,41 @@ def verify(root: Path, *, check_lock: bool = True) -> dict:
 
 def artifact_files(root: Path) -> list[Path]:
     paths = [root / PLUGIN_PATH]
-    paths.extend(regular_files(root / "skills"))
+    paths.extend(
+        path
+        for path in regular_files(root / "skills")
+        if not ignored_repository_source(path.relative_to(root))
+    )
     return sorted(paths)
 
 
-def build_artifact(root: Path, output: Path) -> dict:
+def full_artifact_files(root: Path) -> list[Path]:
+    allowlisted: set[Path] = set()
+    for relative in FULL_ARTIFACT_ROOT_FILES:
+        path = root / relative
+        if not path.is_file():
+            raise CouncilError(f"full release allowlist path is missing: {relative}")
+        allowlisted.add(path)
+    for relative in FULL_ARTIFACT_ROOTS:
+        allowlisted.update(
+            path
+            for path in regular_files(root / relative)
+            if not ignored_repository_source(path.relative_to(root))
+        )
+
+    public_source = set(repository_source_files(root)) | {root / LOCK_PATH}
+    unclassified = public_source - allowlisted
+    unexpected = allowlisted - public_source
+    if unclassified or unexpected:
+        raise CouncilError(
+            "full release allowlist mismatch: "
+            f"unclassified={sorted(path.relative_to(root).as_posix() for path in unclassified)}, "
+            f"unexpected={sorted(path.relative_to(root).as_posix() for path in unexpected)}"
+        )
+    return sorted(allowlisted)
+
+
+def validate_build_output(root: Path, output: Path) -> None:
     root = root.resolve()
     output = output.resolve()
     canonical_roots = ((root / "skills").resolve(), (root / "advisors").resolve())
@@ -1011,12 +1130,105 @@ def build_artifact(root: Path, output: Path) -> dict:
         raise CouncilError(
             "repository-local build output must be under dist/ or build/"
         )
-    verification = verify(root)
-    output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists() and not output.is_dir():
         raise CouncilError(f"build output is not a directory: {output}")
     if output.exists() and any(output.iterdir()):
         raise CouncilError(f"build output must be absent or empty: {output}")
+
+
+def write_deterministic_zip(
+    root: Path,
+    destination: Path,
+    prefix: str,
+    files: list[Path],
+) -> None:
+    with zipfile.ZipFile(
+        destination,
+        mode="w",
+        compression=zipfile.ZIP_DEFLATED,
+        compresslevel=9,
+    ) as archive:
+        for source in files:
+            relative = source.relative_to(root).as_posix()
+            info = zipfile.ZipInfo(
+                f"{prefix}/{relative}",
+                date_time=(1980, 1, 1, 0, 0, 0),
+            )
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 3
+            info.external_attr = (0o100644 & 0xFFFF) << 16
+            if source.is_symlink():
+                raise CouncilError(f"symbolic links are not allowed: {source}")
+            try:
+                resolved = source.resolve(strict=True)
+            except OSError as exc:
+                raise CouncilError(f"unable to resolve release source {source}: {exc}") from exc
+            if root.resolve() not in resolved.parents:
+                raise CouncilError(f"release source escapes the repository: {source}")
+            archive.writestr(info, read_regular_bytes(source))
+
+
+def build_release(root: Path, output: Path) -> dict:
+    root = root.resolve()
+    output = output.resolve()
+    validate_build_output(root, output)
+    verification = verify(root)
+    version = verification["version"]
+    output.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix=f".{output.name}.council-stage-", dir=output.parent))
+    try:
+        artifact_names = {
+            "full": f"council-full-{version}.zip",
+            "plugin": f"council-plugin-{version}.zip",
+        }
+        write_deterministic_zip(
+            root,
+            stage / artifact_names["full"],
+            f"council-full-{version}",
+            full_artifact_files(root),
+        )
+        write_deterministic_zip(
+            root,
+            stage / artifact_names["plugin"],
+            f"council-plugin-{version}",
+            artifact_files(root),
+        )
+        checksums = {
+            name: sha256(stage / name)
+            for name in sorted(artifact_names.values())
+        }
+        (stage / "SHA256SUMS").write_text(
+            "".join(f"{digest}  {name}\n" for name, digest in checksums.items()),
+            encoding="utf-8",
+        )
+        if output.exists():
+            output.rmdir()
+        os.replace(stage, output)
+    except Exception:
+        shutil.rmtree(stage, ignore_errors=True)
+        raise
+    return {
+        "status": "built",
+        "product": verification["product"],
+        "version": version,
+        "output": str(output),
+        "artifacts": {
+            key: {
+                "name": name,
+                "sha256": checksums[name],
+            }
+            for key, name in artifact_names.items()
+        },
+        "checksums": "SHA256SUMS",
+    }
+
+
+def build_artifact(root: Path, output: Path) -> dict:
+    root = root.resolve()
+    output = output.resolve()
+    validate_build_output(root, output)
+    verification = verify(root)
+    output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=f".{output.name}.council-stage-", dir=output.parent))
     try:
         built: dict[str, str] = {}
@@ -1119,9 +1331,7 @@ def receipt_hashes(path: Path, expected_keys: set[str]) -> dict[str, str]:
                 f"expected {expected!r}, found {receipt.get(key)!r}"
             )
     version = receipt.get("version")
-    if not isinstance(version, str) or not re.fullmatch(
-        r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", version
-    ):
+    if not isinstance(version, str) or not SEMVER_PATTERN.fullmatch(version):
         raise CouncilError(f"invalid installation receipt version at {path}")
     files = receipt.get("files")
     if not isinstance(files, dict) or not all(
@@ -1392,6 +1602,11 @@ def parser() -> argparse.ArgumentParser:
     build = subparsers.add_parser("build", help="Build an allowlisted plugin artifact.")
     build.add_argument("--output", type=Path, required=True)
 
+    release = subparsers.add_parser(
+        "release", help="Build deterministic full and skill-only release archives."
+    )
+    release.add_argument("--output", type=Path, required=True)
+
     status = subparsers.add_parser("status", help="Compare canonical source with installed targets.")
     status.add_argument("--skill-root", type=Path, action="append", default=[])
     status.add_argument("--agent-root", type=Path, action="append", default=[])
@@ -1421,6 +1636,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "index":
             if not args.write:
                 raise CouncilError("index is read-only unless --write is supplied")
+            validate_source_tree(root)
             value, _ = validate_representative_library(root, check_index=False)
             write_json_atomic(root / REPRESENTATIVE_INDEX_PATH, value)
             emit({
@@ -1431,6 +1647,9 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "build":
             emit(build_artifact(root, args.output))
+            return 0
+        if args.command == "release":
+            emit(build_release(root, args.output))
             return 0
         if args.command == "status":
             report = status_report(root, args.skill_root, args.agent_root)

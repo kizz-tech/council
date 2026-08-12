@@ -1,5 +1,9 @@
 # Council
 
+[![CI](https://github.com/kizz-tech/council/actions/workflows/ci.yml/badge.svg)](https://github.com/kizz-tech/council/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/kizz-tech/council?include_prereleases)](https://github.com/kizz-tech/council/releases)
+
 Council is an experimental system for making consequential decisions with the
 smallest useful set of independent specialist lenses. It is not a default
 multi-agent chat, a majority vote, or a promise that more agents are better.
@@ -11,12 +15,49 @@ route → shared factual brief → minimum independent lenses → synthesis
       → at most one targeted challenge → verification and stop contract
 ```
 
+| Situation | Route |
+|---|---|
+| Routine, local, or reversible work | Direct / one capable agent |
+| One material decision axis | One specialist consultation |
+| Two countervailing axes could change a consequential decision | Council |
+| Three or four distinct high-blast-radius axes | Expanded council |
+
+## Install the full alpha
+
+The full release contains the Engineering Council skill, four read-only custom
+advisor profiles, the drift-checked materializer, tests, provenance metadata,
+and the exact source lock.
+
+```bash
+curl -LO https://github.com/kizz-tech/council/releases/download/v0.2.0-alpha.1/council-full-0.2.0-alpha.1.zip
+unzip council-full-0.2.0-alpha.1.zip
+cd council-full-0.2.0-alpha.1
+python3 tools/council_dist.py verify
+python3 tools/council_dist.py materialize \
+  --skill-root "$HOME/.agents/skills" \
+  --agent-root "$HOME/.codex/agents" \
+  --apply
+python3 tools/council_dist.py status \
+  --skill-root "$HOME/.agents/skills" \
+  --agent-root "$HOME/.codex/agents"
+```
+
+Start a new Codex task after installation so skill and custom-agent discovery
+run from a clean session. Materialization refuses unknown local drift and never
+reverse-syncs installed files into this repository.
+
+The separate `council-plugin-0.2.0-alpha.1.zip` is intentionally **skill-only**.
+Codex CLI 0.146.0 accepts skills as a plugin component but does not declare
+custom-agent profiles in the plugin manifest. The full Council therefore uses
+the explicit materializer in this alpha; no marketplace installation is
+claimed.
+
 Routine and reversible work should normally stay with one capable agent. A
 single material axis may justify one specialist consultation. A council begins
 only when at least two countervailing, independently completed lenses could
 change a consequential decision.
 
-## What exists in 0.2.0
+## What exists in 0.2.0-alpha.1
 
 - `engineering-council`, the first evaluated domain skill;
 - four read-only Engineering Council advisor profiles;
@@ -115,6 +156,26 @@ Build a clean plugin artifact into a new or empty directory:
 python3 tools/council_dist.py build --output /tmp/council-plugin
 ```
 
+Build deterministic full and skill-only release archives plus checksums:
+
+```bash
+python3 tools/council_dist.py release --output /tmp/council-release
+```
+
+The release builder uses an explicit allowlist and fails when a repository
+source file has not been classified. Two builds from the same locked source
+must produce identical archive hashes.
+
+Validate in a container without materializing into host skill or agent roots:
+
+```bash
+docker build --tag council-release-smoke .
+docker run --rm council-release-smoke
+```
+
+The container isolates release verification; it is not a claim that arbitrary
+agent execution is sandboxed by Council itself.
+
 Inspect local drift without writing:
 
 ```bash
@@ -162,9 +223,15 @@ evaluation receipt,
 the later roster binding, and `advisors/engineering-council/SPEC.md` for the
 unresolved prompt/roster experiments.
 
+The sanitized public run records, measurements, receipt, and narrative report
+live in [Agentic Evidence Lab](https://github.com/kizz-tech/agentic-evidence-lab#council-generation-1).
+That study evaluated exact historical component hashes; this publication does
+not retroactively turn every file in the GitHub release into evaluated behavior.
+
 ## Release state
 
-This is a local pre-release project. No public remote, license, marketplace
-publication, signing identity, or production adoption has been established.
-The absence of a license is intentional until the owner chooses one; do not
-infer redistribution permission from repository availability.
+`v0.2.0-alpha.1` is the first public alpha under Apache-2.0. It has a checked
+full-install path and a separately labeled skill-only plugin artifact. It is
+not a marketplace release, a signed supply-chain artifact, or evidence of
+production adoption. See `SECURITY.md`, `SUPPORT.md`, and `CONTRIBUTING.md` for
+the public project contract.
