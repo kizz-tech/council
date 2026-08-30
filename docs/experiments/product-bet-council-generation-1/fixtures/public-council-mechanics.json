@@ -1,0 +1,66 @@
+{
+  "schema_version": "council.product-bet-case/1",
+  "case_id": "public-council-mechanics",
+  "title": "Commit to a public extension platform with persistent permissions",
+  "archetype": "council-mechanics",
+  "split": "calibration",
+  "evidence_mode": "closed-pack",
+  "consequence": "consequential",
+  "origin": "synthetic",
+  "derived_from_private": false,
+  "classification": "public",
+  "evidence_cutoff": "2026-08-30T00:00:00Z",
+  "decision": "Choose whether to make a two-year compatibility commitment for a third-party extension platform with persistent local permissions in the next release.",
+  "decision_authority_id": "fixture-owner",
+  "options": [
+    "Launch the public extension platform and compatibility promise now",
+    "Ship two internal adapters while keeping the interface private",
+    "Reject the platform direction for the current product horizon"
+  ],
+  "evidence": [
+    {
+      "evidence_id": "committed-builders",
+      "source_class": "signed-intent-summary",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:platform/committed-builders",
+      "content": "Three named design partners have each committed engineering time to a different extension and require a stable public interface before starting."
+    },
+    {
+      "evidence_id": "activation-model",
+      "source_class": "experiment-result",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:platform/activation-model",
+      "content": "A bounded prototype with two private adapters increased activated workflows from 18 of 100 to 41 of 100 in the target cohort."
+    },
+    {
+      "evidence_id": "permission-threat-model",
+      "source_class": "threat-model",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:platform/permission-threat-model",
+      "content": "Persistent extension permissions introduce privilege persistence, confused-deputy, revocation, supply-chain, and data-exfiltration failure paths that do not exist in the private-adapter design."
+    },
+    {
+      "evidence_id": "compatibility-cost-model",
+      "source_class": "capacity-model",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:platform/compatibility-cost-model",
+      "content": "The two-year promise consumes an estimated 30 percent of the maintainer's roadmap capacity and makes permission-model changes costly for all adopters."
+    },
+    {
+      "evidence_id": "rollback-constraint",
+      "source_class": "release-analysis",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:platform/rollback-constraint",
+      "content": "Once external extensions persist user data, rollback requires migration and revocation support rather than a simple feature disable."
+    }
+  ],
+  "outcome_material_in_candidate_packet": false,
+  "candidate_budget": {
+    "max_total_input_bytes": 18000,
+    "max_total_output_bytes": 11000,
+    "max_total_tokens": 200000,
+    "max_wall_seconds": 240,
+    "max_tool_calls": 8,
+    "max_retries": 0
+  }
+}

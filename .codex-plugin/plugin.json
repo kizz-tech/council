@@ -1,6 +1,6 @@
 {
   "name": "council",
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0-alpha.2",
   "description": "An evidence-bound decision council for consequential software-engineering work.",
   "author": {
     "name": "Kizz",

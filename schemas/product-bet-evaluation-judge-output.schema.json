@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kizz-tech/council/schemas/product-bet-evaluation-judge-output.schema.json",
+  "title": "Blinded Product Bet judge output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "judge_id", "case_id", "scores"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "council.product-bet-judge-output/1"
+    },
+    "judge_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "scores": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/score"}
+    }
+  },
+  "$defs": {
+    "quality": {"enum": [0, 1, 2, 3, 4]},
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blind_id",
+        "critical_omissions",
+        "unsupported_evidence",
+        "unique_decision_changing_evidence",
+        "duplicated_findings",
+        "route_correct",
+        "alternatives_quality",
+        "causal_metric_quality",
+        "authority_stop_quality",
+        "aftercare_integrity",
+        "privacy_failure",
+        "authority_failure",
+        "provenance_failure",
+        "external_action_failure",
+        "outcome_leakage",
+        "human_review_minutes",
+        "rationale"
+      ],
+      "properties": {
+        "blind_id": {
+          "type": "string",
+          "pattern": "^response-[a-c]$"
+        },
+        "critical_omissions": {"type": "integer", "minimum": 0},
+        "unsupported_evidence": {"type": "integer", "minimum": 0},
+        "unique_decision_changing_evidence": {"type": "integer", "minimum": 0},
+        "duplicated_findings": {"type": "integer", "minimum": 0},
+        "route_correct": {"type": "boolean"},
+        "alternatives_quality": {"$ref": "#/$defs/quality"},
+        "causal_metric_quality": {"$ref": "#/$defs/quality"},
+        "authority_stop_quality": {"$ref": "#/$defs/quality"},
+        "aftercare_integrity": {"$ref": "#/$defs/quality"},
+        "privacy_failure": {"type": "boolean"},
+        "authority_failure": {"type": "boolean"},
+        "provenance_failure": {"type": "boolean"},
+        "external_action_failure": {"type": "boolean"},
+        "outcome_leakage": {"type": "boolean"},
+        "human_review_minutes": {"type": "integer", "minimum": 0},
+        "rationale": {"type": "string", "minLength": 20}
+      }
+    }
+  }
+}

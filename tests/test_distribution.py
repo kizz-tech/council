@@ -49,7 +49,7 @@ class DistributionContractTest(unittest.TestCase):
     def test_verify_current_tree(self) -> None:
         report, _ = self.run_tool("verify")
         self.assertEqual(report["status"], "ok")
-        self.assertEqual(report["version"], "0.2.0-alpha.1")
+        self.assertEqual(report["version"], "0.2.0-alpha.2")
         lock = json.loads((ROOT / "council.lock.json").read_text())
         self.assertEqual(report["locked_files"], len(lock["files"]))
         self.assertEqual(report["representative_families"], 10)
@@ -90,7 +90,7 @@ class DistributionContractTest(unittest.TestCase):
         self.assertIn("software-engineering", manifest["description"])
         self.assertTrue(all("Engineering Council" in prompt for prompt in prompts))
         self.assertIn("roadmap", manifest["interface"]["longDescription"])
-        self.assertEqual(manifest["version"], "0.2.0-alpha.1")
+        self.assertEqual(manifest["version"], "0.2.0-alpha.2")
         self.assertEqual(manifest["author"]["name"], "Kizz")
         self.assertEqual(manifest["repository"], "https://github.com/kizz-tech/council")
         self.assertEqual(manifest["license"], "Apache-2.0")
@@ -524,7 +524,7 @@ class DistributionContractTest(unittest.TestCase):
             first_report, _ = self.run_tool("release", "--output", str(first))
             second_report, _ = self.run_tool("release", "--output", str(second))
 
-            self.assertEqual(first_report["version"], "0.2.0-alpha.1")
+            self.assertEqual(first_report["version"], "0.2.0-alpha.2")
             self.assertEqual(first_report["artifacts"], second_report["artifacts"])
             self.assertEqual(
                 (first / "SHA256SUMS").read_text(),
@@ -533,8 +533,8 @@ class DistributionContractTest(unittest.TestCase):
 
             full_name = first_report["artifacts"]["full"]["name"]
             plugin_name = first_report["artifacts"]["plugin"]["name"]
-            self.assertEqual(full_name, "council-full-0.2.0-alpha.1.zip")
-            self.assertEqual(plugin_name, "council-plugin-0.2.0-alpha.1.zip")
+            self.assertEqual(full_name, "council-full-0.2.0-alpha.2.zip")
+            self.assertEqual(plugin_name, "council-plugin-0.2.0-alpha.2.zip")
             self.assertEqual(digest(first / full_name), digest(second / full_name))
             self.assertEqual(digest(first / plugin_name), digest(second / plugin_name))
 
@@ -542,15 +542,15 @@ class DistributionContractTest(unittest.TestCase):
                 self.assertEqual(
                     archive.namelist(),
                     [
-                        "council-plugin-0.2.0-alpha.1/.codex-plugin/plugin.json",
-                        "council-plugin-0.2.0-alpha.1/skills/engineering-council/SKILL.md",
-                        "council-plugin-0.2.0-alpha.1/skills/engineering-council/agents/openai.yaml",
+                        "council-plugin-0.2.0-alpha.2/.codex-plugin/plugin.json",
+                        "council-plugin-0.2.0-alpha.2/skills/engineering-council/SKILL.md",
+                        "council-plugin-0.2.0-alpha.2/skills/engineering-council/agents/openai.yaml",
                     ],
                 )
 
             extract_root = base / "extracted"
             shutil.unpack_archive(first / full_name, extract_root)
-            full_root = extract_root / "council-full-0.2.0-alpha.1"
+            full_root = extract_root / "council-full-0.2.0-alpha.2"
             self.assertTrue((full_root / "LICENSE").is_file())
             self.assertFalse((full_root / ".git").exists())
             verified, _ = self.run_repo_tool(full_root, "verify")

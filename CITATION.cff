@@ -4,8 +4,8 @@ title: "Council"
 type: software
 authors:
   - name: "Kizz"
-version: "0.2.0-alpha.1"
-date-released: 2026-08-12
+version: "0.2.0-alpha.2"
+date-released: 2026-08-30
 url: "https://github.com/kizz-tech/council"
 repository-code: "https://github.com/kizz-tech/council"
 license: Apache-2.0

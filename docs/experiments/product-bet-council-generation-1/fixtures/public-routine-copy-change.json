@@ -1,0 +1,44 @@
+{
+  "schema_version": "council.product-bet-case/1",
+  "case_id": "public-routine-copy-change",
+  "title": "Reword one reversible empty-state sentence",
+  "archetype": "ux-comprehension",
+  "split": "calibration",
+  "evidence_mode": "closed-pack",
+  "consequence": "routine",
+  "origin": "synthetic",
+  "derived_from_private": false,
+  "classification": "public",
+  "evidence_cutoff": "2026-08-30T00:00:00Z",
+  "decision": "Choose whether to replace one unclear sentence in a reversible empty state.",
+  "decision_authority_id": "fixture-owner",
+  "options": [
+    "Keep the current sentence",
+    "Ship the clearer sentence behind the normal copy review"
+  ],
+  "evidence": [
+    {
+      "evidence_id": "current-copy",
+      "source_class": "product-snapshot",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:empty-state/current-copy",
+      "content": "The current sentence uses an internal term that the public glossary does not define."
+    },
+    {
+      "evidence_id": "copy-policy",
+      "source_class": "owner-policy",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:empty-state/copy-policy",
+      "content": "The text is locally reversible and does not affect pricing, permissions, safety, or stored data."
+    }
+  ],
+  "outcome_material_in_candidate_packet": false,
+  "candidate_budget": {
+    "max_total_input_bytes": 12000,
+    "max_total_output_bytes": 8000,
+    "max_total_tokens": 24000,
+    "max_wall_seconds": 120,
+    "max_tool_calls": 0,
+    "max_retries": 0
+  }
+}

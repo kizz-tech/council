@@ -1,0 +1,30 @@
+{
+  "schema_version": "council.product-bet-candidate-registry/1",
+  "generation": "product-bet-council-generation-1",
+  "arms": [
+    {
+      "arm_id": "R1",
+      "orchestrator_prompt": "candidates/r1.md",
+      "function_prompt": null,
+      "max_functions": 0,
+      "max_challenge_rounds": 0
+    },
+    {
+      "arm_id": "F-free",
+      "orchestrator_prompt": "candidates/f-free.md",
+      "function_prompt": null,
+      "max_functions": 2,
+      "max_challenge_rounds": 0
+    }
+  ],
+  "shared_limits": {
+    "max_total_input_bytes": 120000,
+    "max_total_output_bytes": 50000,
+    "max_total_tokens": 200000,
+    "max_wall_seconds": 360,
+    "max_tool_calls": 20,
+    "max_retries": 1,
+    "retry_policy": "byte-identical-operational-retry-only"
+  },
+  "claim_boundary": "Candidate contracts are evaluation artifacts, not released skills or evidence that Council improves product decisions."
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "council.product-bet-case/1",
+  "case_id": "public-consequential-platform-bet",
+  "title": "Add a third-party extension interface to a local tool",
+  "archetype": "platform-ecosystem",
+  "split": "calibration",
+  "evidence_mode": "closed-pack",
+  "consequence": "high",
+  "origin": "synthetic",
+  "derived_from_private": false,
+  "classification": "public",
+  "evidence_cutoff": "2026-08-30T00:00:00Z",
+  "decision": "Choose whether the next alpha should expose a third-party extension interface with persistent local permissions.",
+  "decision_authority_id": "fixture-owner",
+  "options": [
+    "Expose the extension interface in the next alpha",
+    "Ship one internal adapter and defer the public interface",
+    "Do nothing until a second real adapter exists"
+  ],
+  "evidence": [
+    {
+      "evidence_id": "request-signal",
+      "source_class": "support-summary",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:extensions/request-signal",
+      "content": "Two prospective users requested different integrations, but neither has committed to build or maintain one."
+    },
+    {
+      "evidence_id": "security-boundary",
+      "source_class": "threat-model",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:extensions/security-boundary",
+      "content": "Extensions would receive persistent local permissions that the current single-adapter design does not expose."
+    },
+    {
+      "evidence_id": "maintenance-capacity",
+      "source_class": "owner-capacity",
+      "as_of": "2026-08-30T00:00:00Z",
+      "locator": "synthetic:extensions/maintenance-capacity",
+      "content": "The maintainer can support one internal adapter this cycle and has no compatibility budget for a public API."
+    }
+  ],
+  "outcome_material_in_candidate_packet": false,
+  "candidate_budget": {
+    "max_total_input_bytes": 16000,
+    "max_total_output_bytes": 10000,
+    "max_total_tokens": 200000,
+    "max_wall_seconds": 180,
+    "max_tool_calls": 6,
+    "max_retries": 0
+  }
+}

@@ -29,9 +29,9 @@ advisor profiles, the drift-checked materializer, tests, provenance metadata,
 and the exact source lock.
 
 ```bash
-curl -LO https://github.com/kizz-tech/council/releases/download/v0.2.0-alpha.1/council-full-0.2.0-alpha.1.zip
-unzip council-full-0.2.0-alpha.1.zip
-cd council-full-0.2.0-alpha.1
+curl -LO https://github.com/kizz-tech/council/releases/download/v0.2.0-alpha.2/council-full-0.2.0-alpha.2.zip
+unzip council-full-0.2.0-alpha.2.zip
+cd council-full-0.2.0-alpha.2
 python3 tools/council_dist.py verify
 python3 tools/council_dist.py materialize \
   --skill-root "$HOME/.agents/skills" \
@@ -46,7 +46,7 @@ Start a new Codex task after installation so skill and custom-agent discovery
 run from a clean session. Materialization refuses unknown local drift and never
 reverse-syncs installed files into this repository.
 
-The separate `council-plugin-0.2.0-alpha.1.zip` is intentionally **skill-only**.
+The separate `council-plugin-0.2.0-alpha.2.zip` is intentionally **skill-only**.
 Codex CLI 0.146.0 accepts skills as a plugin component but does not declare
 custom-agent profiles in the plugin manifest. The full Council therefore uses
 the explicit materializer in this alpha; no marketplace installation is
@@ -57,7 +57,7 @@ single material axis may justify one specialist consultation. A council begins
 only when at least two countervailing, independently completed lenses could
 change a consequential decision.
 
-## What exists in 0.2.0-alpha.1
+## What exists in 0.2.0-alpha.2
 
 - `engineering-council`, the first evaluated domain skill;
 - four read-only Engineering Council advisor profiles;
@@ -71,6 +71,15 @@ change a consequential decision.
   generation-one historical baseline;
 - a matched-budget experiment contract for changing roster size, composition,
   independence, prompt specificity, and model tier.
+
+This follow-up alpha also includes a public Product Bet generation-one
+evaluation harness: frozen candidate and case manifests, privacy-preserving
+case ancestry, bounded execution, authenticated consultation telemetry,
+negative-route fixtures, two-permutation blinded judging, conservative score
+aggregation, and hard rejection gates. The private adaptation rejected both
+Council candidates before held-out. Therefore this release adds **no** Product
+Bet skill, advisor, Aftercare workflow, shared Council kernel, or product-outcome
+claim. Candidate prompts remain non-installable experiment artifacts.
 
 The repository is the canonical source. User skills, project loader overlays,
 personal Codex agent files, plugin artifacts, and installation receipts are
@@ -223,6 +232,14 @@ evaluation receipt,
 the later roster binding, and `advisors/engineering-council/SPEC.md` for the
 unresolved prompt/roster experiments.
 
+Product Bet generation one is a separate private calibration/adaptation
+evaluation with public synthetic mechanics fixtures. It supports the bounded
+claim that neither candidate earned held-out or runtime promotion under the
+frozen reliability and cost contract. Private cases, outputs, blind mappings,
+and judge results are not public artifacts. See
+`docs/decisions/0003-product-bet-evaluation-before-runtime.md` and
+`docs/experiments/product-bet-council-generation-1/`.
+
 The sanitized public run records, measurements, receipt, and narrative report
 live in [Agentic Evidence Lab](https://github.com/kizz-tech/agentic-evidence-lab#council-generation-1).
 That study evaluated exact historical component hashes; this publication does
@@ -230,8 +247,9 @@ not retroactively turn every file in the GitHub release into evaluated behavior.
 
 ## Release state
 
-`v0.2.0-alpha.1` is the first public alpha under Apache-2.0. It has a checked
-full-install path and a separately labeled skill-only plugin artifact. It is
-not a marketplace release, a signed supply-chain artifact, or evidence of
-production adoption. See `SECURITY.md`, `SUPPORT.md`, and `CONTRIBUTING.md` for
-the public project contract.
+`v0.2.0-alpha.2` is the evaluation-harness follow-up to the first public alpha.
+It retains the checked Engineering Council full-install path and the separately
+labeled skill-only plugin artifact. It is not a Product Bet runtime release, a
+marketplace release, a signed supply-chain artifact, or evidence of production
+adoption. See `SECURITY.md`, `SUPPORT.md`, and `CONTRIBUTING.md` for the public
+project contract.

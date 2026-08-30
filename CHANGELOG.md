@@ -3,6 +3,46 @@
 All notable changes to Council are documented here. The project follows
 Semantic Versioning for repository releases while it remains pre-1.0.
 
+## [0.2.0-alpha.2] - 2026-08-30
+
+### Added
+
+- A falsifiable Product Bet generation-one evaluation harness with immutable
+  manifests, private-case ancestry checks, bounded Codex execution, normalized
+  evidence/authority/Aftercare outputs, and safe failure receipts.
+- Public routine, not-ready, consequential, and real-Council mechanics fixtures.
+- Authenticated consultation ledgers bound to actual collaboration tool
+  telemetry, plus two-permutation blinded judging and conservative aggregation.
+- ADR 0003 and a public adaptation decision that preserve the evaluation-first
+  boundary and the rejected candidate ancestry.
+
+### Changed
+
+- Product Bet evidence atoms now use unambiguous `source-bound` provenance
+  rather than conflating packet evidence with an external source.
+- Generation-one Council candidates are limited to exactly two independent
+  first passes, no challenge round, one integration, and a 200,000-token hard
+  ceiling.
+- The evaluation registry removes `F-generic` from held-out eligibility after
+  repeated adaptation completion failures.
+
+### Result boundary
+
+- The surviving `F-free` candidate also failed adaptation reliability, so
+  held-out evaluation and runtime promotion were not started.
+- This release does **not** add Product Bet Council, Product Bet Aftercare, a
+  Product Bet advisor, a shared Council kernel, or a product-outcome claim.
+- The installable plugin remains the Engineering Council skill; Product Bet
+  candidate prompts are non-installable experiment artifacts.
+
+### Security and privacy
+
+- Private cases, raw outputs, blind mappings, judge results, absolute owner
+  paths, and later outcome material are excluded from the public repository and
+  release artifacts.
+- Structured failure receipts retain category and source hashes without raw
+  model output.
+
 ## [0.2.0-alpha.1] - 2026-08-12
 
 This is the first public alpha release.
